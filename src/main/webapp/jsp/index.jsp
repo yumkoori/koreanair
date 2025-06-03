@@ -13,7 +13,8 @@
 </head>
 <body>
     <!-- 모듈화된 헤더 포함 -->
-    <jsp:include page="header.jsp" />
+	<jsp:include page="/jsp/header.jsp" />
+
 
     <section class="booking-widget">
         <div class="container">
@@ -377,7 +378,7 @@
     </section>
 
     <!-- 모듈화된 푸터 포함 -->
-    <jsp:include page="footer.jsp" />
+    <jsp:include page="/jsp/footer.jsp" />
 
     <script src="${pageContext.request.contextPath}/js/script.js"></script>
     
