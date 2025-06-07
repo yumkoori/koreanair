@@ -1144,51 +1144,51 @@ footer {
     .search-box {
         min-width: 250px;
     }
-    
+
     .main-nav ul {
         gap: 30px;
     }
-    
+
     .booking-details {
         flex-wrap: wrap;
         gap: 15px;
     }
-    
+
     .date-section,
     .passenger-section,
     .class-section {
         flex: 1 1 calc(50% - 10px);
     }
-    
+
     .search-section {
         flex: 1 1 100%;
     }
-    
+
     .checkin-inputs,
     .schedule-inputs {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-    
+
     .status-inputs {
         flex-direction: column;
         gap: 20px;
     }
-    
+
     .status-inputs .route-inputs,
     .status-inputs .date-input {
         flex: none;
         width: 100%;
     }
-    
+
     .features .container {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .destination-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .news-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1198,90 +1198,90 @@ footer {
     .header-top {
         padding: 6px 0;
     }
-    
+
     .top-nav-left,
     .top-nav-right {
         gap: 15px;
     }
-    
+
     .language-selector {
         padding: 4px 8px;
     }
-    
+
     .header-main .container {
         flex-wrap: wrap;
         gap: 15px;
     }
-    
+
     .logo {
         order: 1;
         height: 40px;
     }
-    
+
     .main-nav {
         order: 3;
         width: 100%;
     }
-    
+
     .main-nav ul {
         justify-content: center;
         gap: 20px;
     }
-    
+
     .header-actions {
         order: 2;
         gap: 15px;
     }
-    
+
     .search-box {
         min-width: 200px;
         padding: 6px 12px;
     }
-    
+
     .login-btn {
         padding: 8px 16px;
     }
-    
+
     .booking-widget {
         padding: 30px 0;
     }
-    
+
     .booking-content {
         padding: 20px;
     }
-    
+
     .trip-type-section {
         flex-direction: column;
         gap: 20px;
         align-items: flex-start;
     }
-    
+
     .route-inputs {
         flex-direction: row;
         gap: 8px;
         padding: 15px;
     }
-    
+
     .airport-input {
         padding: 12px;
         min-height: 55px;
     }
-    
+
     .airport-code {
         margin-bottom: 2px;
     }
-    
+
     .swap-route-btn {
         width: 30px;
         height: 30px;
         transform: none;
     }
-    
+
     .booking-details {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .date-section,
     .passenger-section,
     .class-section,
@@ -1289,62 +1289,62 @@ footer {
         flex: none;
         width: 100%;
     }
-    
+
     .status-options {
         flex-wrap: wrap;
     }
-    
+
     .status-btn {
         flex: 1 1 calc(50% - 1px);
         border-radius: 0;
     }
-    
+
     .status-btn:first-child {
         border-radius: 8px 0 0 0;
     }
-    
+
     .status-btn:nth-child(2) {
         border-radius: 0 8px 0 0;
     }
-    
+
     .status-btn:nth-child(3) {
         border-radius: 0 0 0 8px;
     }
-    
+
     .status-btn:last-child {
         border-radius: 0 0 8px 0;
     }
-    
+
     .banner-slider {
         height: 400px;
     }
-    
+
     .slide-content {
         padding: 20px;
     }
-    
+
     .destination-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .news-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .footer-top {
         flex-direction: column;
         gap: 40px;
     }
-    
+
     .footer-nav {
         flex-wrap: wrap;
         gap: 30px;
     }
-    
+
     .footer-nav-column {
         flex: 0 0 calc(50% - 15px);
     }
-    
+
     .dropdown-menu {
         display: flex;
         min-width: 320px;
@@ -1355,18 +1355,18 @@ footer {
         max-height: 70vh;
         overflow-y: auto;
     }
-    
+
     .nav-item::after {
         top: 100%;
         height: 15px;
     }
-    
+
     .nav-item:hover .dropdown-menu {
         opacity: 1;
         visibility: visible;
         transform: translateX(-50%) translateY(0);
     }
-    
+
     .dropdown-column:last-child {
         grid-column: unset;
     }
@@ -1470,7 +1470,7 @@ footer {
         padding: 25px;
         flex-wrap: nowrap !important;
     }
-    
+
     .dropdown-column {
         min-width: 0;
         width: 100% !important;
@@ -1487,7 +1487,7 @@ footer {
         padding: 25px;
         flex-wrap: nowrap !important;
     }
-    
+
     .dropdown-column {
         width: 100% !important;
         min-width: 0;
@@ -1564,4 +1564,4 @@ footer {
 
 .nav-item:hover .nav-link::after {
     width: 100%;
-} 
+}

@@ -7,14 +7,13 @@
     <!-- 웹페이지 최소 너비 576px 보장을 위한 추가 메타 태그 -->
     <meta name="format-detection" content="telephone=no">
     <title>항공사 웹사이트</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- 모듈화된 헤더 포함 -->
-	<jsp:include page="header.jsp" />
-
+    <jsp:include page="header.jsp" />
 
     <section class="booking-widget">
         <div class="container">
@@ -380,7 +379,6 @@
     <!-- 모듈화된 푸터 포함 -->
     <jsp:include page="footer.jsp" />
 
-    <script src="${pageContext.request.contextPath}/js/script.js"></script>
-    
+    <script src="js/index.js"></script>
 </body>
 </html> 
