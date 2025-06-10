@@ -1,0 +1,21 @@
+# Eclipse workspace settings
+.metadata/
+Servers/
+RemoteSystemsTempFiles/
+.recommenders/
+
+# Maven build output
+/target/
+
+# IDE settings from within the project (if any)
+.settings/
+.project
+.classpath
+
+# Log files
+*.log
+
+# Temp files
+*.tmp
+*~
+/bin/
