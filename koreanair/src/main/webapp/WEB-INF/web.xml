@@ -6,4 +6,30 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    
+    
+  <servlet>
+  <description>MVC 패턴 서블릿</description>
+  <description>컨트롤러 역할</description>
+  <servlet-name>dispatcher</servlet-name>
+  <servlet-class>com.koreanair.controller.ProjectServlet</servlet-class>
+  <init-param>
+   <description>요청 URL = CommandHandler 매칭 설정파일 등록 </description>
+   <param-name>mappingPath</param-name>
+   <param-value>/WEB-INF/projectservice.properties</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+     <servlet-name>dispatcher</servlet-name>
+     <url-pattern>*.wi</url-pattern>
+  </servlet-mapping>
+  
+  <resource-ref>
+ <description>Oracle Datasource example</description>
+ <res-ref-name>jdbc/myoracle</res-ref-name>
+ <res-type>javax.sql.DataSource</res-type>
+ <res-auth>Container</res-auth>
+</resource-ref>
+
 </web-app>
