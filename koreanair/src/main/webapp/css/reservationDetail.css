@@ -1,0 +1,637 @@
+@charset "UTF-8";
+
+/* ================================================================ */
+/* 아래 코드는 새로운 디자인에 맞춰 수정/추가된 스타일입니다. */
+/* ================================================================ */
+
+/* 전체 레이아웃 및 배경 */
+body {
+    background-color: #f4f7fb;
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+main.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 15px;
+}
+
+/* ==================== [수정된 상단 헤더 영역] ==================== */
+.detail-header-bg {
+    background: linear-gradient(120deg, #64b4ff 0%, #bf9fff 50%, #b4d9ff 100%);
+    padding: 48px 0;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.detail-header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    z-index: 2;
+    text-align: left;
+}
+
+.detail-booking-id {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0d2c5a;
+    margin-bottom: 8px;
+}
+
+.booking-id-value {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.detail-edit-link {
+    font-size: 15px;
+    color: #0d2c5a;
+    font-weight: 500;
+    text-decoration: none;
+    opacity: 0.9;
+    cursor: pointer;
+}
+.detail-edit-link:hover {
+    text-decoration: underline;
+}
+
+.detail-edit-link i {
+    font-size: 13px;
+    margin-left: 4px;
+}
+/* ==================== [수정된 코드 블록 끝] ==================== */
+
+
+/* 메인 카드 (기존 JSP 구조에 맞게 유지) */
+.detail-main-card {
+    max-width: 1100px; /* 컨테이너 전체 너비 사용 */
+    margin: 0 auto;
+    background: transparent; /* 배경 없음 */
+    box-shadow: none; /* 그림자 없음 */
+    padding: 0;
+}
+
+/* 신규 여정 카드 전체 */
+.journey-card-outer {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #d9e2eb;
+    box-shadow: 0 4px 16px rgba(0, 37, 108, 0.05);
+    overflow: hidden;
+    margin-top: 0; /* detail-main-card 안으로 들어갔으므로 margin 제거 */
+}
+
+.journey-card-header {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 12px 20px;
+    border-bottom: 1px solid #d9e2eb;
+}
+
+.journey-badge {
+    background-color: #5d6d85;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.journey-route {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-left: 16px;
+}
+
+.journey-route .fa-arrow-right-long,
+.journey-route .fa-arrow-right { /* → 기호 대신 아이콘 사용 대비 */
+    font-size: 14px;
+    margin: 0 8px;
+}
+
+.journey-arrow {
+    margin-left: auto;
+    color: #5d6d85;
+    font-size: 18px;
+}
+
+/* 카드 본문 (2단 레이아웃) */
+.journey-card-body {
+    display: flex;
+    padding: 32px 24px;
+    gap: 32px;
+}
+
+.journey-details-left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.journey-services-right {
+    flex: 1;
+    min-width: 280px;
+}
+
+/* 왼쪽 컬럼: 항공편 상세 */
+.journey-date { /* 클래스명은 유지하되, 스타일은 신규 디자인에 맞게 재정의 */
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 24px;
+    /* 기존 스타일 제거: min-width, background, border-right, padding, align-items */
+}
+
+.flight-path-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.flight-time-location {
+    text-align: center;
+}
+
+.flight-time-location .time {
+    font-size: 36px;
+    font-weight: 700;
+    color: #111;
+}
+
+.flight-time-location .city {
+    font-size: 15px;
+    color: #555;
+    margin-top: 4px;
+}
+
+.flight-time-location .airport-code {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 2px;
+}
+
+.flight-path-graphic {
+    flex: 1;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.flight-path-graphic .duration {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.path-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.path-line .line {
+    flex: 1;
+    height: 1px;
+    background-color: #a7b7cc;
+}
+
+.path-line .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid #a7b7cc;
+    background-color: #fff;
+}
+
+.path-line i.fa-plane-up {
+    color: #5d6d85;
+    font-size: 20px;
+    transform: rotate(90deg);
+    margin: 0 10px;
+}
+
+.checkin-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 32px 0;
+}
+
+.checkin-btn { /* 클래스명은 유지하되, 스타일은 신규 디자인에 맞게 재정의 */
+    background-color: #fff;
+    border: 1px solid #5d6d85;
+    color: #333;
+    padding: 10px 40px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkin-btn:hover {
+    background-color: #5d6d85;
+    color: #fff;
+    border-color: #5d6d85;
+}
+
+.flight-extra-info {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: auto; /* 하단에 고정 */
+}
+
+/* 오른쪽 컬럼: 좌석 및 서비스 */
+.services-box {
+    border: 1px solid #e9eff5;
+    border-radius: 8px;
+    height: 100%;
+    padding: 24px;
+}
+
+.services-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+.service-items {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.service-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.service-item i {
+    font-size: 28px;
+    color: #5d6d85;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.service-item:hover i {
+    background-color: #0064de;
+    color: #fff;
+}
+
+.service-item:hover span {
+    color: #0064de;
+}
+
+/* ================================================================ */
+/* 아래 코드는 기존 CSS에서 그대로 유지되는 스타일입니다. */
+/* ================================================================ */
+
+/* 탑승객 정보 */
+.section-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    margin: 48px auto 0 auto;
+    /* max-width: 1300px; 기존 너비 삭제 -> main.container에 맞춤 */
+    padding: 0 0 32px 0;
+    border: 1.5px solid #d9e2eb; /* 테두리 색상 통일 */
+    position: relative;
+}
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #102060;
+    padding: 32px 40px 0 40px; /* 패딩값 조정 */
+    position: relative;
+    letter-spacing: -1px;
+    display: flex;
+    justify-content: space-between;
+}
+.section-toggle {
+    /* position, right, top 속성 제거 -> flex로 정렬 */
+    font-size: 20px;
+    color: #233e8b;
+    cursor: pointer;
+}
+.section-divider {
+    border-bottom: 1px solid #e9eff5; /* 구분선 스타일 통일 */
+    margin: 18px 40px 0 40px; /* 패딩값 조정 */
+}
+.passenger-table {
+    width: calc(100% - 80px); /* 패딩값에 맞게 너비 조정 */
+    margin: 24px auto 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fafbfc;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    border: 1px solid #e9eff5; /* 테이블 테두리 추가 */
+}
+.passenger-row {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+}
+.passenger-row:last-child {
+    border-bottom: none;
+}
+.passenger-row-header {
+    background: #f4f7fb;
+    font-weight: 700;
+    font-size: 15px; /* 폰트 크기 조정 */
+}
+.passenger-row-header2 {
+    background: #fff;
+    font-weight: 700;
+    font-size: 14px; /* 폰트 크기 조정 */
+}
+.passenger-cell {
+    flex: 1;
+    padding: 14px; /* 패딩 조정 */
+    display: flex;
+    align-items: center;
+    font-size: 14px; /* 폰트 크기 조정 */
+    color: #333; /* 폰트 색상 조정 */
+    border-right: 1px solid #e5e7eb;
+    min-width: 0;
+    word-break: break-all;
+    gap: 8px; /* 아이콘과 텍스트 간격 */
+}
+.passenger-cell:last-child {
+    border-right: none;
+}
+.passenger-cell.label {
+    color: #102060;
+    font-weight: 700;
+    background: #f8f9fa;
+    justify-content: flex-start;
+    flex: 0 0 180px; /* 라벨 너비 고정 */
+}
+.passenger-cell.value {
+    color: #333;
+    font-weight: 500;
+    background: #fff;
+    justify-content: flex-start;
+    flex-wrap: wrap; /* 내용이 길면 줄바꿈 */
+}
+.strong {
+    font-weight: 700;
+    color: #102060;
+}
+.edit-btn {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-left: 8px;
+    padding: 2px 6px;
+    cursor: pointer;
+    color: #233e8b;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+}
+.edit-btn:hover {
+    background: #233e8b;
+    color: #fff;
+}
+.ticket-link {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #233e8b;
+    background: #fafbfc;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+.ticket-link:hover {
+    background: #233e8b;
+    color: #fff;
+}
+
+
+/* 여행 변경 및 취소 (기존 스타일 유지) */
+.action-section {
+    margin-top: 48px;
+    padding-bottom: 32px;
+}
+.action-btn-row {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    margin-top: 36px;
+    flex-wrap: wrap; /* 화면 작을 때 줄바꿈 */
+}
+.action-btn {
+    flex: 1;
+    max-width: 220px;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 0;
+    background-color: #fafbfc;
+    border-radius: 16px;
+    text-decoration: none;
+    color: #233e8b;
+    font-size: 18px;
+    font-weight: 600;
+    border: 2px solid #233e8b;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.2s;
+}
+.action-btn:hover {
+    background-color: #233e8b;
+    color: #fff;
+}
+.action-btn-icon {
+    font-size: 38px;
+    color: #233e8b;
+    margin-bottom: 12px;
+    transition: color 0.2s;
+}
+.action-btn-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 18px;
+    font-weight: 700;
+}
+.action-btn:hover .action-btn-icon {
+    color: #fff;
+}
+
+/* 추천 상품 (기존 스타일 유지) */
+.detail-recommend-section {
+    max-width: 1100px;
+    margin: 36px auto 0 auto;
+    padding: 0 0 40px 0;
+}
+.detail-recommend-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0064de;
+    margin-bottom: 18px;
+}
+.detail-recommend-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    overflow: hidden;
+    max-width: 340px;
+    border: 1px solid #e9eff5;
+}
+.detail-recommend-img {
+    width: 120px;
+    height: 100px;
+    object-fit: cover;
+}
+.detail-recommend-info {
+    padding: 18px;
+}
+.detail-recommend-info p {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 8px;
+}
+.detail-recommend-info .agoda-logo {
+    width: 60px;
+    margin-top: 8px;
+}
+
+/* 부드러운 애니메이션을 위한 기본 transition 설정 */
+.journey-card-outer .journey-card-body,
+.journey-card-outer .journey-arrow,
+.section-card .passenger-table,
+.section-card .section-divider,
+.section-card .section-toggle {
+    transition: all 0.4s ease;
+}
+
+/* 1. 여정 카드 접기 스타일 */
+.journey-card-outer.is-collapsed .journey-card-body {
+    /* 내용 숨기기 */
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin: 0;
+}
+
+.journey-card-outer.is-collapsed .journey-arrow {
+    /* 화살표 아이콘 회전 */
+    transform: rotate(180deg);
+}
+
+
+/* 2. 탑승객 정보 및 기타 섹션 카드 접기 스타일 */
+.section-card.is-collapsed .passenger-table,
+.section-card.is-collapsed .action-btn-row,
+.section-card.is-collapsed .section-divider {
+    /* 내용 숨기기 */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.section-card.is-collapsed .section-toggle {
+    /* 화살표 아이콘 회전 */
+    transform: rotate(180deg);
+}
+
+.section-card.is-collapsed {
+    /* 접혔을 때 아래쪽 패딩 제거 */
+    padding-bottom: 0;
+}
+
+.section-card.is-collapsed .section-title {
+    /* 접혔을 때 제목 아래쪽 패딩 추가해서 경계선과 간격 유지 */
+    padding-bottom: 32px;
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 900px) {
+    .journey-card-body {
+        flex-direction: column;
+    }
+    .journey-services-right {
+        min-width: 100%;
+    }
+    .passenger-cell.label {
+        flex: 0 0 120px; /* 작은 화면에서 라벨 너비 축소 */
+    }
+    .passenger-row {
+        flex-direction: column; /* 탑승객 정보 세로 정렬 */
+    }
+    .passenger-cell, .passenger-cell.label {
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+    }
+     .passenger-row:last-child .passenger-cell:last-child {
+        border-bottom: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .flight-path-info {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .path-line i.fa-plane-up {
+        transform: rotate(0deg);
+    }
+    .flight-time-location .time {
+        font-size: 28px;
+    }
+    .service-items {
+        justify-content: center;
+    }
+    .section-title, .section-divider {
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .passenger-table {
+        width: calc(100% - 40px);
+    }
+}
+

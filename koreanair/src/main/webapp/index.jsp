@@ -1,18 +1,85 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes">
-    <!-- 웹페이지 최소 너비 576px 보장을 위한 추가 메타 태그 -->
     <meta name="format-detection" content="telephone=no">
     <title>항공사 웹사이트</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <%-- 결과 요약 화면을 위한 CSS 추가 (기존 디자인에 영향 없음) --%>
+    <style>
+        .lookup-result-wrapper { padding: 30px; }
+        .lookup-result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .lookup-status-container { display: flex; align-items: center; gap: 10px; }
+        .lookup-status { font-size: 16px; font-weight: 700; color: #0064de; }
+        .lookup-booking-id { font-size: 14px; color: #fff; background-color: #0064de; padding: 5px 10px; border-radius: 15px; }
+        .lookup-another { font-size: 14px; color: #555; text-decoration: none; }
+        .lookup-another:hover { text-decoration: underline; }
+        .lookup-result-body { display: flex; justify-content: space-between; align-items: center; }
+        .lookup-route-info { display: flex; align-items: center; gap: 20px; }
+        .lookup-route-airports { display: flex; align-items: center; gap: 15px; font-size: 24px; font-weight: 800; }
+        .lookup-route-airports .fa-plane { color: #0064de; font-size: 20px; }
+        .lookup-route-airports .airport-details { line-height: 1.2; }
+        .lookup-route-airports .airport-name { font-size: 14px; font-weight: 400; color: #666; }
+        .lookup-flight-time { font-size: 14px; color: #333; }
+        .lookup-actions .btn-more { background: #60a5fa; color: white; padding: 12px 30px; border-radius: 20px; text-decoration: none; transition: background-color 0.3s; font-weight: 700;}
+        .lookup-actions .btn-more:hover { background-color: #3b82f6; }
+        .lookup-fail-msg { text-align: center; color: red; margin-bottom: 15px; font-weight: 500;}
+    </style>
+        <style>
+        /* 추가된 요약 정보 스타일 */
+        .booking-result-section {
+            padding: 40px 0;
+            background-color: #f8f9fa;
+        }
+        .booking-summary, .booking-error {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .booking-summary h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .booking-summary p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+        .booking-summary .btn-detail {
+            display: inline-block;
+            background-color: #0064de;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .booking-summary .btn-detail:hover {
+            background-color: #0056c0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 100, 222, 0.3);
+        }
+        .booking-error p {
+            font-size: 16px;
+            color: #d93025;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
-    <!-- 모듈화된 헤더 포함 -->
     <jsp:include page="/views/common/header.jsp" />
 
     <section class="booking-widget">
@@ -25,6 +92,7 @@
                     <button class="tab-btn" data-tab="status">출도착/스케줄</button>
                 </div>
                 
+                <%-- 항공권 예매 탭 (기존 코드 그대로 유지) --%>
                 <div class="booking-content active" id="flight">
                     <div class="trip-type-section">
                         <div class="trip-type-buttons">
@@ -95,44 +163,92 @@
                     </div>
                 </div>
                 
+                <%-- 예약 조회 탭 (조건부 렌더링으로 수정된 부분) --%>
                 <div class="booking-content" id="checkin">
-                    <div class="checkin-form">
-                        <div class="form-description">
-                            <p>예약번호 또는 항공권번호</p>
-                        </div>
-                        <div class="checkin-inputs">
-                            <div class="input-group">
-                                <input type="text" placeholder="예) A1B2C3 또는 1801234567890">
+                    <c:choose>
+                        <%-- 조건 1: request 객체에 bookingInfo가 있는 경우 -> 결과 요약 화면 표시 --%>
+                        <c:when test="${not empty bookingInfo}">
+                            <div class="lookup-result-wrapper">
+                                <div class="lookup-result-header">
+                                    <div class="lookup-status-container">
+                                        <span class="lookup-status">구매 완료</span>
+                                        <span class="lookup-booking-id">예약번호 : ${bookingInfo.bookingId}</span>
+                                    </div>
+                                    <a href="${pageContext.request.contextPath}/index.jsp" class="lookup-another">다른 예약 조회 ❯</a>
+                                </div>
+                                <div class="lookup-result-body">
+                                    <div class="lookup-route-info">
+                                        <div class="lookup-route-airports">
+                                            <div class="airport-details">
+                                                <div>${bookingInfo.departureAirportId}</div>
+                                                <div class="airport-name">${bookingInfo.departureAirportName}</div>
+                                            </div>
+                                            <i class="fas fa-plane"></i>
+                                            <div class="airport-details">
+                                                <div>${bookingInfo.arrivalAirportId}</div>
+                                                <div class="airport-name">${bookingInfo.arrivalAirportName}</div>
+                                            </div>
+                                        </div>
+                                        <div class="lookup-flight-time">
+                                            <fmt:formatDate value="${bookingInfo.departureTime}" pattern="yyyy년 MM월 dd일 (E) HH:mm" /> ~ 
+                                            <fmt:formatDate value="${bookingInfo.arrivalTime}" pattern="HH:mm" />
+                                        </div>
+                                    </div>
+                                    <div class="lookup-actions">
+                                        <%-- TODO: '더 보기' 클릭 시 상세 페이지로 이동하는 기능 추가 필요 --%>
+                                        <a href="${pageContext.request.contextPath}/reservationDetail?bookingId=${bookingInfo.bookingId}"
+                                         class="btn-more">더 보기</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="input-group">
-                                <label>출발일</label>
-                                <input type="date">
-                            </div>
-                            <div class="input-group">
-                                <label>성</label>
-                                <input type="text" placeholder="">
-                            </div>
-                            <div class="input-group">
-                                <label>이름</label>
-                                <input type="text" placeholder="">
-                            </div>
-                            <div class="search-section">
-                                <button class="search-flights-btn">조회</button>
-                            </div>
-                        </div>
-                        <div class="form-notice">
-                            <label class="checkbox-label">
-                                <input type="checkbox">
-                                <span class="checkmark"></span>
-                                [필수] 본인의 예약 정보이거나 승객으로부터 조회를 위임 받은 예약 정보입니다.
-                            </label>
-                            <p class="notice-text">국내선 입금 예약인 경우, 입금 상태 여부를 입력하세요.</p>
-                        </div>
-                    </div>
+                        </c:when>
+                        
+                        <%-- 조건 2: bookingInfo가 없는 경우 -> 기본 입력 폼 표시 --%>
+                        <c:otherwise>
+                            <form class="checkin-form" action="lookup" method="POST">
+                                <%-- 조회 실패 시 lookupFailed 플래그가 true일 경우 메시지 표시 --%>
+                                <c:if test="${lookupFailed}">
+                                    <p class="lookup-fail-msg">입력하신 정보와 일치하는 예약 내역을 찾을 수 없습니다.</p>
+                                </c:if>
+                                
+                                <div class="form-description">
+                                    <p>예약번호 또는 항공권번호</p>
+                                </div>
+                                <div class="checkin-inputs">
+                                    <div class="input-group">
+                                        <input type="text" name="bookingId" placeholder="예) B001" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>출발일</label>
+                                        <input type="date" name="departureDate" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>성</label>
+                                        <input type="text" name="lastName" placeholder="예) HONG" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>이름</label>
+                                        <input type="text" name="firstName" placeholder="예) GILDONG" required>
+                                    </div>
+                                    <div class="search-section">
+                                        <button type="submit" class="search-flights-btn">조회</button>
+                                    </div>
+                                </div>
+                                <div class="form-notice">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" required>
+                                        <span class="checkmark"></span>
+                                        [필수] 본인의 예약 정보이거나 승객으로부터 조회를 위임 받은 예약 정보입니다.
+                                    </label>
+                                    <p class="notice-text">국내선 입금 예약인 경우, 입금 상태 여부를 입력하세요.</p>
+                                </div>
+                            </form>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
-                
+				<%-- 체크인 탭 (기존 코드 그대로 유지) --%>
                 <div class="booking-content" id="schedule">
-                    <div class="schedule-form">
+                     <div class="schedule-form">
                         <div class="form-description">
                             <p>예약번호 또는 항공권번호</p>
                         </div>
@@ -169,6 +285,7 @@
                     </div>
                 </div>
                 
+                <%-- 출도착/스케줄 탭 (기존 코드 그대로 유지) --%>
                 <div class="booking-content" id="status">
                     <div class="status-form">
                         <div class="status-options">
@@ -205,6 +322,7 @@
         </div>
     </section>
 
+    <%-- 페이지 하단 컨텐츠 --%>
     <section class="banner">
         <div class="container">
             <div class="banner-slider">
@@ -376,9 +494,8 @@
         </div>
     </section>
 
-    <!-- 모듈화된 푸터 포함 -->
     <jsp:include page="/views/common/footer.jsp" />
 
     <script src="${pageContext.request.contextPath}/js/index.js"></script>
 </body>
-</html> 
+</html>
