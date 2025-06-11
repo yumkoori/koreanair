@@ -1,0 +1,111 @@
+package com.koreanair.model.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import com.koreanair.model.dto.PassengerDTO;
+import com.koreanair.model.dto.ReservationDTO;
+import com.koreanair.util.DBconn2;
+
+public class ReservationDAOImpl implements ReservationDAO {
+
+    // findReservation: 스키마 기반 최종 SQL
+    @Override
+    public ReservationDTO findReservation(String reservationId, String departureDate, String lastName, String firstName) {
+        ReservationDTO reservation = null;
+        String sql = getFinalQuery() + " WHERE b.booking_id = ? AND p.last_name = ? AND p.first_name = ? AND DATE(f.departure_time) = ? GROUP BY b.booking_id";
+
+        try (Connection conn = DBconn2.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, reservationId);
+            pstmt.setString(2, lastName);
+            pstmt.setString(3, firstName);
+            pstmt.setString(4, departureDate);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    reservation = mapResultSetToReservationDTO(rs);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reservation;
+    }
+
+    // findReservationById: 스키마 기반 최종 SQL
+    @Override
+    public ReservationDTO findReservationById(String bookingId) {
+        ReservationDTO reservation = null;
+        String sql = getFinalQuery() + " WHERE b.booking_id = ? GROUP BY b.booking_id";
+
+        try (Connection conn = DBconn2.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, bookingId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    reservation = mapResultSetToReservationDTO(rs);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reservation;
+    }
+    
+    // 중복 제거를 위한 최종 쿼리 생성 메소드
+    private String getFinalQuery() {
+        return "SELECT "
+             + "    b.booking_id, "
+             + "    f.flight_id, f.departure_time, f.arrival_time, "
+             + "    p.last_name, p.first_name, "
+             + "    u.phone, u.email, u.user_id AS member_id, "
+             + "    sc.class_name AS cabin_class, "
+             + "    da.airport_id AS departure_airport_id, da.airport_name AS departure_airport_name, "
+             + "    aa.airport_id AS arrival_airport_id, aa.airport_name AS arrival_airport_name "
+             + "FROM booking b "
+             + "JOIN flight f ON b.flight_id = f.flight_id "
+             + "JOIN passenger p ON b.booking_id = p.booking_id "
+             + "JOIN users u ON p.user_no = u.user_no "
+             + "JOIN airport da ON f.departure_airport_id = da.airport_id "
+             + "JOIN airport aa ON f.arrival_airport_id = aa.airport_id "
+             + "LEFT JOIN booking_seat bs ON b.booking_id = bs.booking_id "
+             + "LEFT JOIN flight_seat fs ON bs.flight_seat_id = fs.seat_id "
+             + "LEFT JOIN seat_class sc ON fs.class_id = sc.class_id";
+    }
+
+    // 최종 DTO 매핑 로직
+    private ReservationDTO mapResultSetToReservationDTO(ResultSet rs) throws Exception {
+        ReservationDTO reservation = new ReservationDTO();
+        
+        // 스키마에 존재하는 필드 매핑
+        reservation.setBookingId(rs.getString("booking_id"));
+        reservation.setFlightId(rs.getString("flight_id"));
+        reservation.setFlightName(rs.getString("flight_id")); // 편명은 flight_id로 대체
+        reservation.setDepartureTime(rs.getTimestamp("departure_time"));
+        reservation.setArrivalTime(rs.getTimestamp("arrival_time"));
+        reservation.setLastName(rs.getString("last_name"));
+        reservation.setFirstName(rs.getString("first_name"));
+        reservation.setPhone(rs.getString("phone"));
+        reservation.setEmail(rs.getString("email"));
+        reservation.setMemberId(rs.getString("member_id"));
+        reservation.setCabinClass(rs.getString("cabin_class"));
+        reservation.setDepartureAirportId(rs.getString("departure_airport_id"));
+        reservation.setDepartureAirportName(rs.getString("departure_airport_name"));
+        reservation.setArrivalAirportId(rs.getString("arrival_airport_id"));
+        reservation.setArrivalAirportName(rs.getString("arrival_airport_name"));
+        
+        // 스키마에 존재하지 않는 필드는 null로 유지됨 (기본값)
+        // reservation.setAircraftType(null);
+        // reservation.setTicketNumber(null);
+        
+        return reservation;
+    }
+
+    @Override
+    public void insertReservation(ReservationDTO reservation) { /* 미구현 */ }
+    @Override
+    public void insertPassenger(PassengerDTO passenger) { /* 미구현 */ }
+    @Override
+    public void updateReservation(ReservationDTO reservation) { /* 미구현 */ }
+    @Override
+    public void cancelReservation(String reservationId) { /* 미구현 */ }
+}
