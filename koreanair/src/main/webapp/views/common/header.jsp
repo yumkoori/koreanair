@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.koreanair.model.dto.User" %>
 <header>
     <div class="header-top">
         <div class="container">
@@ -18,10 +19,29 @@
                     <span>대한민국 - 한국어</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <a href="#" class="top-link">
-                    <i class="fas fa-user"></i>
-                    회원가입
-                </a>
+                <%
+                    // 세션에서 사용자 정보 확인
+                    User user = (User) session.getAttribute("user");
+                    if (user != null) {
+                %>
+                    <span class="top-link user-info">
+                        <i class="fas fa-user"></i>
+                        <%= user.getKoreanName() %>님
+                    </span>
+                    <a href="logout.do" class="top-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        로그아웃
+                    </a>
+                <%
+                    } else {
+                %>
+                    <a href="registerForm.do" class="top-link">
+                        <i class="fas fa-user-plus"></i>
+                        회원가입
+                    </a>
+                <%
+                    }
+                %>
             </div>
         </div>
     </div>
@@ -167,7 +187,17 @@
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
-                <button class="login-btn">로그인</button>
+                <%
+                    if (user != null) {
+                %>
+                    <a href="dashboard.do" class="login-btn">마이페이지</a>
+                <%
+                    } else {
+                %>
+                    <a href="loginForm.do" class="login-btn">로그인</a>
+                <%
+                    }
+                %>
             </div>
         </div>
     </div>

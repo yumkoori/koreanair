@@ -272,6 +272,12 @@ header.scrolled {
     box-shadow: 0 4px 12px rgba(0, 100, 222, 0.3);
 }
 
+.user-info {
+    color: #0064de;
+    font-weight: 500;
+    pointer-events: none;
+}
+
 /* 예약 위젯 스타일 */
 .booking-widget {
     background: linear-gradient(135deg, #87CEEB 0%, #FFB6C1 100%);
