@@ -1,3 +1,5 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -27,7 +29,6 @@
         aspect-ratio: 1 / 1; 
         background-color: #338fff; 
         color: white; 
-        /* font-size: 10px; */ /* 내부 span에서 개별 지정 */
         text-align: center; 
         display: flex; 
         flex-direction: column; 
@@ -60,8 +61,8 @@
         display: block; 
     }
     .seat .seat-price-display {
-        font-size: 9px; /* 가격 표시 폰트 크기 */
-        color: #FFA500; /* 가격 표시 색상 주황색으로 변경 */
+        font-size: 9px;
+        color: #FFA500;
         margin-top: 0px; 
         display: block; 
         font-weight: normal;
@@ -174,7 +175,7 @@
             border-radius: 3px;
         }
         .seat .seat-letter { font-size: 8px; } 
-        .seat .seat-price-display { font-size: 8px; color: #FFA500; } /* 모바일 가격 표시 크기 및 주황색 */
+        .seat .seat-price-display { font-size: 8px; color: #FFA500; }
 
         .seat-removed { width: 10%; margin: 1px;}
         .aisle { width: 3%; }
@@ -427,20 +428,12 @@
                             </div>
                             <button id="applyPriceButton" class="btn btn-primary btn-sm" style="width: 100%; margin-top: 10px;">선택 좌석 가격 적용</button>
                             <button id="saveSelectedSeatsButton" class="btn btn-success btn-sm" style="width: 100%; margin-top: 10px;">선택 내용 DB 저장 (준비)</button>
+                            <button id="loadSeatsButton" class="btn btn-info btn-sm" style="width: 100%; margin-top: 10px;">저장된 좌석 불러오기</button>
                         </div>
                     </div>
 
                     {/* --- 좌석 배치도 생성 및 제어 스크립트 --- */}
                     <script>
-                        /**
-                         * @file 항공기 좌석 관리 페이지 스크립트
-                         * @description 항공기 모델별 좌석 배치도를 렌더링하고, 좌석 선택 및 가격 설정을 관리합니다.
-                         */
-
-                        /**
-                         * 항공기 모델별 좌석 레이아웃 및 기타 정보를 담고 있는 객체입니다.
-                         * @type {Object<string, Object>}
-                         */
                         const aircraftData = {
                             "model1": {
                                 name: "보잉 787-9 (기본형)",
@@ -451,7 +444,7 @@
                                     { startRow: 28, endRow: 43, info: "Economy Class (Rows 28-43)", removedSeats: { 28: ['A','B','C'], 43: ['D','E','F'] } },
                                     { startRow: 44, endRow: 57, info: "Economy Class (Rows 44-57)", removedSeats: { 44: ['C','G','D','E','F'], 45: ['D','E','F'], 57: ['A','J'] } }
                                 ],
-                                frontFacilitiesHTML: `<div class="facility-row"> <div class="facility-group"> <span class="facility-item">🍽</span> <span class="facility-item">🍽</span> </div> </div><div class="facility-row"> <div class="facility-group"> <span class="facility-item exit-facility" style="margin-left: 20px;">EXIT</span> </div> <div class="facility-group"> <span class="facility-item">🍽</span> </div> <div class="facility-group"> <span class="facility-item">🚻♿</span> <span class="facility-item exit-facility style="margin-right: 20px; ">EXIT</span> </div> </div>`,
+                                frontFacilitiesHTML: `<div class="facility-row"> <div class="facility-group"> <span class="facility-item">🍽</span> <span class="facility-item">🍽</span> </div> </div><div class="facility-row"> <div class="facility-group"> <span class="facility-item exit-facility" style="margin-left: 20px;">EXIT</span> </div> <div class="facility-group"> <span class="facility-item">🍽</span> </div> <div class="facility-group"> <span class="facility-item">🚻♿</span> <span class="facility-item exit-facility" style="margin-right: 20px;">EXIT</span> </div> </div>`,
                                 prestigeEndFacilitiesHTML: `<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻♿</span></div> <div class="facility-group"><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div>`,
                                 economy1EndFacilitiesHTML: `<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻♿</span><span class="facility-item">🚻</span></div> <div class="facility-group"><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div>`,
                                 rearFacilitiesHTML: `<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻</span></div> <div class="facility-group"><span class="facility-item">🍽</span><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div><div class="facility-row"> <div class="facility-group"> <span class="facility-item">🍽</span> <span class="facility-item">🍽</span> </div> </div>`
@@ -459,22 +452,9 @@
                             "model2": { name: "다른 기종 (준비중)" }
                         };
 
-                        /**
-                         * 현재 UI에서 선택(하이라이트)된 좌석 정보를 임시로 저장하는 Map 객체입니다.
-                         * '가격 적용' 버튼 클릭 시 이 Map의 내용은 seatsReadyForDB로 옮겨지고, 이 Map은 초기화됩니다.
-                         * @type {Map<string, {row: string, seat: string, price: number | null}>}
-                         */
                         let selectedSeatsMap = new Map();
-
-                        /**
-                         * 최종적으로 DB에 저장될 좌석 및 가격 정보를 누적하는 배열입니다.
-                         * @type {Array<{aircraft: string, row: string, seat: string, price: number | null}>}
-                         */
                         let seatsReadyForDB = [];
 
-                        /**
-                         * 우측 패널에 현재 선택된 좌석 목록(`selectedSeatsMap` 기준)을 업데이트합니다.
-                         */
                         function updateSelectedSeatsDisplay() {
                             const selectedSeatInfoDiv = document.getElementById('selectedSeatInfo');
                             if (!selectedSeatInfoDiv) {
@@ -487,16 +467,13 @@
                             }
                             let listHtml = '<ul>'; 
                             selectedSeatsMap.forEach((details, key) => {
-                                listHtml += `<li>${details.row}열 ${details.seat}석</li>`;
+                                // FIXED
+                                listHtml += `<li>\${details.row}열 \${details.seat}석</li>`;
                             });
                             listHtml += '</ul>';
                             selectedSeatInfoDiv.innerHTML = listHtml;
                         }
                         
-                        /**
-                         * 현재 선택된 모든 좌석 정보(UI 하이라이트, selectedSeatsMap, 가격 입력 필드)를 초기화합니다.
-                         * seatsReadyForDB 배열은 이 함수에서 건드리지 않습니다.
-                         */
                         function resetSelectedSeats() {
                             selectedSeatsMap.clear(); 
                             const highlightedSeats = document.querySelectorAll('#airplaneContainer .seat.seat-selected-highlight');
@@ -508,10 +485,6 @@
                             console.log('Current seat selections and price input have been reset.');
                         }
 
-                        /**
-                         * 지정된 항공기 모델에 따라 좌석 배치도를 그리고, 관련 상태를 초기화합니다.
-                         * @param {string} modelKey - aircraftData 객체의 키값.
-                         */
                         function renderAircraft(modelKey) {
                             const airplaneDiv = document.getElementById("airplaneContainer");
                             if (!airplaneDiv) { console.error("Airplane container div ('airplaneContainer') not found!"); return; }
@@ -528,12 +501,9 @@
                             seatsReadyForDB = []; 
                             console.log("Aircraft model changed, seatsReadyForDB has been reset.");
 
-                            // 이전에 설정된 가격이 있는 좌석 정보를 seatsReadyForDB에서 찾아 UI에 복원
-                            // (현재는 renderAircraft 시 seatsReadyForDB가 초기화되므로 이 로직은 불필요.
-                            //  만약 기종 변경 시에도 seatsReadyForDB를 유지하고 싶다면, 이 부분에 복원 로직 추가)
-
                             if (modelKey === "model2" || !model.prestigeLayout) {
-                                htmlContent = `<p style="text-align:center; padding: 20px;">${(modelKey === "model2") ? `${selectedOptionText}의 좌석 배치도는 현재 준비 중입니다.` : '좌석 배치도 정보를 불러올 수 없습니다.'}</p>`;
+                                // FIXED
+                                htmlContent = `<p style="text-align:center; padding: 20px;">\${(modelKey === "model2") ? `\${selectedOptionText}의 좌석 배치도는 현재 준비 중입니다.` : '좌석 배치도 정보를 불러올 수 없습니다.'}</p>`;
                                 airplaneDiv.innerHTML = htmlContent;
                                 return;
                             }
@@ -541,35 +511,29 @@
                             htmlContent += model.frontFacilitiesHTML || '';
                             htmlContent += '<div class="section-divider"></div><p class="info-text">Prestige Class</p>';
                             model.prestigeRows.forEach(r => {
-                                htmlContent += `<div class="visual-seat-row"><div class="row-number">${r}</div><div class="row">`;
+                                // FIXED
+                                htmlContent += `<div class="visual-seat-row"><div class="row-number">\${r}</div><div class="row">`;
                                 model.prestigeLayout.forEach(c => { 
-                                    // seatsReadyForDB에서 현재 좌석의 가격 정보 확인 (기종 변경 후에도 가격 유지 위함 - 현재 로직에서는 불필요)
-                                    // const seatKey = `${r}-${c}`;
-                                    // const existingSeatData = seatsReadyForDB.find(s => s.aircraft === model.name && s.row == r && s.seat === c);
-                                    let seatDisplayContent = `<span class="seat-letter">${c}</span>`;
-                                    // if (existingSeatData && typeof existingSeatData.price === 'number') {
-                                    //     seatDisplayContent += `<span class="seat-price-display">${existingSeatData.price.toLocaleString()}</span>`;
-                                    // }
-                                    htmlContent += (c === ' ') ? '<div class="aisle"></div>' : `<div class="seat" data-row="${r}" data-seat="${c}">${seatDisplayContent}</div>`; 
+                                    let seatDisplayContent = `<span class="seat-letter">\${c}</span>`;
+                                    // FIXED
+                                    htmlContent += (c === ' ') ? '<div class="aisle"></div>' : `<div class="seat" data-row="\${r}" data-seat="\${c}">\${seatDisplayContent}</div>`; 
                                 });
                                 htmlContent += '</div></div>';
                             });
                             htmlContent += model.prestigeEndFacilitiesHTML || '';
                             model.economySections.forEach((section, index) => {
-                                htmlContent += `<div class="section-divider"></div><p class="info-text">${section.info}</p>`;
+                                // FIXED
+                                htmlContent += `<div class="section-divider"></div><p class="info-text">\${section.info}</p>`;
                                 for (let r = section.startRow; r <= section.endRow; r++) {
-                                    htmlContent += `<div class="visual-seat-row"><div class="row-number">${r}</div><div class="row">`;
+                                    // FIXED
+                                    htmlContent += `<div class="visual-seat-row"><div class="row-number">\${r}</div><div class="row">`;
                                     model.economyLayout.forEach(c => {
                                         if (c === ' ') { htmlContent += '<div class="aisle"></div>'; }
                                         else {
                                             let isRemoved = (section.removedSeats && section.removedSeats[r] && section.removedSeats[r].includes(c));
-                                            // const seatKey = `${r}-${c}`;
-                                            // const existingSeatData = seatsReadyForDB.find(s => s.aircraft === model.name && s.row == r && s.seat === c);
-                                            let seatDisplayContent = `<span class="seat-letter">${c}</span>`;
-                                            // if (existingSeatData && typeof existingSeatData.price === 'number') {
-                                            //    seatDisplayContent += `<span class="seat-price-display">${existingSeatData.price.toLocaleString()}</span>`;
-                                            // }
-                                            htmlContent += isRemoved ? '<div class="seat-removed"></div>' : `<div class="seat" data-row="${r}" data-seat="${c}">${seatDisplayContent}</div>`;
+                                            let seatDisplayContent = `<span class="seat-letter">\${c}</span>`;
+                                            // FIXED
+                                            htmlContent += isRemoved ? '<div class="seat-removed"></div>' : `<div class="seat" data-row="\${r}" data-seat="\${c}">\${seatDisplayContent}</div>`;
                                         }
                                     });
                                     htmlContent += '</div></div>';
@@ -579,30 +543,24 @@
                             htmlContent += model.rearFacilitiesHTML || '';
                             airplaneDiv.innerHTML = htmlContent;
 
-                            // 기종 변경 후, seatsReadyForDB에 있는 현재 기종의 좌석 가격을 UI에 다시 표시
-                            // (renderAircraft에서 seatsReadyForDB를 초기화하므로, 이 로직은 기종 변경시 가격 유지 정책이 있을 경우에만 필요)
                             seatsReadyForDB.forEach(dbSeat => {
-                                if (dbSeat.aircraft === aircraftModelName) { // aircraftData[modelKey].name으로 비교해야 더 정확
-                                    const seatElement = document.querySelector(`.seat[data-row="${dbSeat.row}"][data-seat="${dbSeat.seat}"]`);
+                                if (dbSeat.aircraft === aircraftData[modelKey].name) { 
+                                    const seatElement = document.querySelector(`.seat[data-row="\${dbSeat.row}"][data-seat="\${dbSeat.seat}"]`);
                                     if (seatElement && typeof dbSeat.price === 'number') {
-                                        seatElement.innerHTML = `<span class="seat-letter">${dbSeat.seat}</span><span class="seat-price-display">${dbSeat.price.toLocaleString()}</span>`;
+                                        // FIXED
+                                        seatElement.innerHTML = `<span class="seat-letter">\${dbSeat.seat}</span><span class="seat-price-display">\${dbSeat.price.toLocaleString()}</span>`;
                                     }
                                 }
                             });
-
                         }
 
-                        /**
-                         * 좌석 클릭 이벤트를 처리합니다. 
-                         * @param {Event} event - 클릭 이벤트 객체.
-                         */
                         function handleSeatClick(event) {
                             const targetSeatElement = event.target.closest('.seat'); 
 
                             if (targetSeatElement && !targetSeatElement.classList.contains('seat-removed')) {
                                 const seatLetter = targetSeatElement.dataset.seat;
                                 const rowNumber = targetSeatElement.dataset.row;
-                                const seatKey = `${rowNumber}-${seatLetter}`; 
+                                const seatKey = `\${rowNumber}-\${seatLetter}`; 
 
                                 if (selectedSeatsMap.has(seatKey)) { 
                                     selectedSeatsMap.delete(seatKey);
@@ -615,9 +573,6 @@
                             }
                         }
 
-                        /**
-                         * "선택 좌석 가격 적용" 버튼 로직
-                         */
                         function applyPriceToSelectedSeats() {
                             const priceInput = document.getElementById('seatPriceInput');
                             const priceValue = parseInt(priceInput.value, 10);
@@ -657,14 +612,19 @@
                                 }
                                 appliedCount++;
 
-                                const seatElement = document.querySelector(`.seat[data-row="${details.row}"][data-seat="${details.seat}"]`);
+                                const seatElement = document.querySelector(`.seat[data-row="\${details.row}"][data-seat="\${details.seat}"]`);
                                 if (seatElement) {
-                                    seatElement.innerHTML = `<span class="seat-letter">${details.seat}</span><span class="seat-price-display">${priceValue.toLocaleString()}</span>`;
+                                    // FIXED
+                                    seatElement.innerHTML = `<span class="seat-letter">\${details.seat}</span><span class="seat-price-display">\${priceValue.toLocaleString()}</span>`;
                                 }
                             });
+                            
+
+                            
 
                             if (appliedCount > 0) {
-                                alert(`${appliedCount}개 좌석에 ${priceValue.toLocaleString()}원이 적용(UI 표시)되었으며, 저장 대기 중입니다.`);
+                                // FIXED
+                                alert(`\${appliedCount}개 좌석에 \${priceValue.toLocaleString()}원이 적용(UI 표시)되었으며, 저장 대기 중입니다.`);
                             }
                             
                             resetSelectedSeats(); 
@@ -672,28 +632,101 @@
                             console.log("좌석 최종 저장 대기 목록 (seatsReadyForDB):", JSON.parse(JSON.stringify(seatsReadyForDB)));
                         }
 
-                        /**
-                         * "선택 내용 DB 저장 (준비)" 버튼 로직
-                         */
                         function prepareSaveSelectedSeats() {
                             if (seatsReadyForDB.length === 0) {
-                                alert('DB에 저장할 좌석 정보가 없습니다. 먼저 좌석을 선택하고 가격을 적용해주세요.');
+                                alert('DB에 저장할 좌석 정보가 없습니다.');
                                 return;
                             }
-                            console.log("DB에 저장할 최종 좌석 정보:", seatsReadyForDB);
-                            alert(`총 ${seatsReadyForDB.length}개의 좌석 정보가 DB 저장 준비되었습니다. (콘솔 확인)`);
-                            // 실제 백엔드 전송 로직은 여기에...
+
+                            const contextPath = "${pageContext.request.contextPath}";
+                            const url = `\${contextPath}/seatsave.wi`;
+                            const jsonData = JSON.stringify(seatsReadyForDB);
+
+                            fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: jsonData,
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    // 서버가 4xx, 5xx 에러를 보냈을 경우
+                                    throw new Error(`서버 에러 발생! 상태: \${response.status}`);
+                                }
+                                // 서버 응답을 JSON 객체로 바로 파싱하여 다음 then으로 넘깁니다.
+                                return response.json(); 
+                            })
+                            .then(data => {
+                                // 'data'는 서버가 보낸 JSON이 변환된 자바스크립트 객체입니다.
+                                // 예: { status: 'success', message: '8개의 좌석...', savedCount: 8 }
+                                console.log('서버로부터 받은 데이터:', data);
+
+                                // 서버가 보낸 메시지를 그대로 alert 창에 보여줍니다.
+                                alert(data.message); 
+
+                                if (data.status === 'success') {
+                                    // 성공했을 때만 페이지를 새로고침합니다.
+                                    location.reload();
+                                }
+                            })
+                            .catch(error => {
+                                // 네트워크 통신 자체에 실패했거나, 위에서 throw된 에러를 처리합니다.
+                                console.error('Fetch 요청 최종 실패:', error);
+                                alert('요청 처리 중 문제가 발생했습니다.');
+                            });
+                        }
+                        
+                        function loadSavedSeats() {
+                            alert("버튼 클릭 실행 성공!");
+                            const aircraftElement = document.getElementById('aircraftModelName');
+                            const aircraftName = aircraftElement.textContent;
+
+                            // 2. 기본 URL과 파라미터 이름을 정합니다.
+                            const contextPath = "${pageContext.request.contextPath}";
+                            const baseUrl = `\${contextPath}/seatload.wi`;
+                            const paramName = 'aircraft'; // 서버에서 request.getParameter()로 받을 이름
+
+                            // 3. URLSearchParams로 안전하게 전체 URL을 만듭니다.
+                            const params = new URLSearchParams();
+                            params.append(paramName, aircraftName); // "이름=값" 형태로 파라미터를 추가합니다.
+
+                            const finalUrl = `\${baseUrl}?${params.toString()}`;
+
+                            console.log("최종 요청 URL:", finalUrl); // F12 콘솔에서 확인해보세요.
+                            
+                            fetch(url) // GET 요청은 URL만 넘겨주면 됩니다.
+                            .then(response => {
+                                // 1. HTTP 응답 상태를 확인합니다. (성공: 200~299)
+                                if (!response.ok) {
+                                    // 서버가 에러 코드를 응답한 경우, 여기서 에러를 발생시켜 catch 블록으로 보냅니다.
+                                    throw new Error(`서버 에러 발생! 상태: ${response.status}`);
+                                }
+                                
+                                // 2. 서버가 보낸 응답을 JSON 객체로 파싱합니다.
+                                return response.json();
+                            })
+                            .then(userData => {
+                                // 3. 성공적으로 받은 데이터(JSON이 변환된 자바스크립트 객체)를 사용합니다.
+                                console.log('성공적으로 받은 사용자 데이터:', userData);
+                                
+                                // 예: 화면에 사용자 이름 표시
+                                // document.getElementById('username').textContent = userData.name;
+                            })
+                            .catch(error => {
+                                // 4. 네트워크 오류 또는 위 .then() 블록에서 throw된 에러를 처리합니다.
+                                console.error('요청 실패:', error);
+                                alert('데이터를 불러오는 데 실패했습니다.');
+                            });
                         }
 
-                        /**
-                         * DOMContentLoaded 이벤트 발생 시 초기화 및 이벤트 리스너를 설정합니다.
-                         */
                         document.addEventListener('DOMContentLoaded', function() {
                             const selector = document.getElementById('aircraftSelector');
                             const airplaneContainer = document.getElementById('airplaneContainer');
                             const applyPriceBtn = document.getElementById('applyPriceButton');
                             const saveButton = document.getElementById('saveSelectedSeatsButton');
                             const resetButton = document.getElementById('resetSelectedSeatsButton'); 
+                            const loadButton = document.getElementById('loadSeatsButton');
 
                             if (selector) {
                                 selector.addEventListener('change', function() { renderAircraft(this.value); });
@@ -722,6 +755,13 @@
                             } else {
                                 console.error("Reset selected seats button not found!");
                             }
+                            if (loadButton) {
+                                console.log('불러오기 버튼을 성공적으로 찾았습니다.');
+                                loadButton.addEventListener('click', loadSavedSeats);
+                            } else {
+                                console.error('ID가 "loadSeatsButton"인 버튼을 찾을 수 없습니다!');
+                            }
+
                         });
                     </script>
                 </div>

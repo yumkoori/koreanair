@@ -34,7 +34,7 @@ public class ProjectServlet extends HttpServlet {
 		// System.out.println("> DispatcherServlet.destroy()...");
 	}
 	
-    // Map ¼±¾ğ : key=url, value=¸ğµ¨ °´Ã¼¸¦ »ı¼ºÇØ¼­
+    // Map ï¿½ï¿½ï¿½ï¿½ : key=url, value=ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½
 	public Map<String, CommandHandler> commandHandlerMap = new HashMap<>();
 	
 	public void init(ServletConfig config) throws ServletException {
@@ -57,6 +57,7 @@ public class ProjectServlet extends HttpServlet {
 		while( ir.hasNext() ) {
 			Entry<Object, Object> entry = ir.next();
 			String url = (String)entry.getKey();  // board/list.do
+			System.out.println("ë§µì— ë“±ë¡ ì‹œë„í•˜ëŠ” Key: [" + url + "]");
 			String fullName = (String)entry.getValue();  // days08.mvc.command.ListHandler
 			
 			Class<?> commandHandlerClass = null;
@@ -64,7 +65,7 @@ public class ProjectServlet extends HttpServlet {
 	            commandHandlerClass = Class.forName(fullName);
 	            try {
 	               CommandHandler handler = (CommandHandler) commandHandlerClass.newInstance();
-	               this.commandHandlerMap.put(url, handler); // ¸Ê Ãß°¡
+	               this.commandHandlerMap.put(url, handler); // ï¿½ï¿½ ï¿½ß°ï¿½
 	            } catch (InstantiationException e) { 
 	               e.printStackTrace();
 	            } catch (IllegalAccessException e) { 
@@ -81,18 +82,19 @@ public class ProjectServlet extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		// 2´Ü°è (¿äÃ» URL ºĞ¼®)
+		request.setCharacterEncoding("UTF-8"); 
+		System.out.println("ì‹œì‘");
+		// 2ë‹¨ê³„ (ìš”ì²­ URL ë¶„ì„)
 				//   /jspPro/board/list.do
 				String requestURI = request.getRequestURI();
 				// request.getRequestURL();
 				
-				// "/jspPro" ¸¸Å­ ÀÚ¸¥´Ù
+				// "/jspPro" ë§Œí¼ ìë¥¸ë‹¤
 				int beginIndex = request.getContextPath().length();
 				// /board/list.do
 				requestURI = requestURI.substring(beginIndex);
 				
-				// 3´Ü°è - ·ÎÁ÷Ã³¸®ÇÏ´Â ¸ğ´î°´Ã¼¸¦ commandHandlerMapÀ¸·Î ºÎÅÍ ¾ò¾î¿À±â
+				// 3ë‹¨ê³„ - ë¡œì§ì²˜ë¦¬í•˜ëŠ” ëª¨ëŒˆê°ì²´ë¥¼ commandHandlerMapìœ¼ë¡œ ë¶€í„° ì–»ì–´ì˜¤ê¸°
 				CommandHandler handler = this.commandHandlerMap.get(requestURI);
 				
 				/*
@@ -101,24 +103,24 @@ public class ProjectServlet extends HttpServlet {
 				String view = null;
 				try {
 					view = handler.process(request, response);
-					// 4´Ü°è : request, session °´Ã¼ °á°ú¸¦ ÀúÀå
+					// 4ë‹¨ê³„ : request, session ê°ì²´ ê²°ê³¼ë¥¼ ì €ì¥
 				} catch (Exception e) {
 					
 					e.printStackTrace();
 				}
 				
-				// 5´Ü°è - ºä Ãâ·Â ( Æ÷¿öµù, ¸®´ÙÀÌ·ºÆ® ) 
+				// 5ë‹¨ê³„ - ë·° ì¶œë ¥ ( í¬ì›Œë”©, ë¦¬ë‹¤ì´ë ‰íŠ¸ ) 
 				if( view != null) {
-					// Æ÷¿öµù
+					// í¬ì›Œë”©
 					RequestDispatcher dispatcher = request.getRequestDispatcher(view);
 					dispatcher.forward(request, response);
 				}
+			
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		doGet(request, response);
+        doGet(request, response); 
 	}
 
 }
