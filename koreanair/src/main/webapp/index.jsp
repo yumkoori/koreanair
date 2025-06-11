@@ -1,6 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%@ page import="com.koreanair.model.dto.User" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -80,7 +83,10 @@
     </style>
 </head>
 <body>
-    <jsp:include page="/views/common/header.jsp" />
+
+    <!-- 모듈화된 헤더 포함 -->
+    <jsp:include page="views/common/header.jsp" />
+
 
     <section class="booking-widget">
         <div class="container">
@@ -494,7 +500,8 @@
         </div>
     </section>
 
-    <jsp:include page="/views/common/footer.jsp" />
+    <!-- 모듈화된 푸터 포함 -->
+    <jsp:include page="views/common/footer.jsp" />
 
     <script src="${pageContext.request.contextPath}/js/index.js"></script>
 </body>
