@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.koreanair.model.dto.User" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -13,7 +14,7 @@
 </head>
 <body>
     <!-- 모듈화된 헤더 포함 -->
-    <jsp:include page="/views/common/header.jsp" />
+    <jsp:include page="views/common/header.jsp" />
 
     <section class="booking-widget">
         <div class="container">
@@ -377,7 +378,7 @@
     </section>
 
     <!-- 모듈화된 푸터 포함 -->
-    <jsp:include page="/views/common/footer.jsp" />
+    <jsp:include page="views/common/footer.jsp" />
 
     <script src="${pageContext.request.contextPath}/js/index.js"></script>
 </body>
