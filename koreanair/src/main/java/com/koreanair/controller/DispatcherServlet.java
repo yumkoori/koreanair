@@ -73,7 +73,9 @@ public class DispatcherServlet extends HttpServlet {
 		CommandHandler handler = commandHandlerMap.get(command);
 		
 		if (handler == null) {
-//			handler = new NullHandler();
+			// 매핑되지 않은 URL의 경우 홈페이지로 리다이렉트
+			response.sendRedirect(request.getContextPath() + "/index.do");
+			return;
 		}
 		
 		String viewPage = null;

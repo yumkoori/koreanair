@@ -66,7 +66,7 @@
             <form action="deleteAccount.do" method="post" onsubmit="return confirmDeleteAccount()">
                 <div class="form-group">
                     <label for="deletePassword">비밀번호 확인</label>
-                    <input type="password" id="deletePassword" name="password" required 
+                    <input type="password" id="deletePassword" name="confirmPassword" required 
                            placeholder="현재 비밀번호를 입력하세요">
                 </div>
                 <button type="submit" class="btn btn-danger">회원탈퇴</button>

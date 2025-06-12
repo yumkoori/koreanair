@@ -23,6 +23,7 @@ target/
 .metadata/
 Servers/
 **/build/
+**/*.jar
 
 ### NetBeans ###
 /nbproject/private/
