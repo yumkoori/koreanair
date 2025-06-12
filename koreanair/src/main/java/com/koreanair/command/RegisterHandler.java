@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.koreanair.model.dao.UserDAO;
 import com.koreanair.model.dto.User;
+import com.koreanair.util.PasswordUtil;
 
 public class RegisterHandler implements CommandHandler {
     private UserDAO userDAO;
@@ -70,6 +71,12 @@ public class RegisterHandler implements CommandHandler {
             return "/views/login/register.jsp";
         }
         
+        // 비밀번호 강도 검증
+        if (!PasswordUtil.isValidPassword(password)) {
+            request.setAttribute("error", "비밀번호는 4자 이상이어야 합니다.");
+            return "/views/login/register.jsp";
+        }
+        
         // 생년월일 형식 검증 및 변환
         Date birthDate = null;
         try {
@@ -90,7 +97,8 @@ public class RegisterHandler implements CommandHandler {
         // 사용자 등록
         User user = new User();
         user.setUserId(userId);
-        user.setPassword(password);
+        // 비밀번호를 BCrypt로 암호화
+        user.setPassword(PasswordUtil.hashPassword(password));
         user.setKoreanName(koreanName);
         user.setEnglishName(englishName);
         user.setBirthDate(birthDate);
