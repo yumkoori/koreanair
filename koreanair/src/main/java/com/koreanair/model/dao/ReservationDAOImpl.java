@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import com.koreanair.model.dto.PassengerDTO;
 import com.koreanair.model.dto.ReservationDTO;
-import com.koreanair.util.DBconn2;
+import com.koreanair.util.DBConnection; // ◀◀◀ 변경점 1: DBconn2를 DBConnection으로 수정
 
 public class ReservationDAOImpl implements ReservationDAO {
 
@@ -15,7 +15,8 @@ public class ReservationDAOImpl implements ReservationDAO {
         ReservationDTO reservation = null;
         String sql = getFinalQuery() + " WHERE b.booking_id = ? AND p.last_name = ? AND p.first_name = ? AND DATE(f.departure_time) = ? GROUP BY b.booking_id";
 
-        try (Connection conn = DBconn2.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        // ◀◀◀ 변경점 2: DBconn2.getConnection()을 DBConnection.getConnection()으로 수정
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, reservationId);
             pstmt.setString(2, lastName);
             pstmt.setString(3, firstName);
@@ -32,14 +33,18 @@ public class ReservationDAOImpl implements ReservationDAO {
         return reservation;
     }
 
-    // findReservationById: 스키마 기반 최종 SQL
+    // [수정] findReservationById: 스키마 기반 최종 SQL
     @Override
-    public ReservationDTO findReservationById(String bookingId) {
+    public ReservationDTO findReservationById(String bookingId, String userId) {
         ReservationDTO reservation = null;
-        String sql = getFinalQuery() + " WHERE b.booking_id = ? GROUP BY b.booking_id";
+        // SQL 쿼리에 사용자 ID 검증 로직 추가 (AND u.user_id = ?)
+        String sql = getFinalQuery() + " WHERE b.booking_id = ? AND u.user_id = ? GROUP BY b.booking_id";
 
-        try (Connection conn = DBconn2.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        // ◀◀◀ 변경점 2: DBconn2.getConnection()을 DBConnection.getConnection()으로 수정
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, bookingId);
+            pstmt.setString(2, userId); // PreparedStatement에 userId 바인딩
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     reservation = mapResultSetToReservationDTO(rs);

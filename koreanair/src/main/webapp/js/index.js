@@ -481,4 +481,32 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+        window.addEventListener('pageshow', function(event) {
+        // event.persisted 속성은 페이지가 bfcache에서 로드되었을 때 true가 됩니다.
+        if (event.persisted) {
+            // '예약 조회' 탭의 비회원 조회 폼을 찾습니다.
+            const lookupForm = document.querySelector('#checkin .checkin-form');
+            if (lookupForm) {
+                // reset() 대신 각 필드를 직접 찾아 값을 비웁니다.
+                const bookingIdInput = lookupForm.querySelector('input[name="bookingId"]');
+                const departureDateInput = lookupForm.querySelector('input[name="departureDate"]');
+                const lastNameInput = lookupForm.querySelector('input[name="lastName"]');
+                const firstNameInput = lookupForm.querySelector('input[name="firstName"]');
+                const checkbox = lookupForm.querySelector('input[type="checkbox"]');
+
+                if (bookingIdInput) bookingIdInput.value = '';
+                if (departureDateInput) departureDateInput.value = '';
+                if (lastNameInput) lastNameInput.value = '';
+                if (firstNameInput) firstNameInput.value = '';
+                if (checkbox) checkbox.checked = false; // 체크박스도 해제
+            }
+            
+            // bfcache에 남아있을 수 있는 조회 실패 오류 메시지를 찾아 제거합니다.
+            const lookupError = document.querySelector('#checkin .booking-error');
+            if (lookupError) {
+                lookupError.remove();
+            }
+        }
+    });
+
 }); 

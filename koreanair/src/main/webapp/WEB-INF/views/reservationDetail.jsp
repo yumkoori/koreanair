@@ -112,19 +112,24 @@
             </div>
             <div class="section-card passenger-section">
                 <div class="section-title">
-                    탑승객 정보
+                    <span>탑승객 정보</span>
                     <span class="section-toggle"><i class="fa-solid fa-chevron-down"></i></span>
                 </div>
                 <div class="section-divider"></div>
                 <div class="passenger-table">
                     <div class="passenger-row passenger-row-header">
-                        <div class="passenger-cell label">대표자 연락처</div>
-                        <div class="passenger-cell value">
-                            <i class="fa-solid fa-phone"></i> 전화번호&nbsp; <span class="strong">${reservation.phone}</span>
-                            &nbsp;&nbsp;
-                            <i class="fa-solid fa-envelope"></i> 이메일&nbsp; <span class="strong">${reservation.email}</span>
-                        </div>
-                    </div>
+							<div class="passenger-cell label">대표자 연락처</div>
+							<div class="passenger-cell value">
+								<div class="contact-item">
+									<i class="fa-solid fa-phone"></i> 전화번호&nbsp; <span
+										class="strong">${reservation.phone}</span>
+								</div>
+								<div class="contact-item">
+									<i class="fa-solid fa-envelope"></i> 이메일&nbsp; <span
+										class="strong">${reservation.email}</span>
+								</div>
+							</div>
+						</div>
                     <div class="passenger-row passenger-row-header2">
                         <div class="passenger-cell label">탑승객/회원번호</div>
                         <div class="passenger-cell label">연락처</div>
@@ -156,7 +161,7 @@
 
             <div class="section-card action-section">
                 <div class="section-title">
-                    여행 변경 및 취소
+                    <span>여행 변경 및 취소</span>
                     <span class="section-toggle"><i class="fa-solid fa-chevron-down"></i></span>
                 </div>
                 <div class="section-divider"></div>
@@ -172,7 +177,7 @@
                 </div>
             </div>
 
-            <div class="detail-recommend-section">
+           <!--  <div class="detail-recommend-section">
                 <div class="detail-recommend-title">추천 상품</div>
                 <div class="detail-recommend-card">
                     <img class="detail-recommend-img" src="https://cdn.pixabay.com/photo/2016/11/29/09/32/beach-1867285_1280.jpg" alt="제주 호텔">
@@ -182,7 +187,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </c:when>
     <c:otherwise>
         <div class="container">

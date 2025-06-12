@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import com.koreanair.model.dto.ReservationDTO;
 import com.koreanair.model.dto.User;
 import com.koreanair.util.DBConnection;
 
@@ -164,6 +167,50 @@ public class UserDAO {
             closeResources(conn, pstmt, null);
         }
     }
+
+    // [추가된 메소드] 특정 사용자의 모든 예약 목록 조회
+    public List<ReservationDTO> getUserReservations(String userId) {
+        List<ReservationDTO> reservationList = new ArrayList<>();
+        String sql = "SELECT b.booking_id, f.departure_time, f.arrival_time, " +
+                     "da.airport_id AS departure_airport_id, da.airport_name AS departure_airport_name, " +
+                     "aa.airport_id AS arrival_airport_id, aa.airport_name AS arrival_airport_name " +
+                     "FROM booking b " +
+                     "JOIN flight f ON b.flight_id = f.flight_id " +
+                     "JOIN passenger p ON b.booking_id = p.booking_id " +
+                     "JOIN users u ON p.user_no = u.user_no " +
+                     "JOIN airport da ON f.departure_airport_id = da.airport_id " +
+                     "JOIN airport aa ON f.arrival_airport_id = aa.airport_id " +
+                     "WHERE u.user_id = ? " +
+                     "GROUP BY b.booking_id, f.departure_time, f.arrival_time, departure_airport_id, departure_airport_name, arrival_airport_id, arrival_airport_name " +
+                     "ORDER BY f.departure_time DESC";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, userId);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                ReservationDTO reservation = new ReservationDTO();
+                reservation.setBookingId(rs.getString("booking_id"));
+                reservation.setDepartureTime(rs.getTimestamp("departure_time"));
+                reservation.setArrivalTime(rs.getTimestamp("arrival_time"));
+                reservation.setDepartureAirportId(rs.getString("departure_airport_id"));
+                reservation.setDepartureAirportName(rs.getString("departure_airport_name"));
+                reservation.setArrivalAirportId(rs.getString("arrival_airport_id"));
+                reservation.setArrivalAirportName(rs.getString("arrival_airport_name"));
+                reservationList.add(reservation);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+        return reservationList;
+    }
     
     // 리소스 정리
     private void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
@@ -189,4 +236,4 @@ public class UserDAO {
             }
         }
     }
-} 
+}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.koreanair.model.dao.UserDAO;
+import com.koreanair.model.dto.ReservationDTO;
 import com.koreanair.model.dto.User;
 
 public class LoginController extends HttpServlet {
@@ -67,6 +69,10 @@ public class LoginController extends HttpServlet {
                 case "/checkUserId.do":
                     checkUserId(request, response);
                     break;
+                // [추가] 새로운 예약 조회 페이지를 보여주기 위한 case
+                case "/lookupForm.do": 
+                    showLookupForm(request, response);
+                    break;
                 case "/":
                 case "/index.do":
                     showMainIndex(request, response);
@@ -80,6 +86,13 @@ public class LoginController extends HttpServlet {
             request.setAttribute("error", "시스템 오류가 발생했습니다.");
             request.getRequestDispatcher("/views/login/error.jsp").forward(request, response);
         }
+    }
+    
+    // [추가] 다른 예약 조회 폼을 보여주는 메소드
+    private void showLookupForm(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        // WEB-INF 내의 JSP 경로로 포워딩합니다.
+        request.getRequestDispatcher("/WEB-INF/views/lookupForm.jsp").forward(request, response);
     }
     
     // 홈 페이지 표시 (기존 로그인 시스템)
@@ -130,6 +143,10 @@ public class LoginController extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
+
+            List<ReservationDTO> userBookings = userDAO.getUserReservations(userId);
+            session.setAttribute("userBookings", userBookings);
+            
             response.sendRedirect(request.getContextPath() + "/");
         } else {
             request.setAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");
@@ -161,7 +178,6 @@ public class LoginController extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         
-        // 입력값 검증
         if (userId == null || password == null || koreanName == null || englishName == null ||
             birthDateStr == null || gender == null || email == null || phone == null ||
             userId.trim().isEmpty() || password.trim().isEmpty() || koreanName.trim().isEmpty() ||
@@ -178,7 +194,6 @@ public class LoginController extends HttpServlet {
             return;
         }
         
-        // 생년월일 형식 검증 및 변환
         Date birthDate = null;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -190,14 +205,12 @@ public class LoginController extends HttpServlet {
             return;
         }
         
-        // 아이디 중복 체크
         if (userDAO.isUserIdExists(userId)) {
             request.setAttribute("error", "이미 사용중인 아이디입니다.");
             request.getRequestDispatcher("/views/login/register.jsp").forward(request, response);
             return;
         }
         
-        // 사용자 등록
         User user = new User(userId, password, koreanName, englishName, birthDate, gender, email, phone, address);
         boolean success = userDAO.insertUser(user);
         
@@ -213,7 +226,6 @@ public class LoginController extends HttpServlet {
     // 회원탈퇴 처리
     private void handleDeleteAccount(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        // AuthenticationFilter에서 이미 인증을 확인했으므로 세션에서 사용자 정보 가져오기
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         
@@ -225,14 +237,12 @@ public class LoginController extends HttpServlet {
             return;
         }
         
-        // 비밀번호 확인
         if (!user.getPassword().equals(password)) {
             request.setAttribute("error", "비밀번호가 올바르지 않습니다.");
             request.getRequestDispatcher("/views/login/dashboard.jsp").forward(request, response);
             return;
         }
         
-        // 회원탈퇴 처리
         boolean success = userDAO.deleteUser(user.getUserId());
         
         if (success) {
@@ -257,4 +267,4 @@ public class LoginController extends HttpServlet {
         
         response.getWriter().write(jsonResponse);
     }
-} 
+}
