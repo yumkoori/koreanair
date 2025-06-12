@@ -1571,3 +1571,156 @@ footer {
 .nav-item:hover .nav-link::after {
     width: 100%;
 }
+
+.lookup-actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 12px;
+}
+
+
+/* [수정] 버튼 스타일 통합 및 크기 조정 */
+.lookup-result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-bottom: 25px;
+}
+
+.lookup-result-body {
+    position: relative;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.lookup-result-body .flight-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.lookup-result_body .status-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.lookup-result_body .status-badge .purchase-status {
+    background-color: #dbeafe;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+.lookup-result_body .status-badge .booking-id {
+    background-color: #1e3a8a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+
+.lookup-result-body .route-info {
+    font-size: 22px;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.lookup-result-body .route-info .fa-plane-departure {
+    color: #5d6d85;
+}
+.lookup-result_body .route-info .airport-name {
+    font-size: 14px;
+    color: #666;
+    display: block;
+    margin-top: 2px;
+}
+
+.lookup-result-body .date-info {
+    font-size: 15px;
+    color: #555;
+    margin-left: 20px;
+}
+
+/* [수정] 버튼 스타일 통합 및 크기 조정 */
+.lookup-another,
+.btn-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* 밝은 버튼 스타일 (다른 예약 조회) */
+.lookup-another {
+    background-color: #f4f7fb;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+}
+.lookup-another:hover {
+    background-color: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+/* 파란 버튼 스타일 (더 보기) */
+.btn-more {
+    background-color: #3b82f6;
+    border: 1px solid #2563eb;
+    color: white;
+}
+.btn-more:hover {
+    background-color: #2563eb;
+}
+
+
+.lookup-another-abs {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    z-index: 2;
+}
+
+.no-booking-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 0 32px 0;
+    gap: 18px;
+}
+.no-booking-message {
+    font-size: 17px;
+    color: #888;
+    margin-bottom: 8px;
+}
+.btn-lookup-another {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f4f7fb;
+    color: #174ea6;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.btn-lookup-another:hover {
+    background: #e2e8f0;
+}

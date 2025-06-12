@@ -7,7 +7,6 @@
     
     <display-name>AirLogin Web Application</display-name>
     
-    <!-- 데이터소스 리소스 참조 -->
     <resource-ref>
         <description>Oracle Database Connection Pool</description>
         <res-ref-name>jdbc/airloginDB</res-ref-name>
@@ -15,7 +14,25 @@
         <res-auth>Container</res-auth>
     </resource-ref>
     
+<<<<<<< HEAD
+    <servlet>
+   		<servlet-name>DispatcherServlet</servlet-name>
+   		<servlet-class>com.koreanair.controller.DispatcherServlet</servlet-class>
+   		<init-param>
+   			<param-name>configFile</param-name>
+   			<param-value>/WEB-INF/commandHandler.properties</param-value>
+   		</init-param>
+   		<load-on-startup>1</load-on-startup>
+   </servlet>
+   
+   <servlet-mapping>
+   		<servlet-name>DispatcherServlet</servlet-name>
+   		<url-pattern>*.air</url-pattern>
+   </servlet-mapping>
+    
+=======
     <!-- 메인 디스패처 서블릿 설정 -->
+>>>>>>> main
     <servlet>
         <servlet-name>DispatcherServlet</servlet-name>
         <servlet-class>com.koreanair.controller.DispatcherServlet</servlet-class>
@@ -30,13 +47,20 @@
         <servlet-name>DispatcherServlet</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
-    
-    <!-- 세션 타임아웃 설정 (30분) -->
+
+    <servlet>
+        <servlet-name>ReservationDetailServlet</servlet-name>
+        <servlet-class>com.koreanair.controller.ReservationDetailServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReservationDetailServlet</servlet-name>
+        <url-pattern>/reservationDetail</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
     
-    <!-- 인코딩 필터 -->
     <filter>
         <filter-name>EncodingFilter</filter-name>
         <filter-class>com.koreanair.filter.EncodingFilter</filter-class>
@@ -51,7 +75,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
-    <!-- 인증 필터 -->
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>com.koreanair.filter.AuthenticationFilter</filter-class>
@@ -62,9 +85,8 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
-    <!-- 웰컴 파일 설정 -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     
-</web-app> 
+</web-app>
