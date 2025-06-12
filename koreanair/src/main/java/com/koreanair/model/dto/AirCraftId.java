@@ -11,17 +11,6 @@ import lombok.Setter;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FlightSeatSaveDTO {
-	String seat_id;
-	String flight_id;  // aircraft
-	String class_id;
-	String status;
-	
-	
-	
-	String aircraft;
-	int row;
-	String seat;
-	int price;
-	String planeType;
+public class AirCraftId {
+	String aircraftid;
 }

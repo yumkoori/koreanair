@@ -140,6 +140,11 @@
         margin-bottom: 5px;
     }
 
+    /* === 검색 드롭다운 스타일 === */
+    .aircraft-option:hover {
+        background-color: #f5f5f5;
+    }
+
     /* === 반응형 스타일 === */
     @media (max-width: 992px) { 
         .x_content > div[style*="display: flex;"] {
@@ -391,11 +396,18 @@
                 <div class="x_title">
                     <h2>좌석 배치 <small id="aircraftModelName" style="color: blue;">보잉 787-9 (278석)</small></h2>
                     <div style="float: right; margin-left: 20px;">
-                        <label for="aircraftSelector" style="margin-right: 5px; font-weight: normal; font-size: 13px; vertical-align: middle;">기종 선택:</label>
-                        <select id="aircraftSelector" class="form-control" style="display: inline-block; width: auto; padding: 4px 8px; height: auto; font-size: 13px;">
-                            <option value="model1">보잉 787-9 (278석)</option>
-                            <option value="model2">다른 기종 (준비중)</option>
-                        </select>
+                        <label for="aircraftSearch" style="margin-right: 5px; font-weight: normal; font-size: 13px; vertical-align: middle;">기종 검색:</label>
+                        <div style="display: inline-block; position: relative;">
+                            <input type="text" id="aircraftSearch" class="form-control" 
+                                   style="display: inline-block; width: 180px; padding: 4px 8px; height: auto; font-size: 13px;"
+                                   placeholder="기종명을 입력하세요"
+                                   value="보잉 787-9 (278석)"
+                                   autocomplete="off">
+                            <div id="aircraftDropdown" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ccc; border-top: none; max-height: 200px; overflow-y: auto; z-index: 1000; display: none;">
+                                <div class="aircraft-option" data-value="model1" style="padding: 8px; cursor: pointer; border-bottom: 1px solid #eee;">보잉 787-9 (278석)</div>
+                                <div class="aircraft-option" data-value="model2" style="padding: 8px; cursor: pointer; border-bottom: 1px solid #eee;">다른 기종 (준비중)</div>
+                            </div>
+                        </div>
                     </div>
                     <ul class="nav navbar-right panel_toolbox">
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
@@ -492,8 +504,8 @@
                             let htmlContent = '';
                             const model = aircraftData[modelKey];
                             const modelNameDisplay = document.getElementById('aircraftModelName');
-                            const selector = document.getElementById('aircraftSelector');
-                            const selectedOptionText = selector.options[selector.selectedIndex].text;
+                            const searchInput = document.getElementById('aircraftSearch');
+                            const selectedOptionText = searchInput ? searchInput.value : aircraftData[modelKey].name;
 
                             if (modelNameDisplay) { modelNameDisplay.innerText = selectedOptionText; }
                             
@@ -588,7 +600,15 @@
                                 return;
                             }
 
-                            const aircraftModelName = aircraftData[document.getElementById('aircraftSelector').value].name;
+                            const currentSearchValue = document.getElementById('aircraftSearch').value;
+                            let selectedModelKey = 'model1'; // 기본값
+                            const aircraftOptions = document.querySelectorAll('.aircraft-option');
+                            aircraftOptions.forEach(option => {
+                                if (option.textContent === currentSearchValue) {
+                                    selectedModelKey = option.getAttribute('data-value');
+                                }
+                            });
+                            const aircraftModelName = aircraftData[selectedModelKey].name;
                             let appliedCount = 0;
 
                             selectedSeatsMap.forEach((details, seatKey) => {
@@ -638,9 +658,16 @@
                                 return;
                             }
 
+                            // 현재 페이지 URL에서 craftid 파라미터 값을 가져옵니다
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const craftId = urlParams.get('craftid') || '';
+
                             const contextPath = "${pageContext.request.contextPath}";
-                            const url = `\${contextPath}/seatsave.wi`;
+                            const url = `\${contextPath}/seatsave.wi?craftid=\${encodeURIComponent(craftId)}`;
                             const jsonData = JSON.stringify(seatsReadyForDB);
+                            
+                            console.log("저장 시 사용할 craftid:", craftId);
+                            console.log("저장 요청 URL:", url);
 
                             fetch(url, {
                                 method: 'POST',
@@ -679,23 +706,22 @@
                         
                         function loadSavedSeats() {
                             alert("버튼 클릭 실행 성공!");
-                            const aircraftElement = document.getElementById('aircraftModelName');
-                            const aircraftName = aircraftElement.textContent;
+                            
+                            // 현재 페이지 URL에서 craftid 파라미터 값을 가져옵니다
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const craftId = urlParams.get('craftid') || ''; // craftid가 없으면 빈 문자열
 
-                            // 2. 기본 URL과 파라미터 이름을 정합니다.
+                            // 기본 URL 설정
                             const contextPath = "${pageContext.request.contextPath}";
                             const baseUrl = `\${contextPath}/seatload.wi`;
-                            const paramName = 'aircraft'; // 서버에서 request.getParameter()로 받을 이름
 
-                            // 3. URLSearchParams로 안전하게 전체 URL을 만듭니다.
-                            const params = new URLSearchParams();
-                            params.append(paramName, aircraftName); // "이름=값" 형태로 파라미터를 추가합니다.
+                            // craftid만 파라미터로 전달
+                            const finalUrl = `\${baseUrl}?craftid=\${encodeURIComponent(craftId)}`;
 
-                            const finalUrl = `\${baseUrl}?${params.toString()}`;
-
-                            console.log("최종 요청 URL:", finalUrl); // F12 콘솔에서 확인해보세요.
+                            console.log("현재 URL의 craftid:", craftId);
+                            console.log("최종 요청 URL:", finalUrl);
                             
-                            fetch(url) // GET 요청은 URL만 넘겨주면 됩니다.
+                            fetch(finalUrl) // GET 요청은 URL만 넘겨주면 됩니다.
                             .then(response => {
                                 // 1. HTTP 응답 상태를 확인합니다. (성공: 200~299)
                                 if (!response.ok) {
@@ -719,21 +745,127 @@
                                 alert('데이터를 불러오는 데 실패했습니다.');
                             });
                         }
+                        function Searchplane(){
+                        	const searchInput = document.getElementById('aircraftSearch');
+                        	const searchValue = searchInput.value.trim();
+                        	
+                        	console.log('검색어:', searchValue);
+                        	
+                        	// 검색어가 있으면 서버에 요청, 없으면 기본 비행기 표시
+                        	if (searchValue) {
+                        		console.log('검색 실행:', searchValue);
+                        		
+                        		const contextPath = "${pageContext.request.contextPath}";
+                        		const url = `\${contextPath}/seachplane.wi?searchword=\${encodeURIComponent(searchValue)}`;
+                        		console.log('요청 URL:', url);
+                        		
+                        		fetch(url)
+                        		.then(response => {
+                        			if (!response.ok) {
+                        				throw new Error(`서버 에러 발생! 상태: \${response.status}`);
+                        			}
+                        			return response.json();
+                        		})
+                        		.then(userData => {
+                        			console.log('서버 응답:', userData);
+                        			
+                        			// check 값에 따라 다른 처리
+                        			if (userData.check === 1) {
+                        				// 검색 성공 - 검색어로 변경되었다고 알림
+                        				alert(`"${searchValue}" 검색 완료! 현재는 보잉 787-9만 지원됩니다.`);
+                        				
+                        				// 검색 결과로 기본 비행기 표시
+                        				searchInput.value = searchValue; // 검색어 그대로 유지
+                        				renderAircraft('model1');
+                        				
+                        				// URL에 검색어를 craftid 파라미터로 추가
+                        				const currentUrl = new URL(window.location);
+                        				currentUrl.searchParams.set('craftid', searchValue);
+                        				window.history.pushState({}, '', currentUrl);
+                        				
+                        			} else {
+                        				// 검색 실패 - DB에 없는 비행기
+                        				alert('DB에 없는 비행기입니다.');
+                        				
+                        				// 검색창을 기본값으로 되돌림
+                        				searchInput.value = "보잉 787-9 (278석)";
+                        				renderAircraft('model1');
+                        			}
+                        		})
+                        		.catch(error => {
+                        			console.error('검색 실패:', error);
+                        			alert('검색 중 오류가 발생했습니다.');
+                        			
+                        			// 에러 시 기본값으로 되돌림
+                        			searchInput.value = "보잉 787-9 (278석)";
+                        			renderAircraft('model1');
+                        		});
+                        	} else {
+                        		alert('검색어를 입력해주세요.');
+                        	}
+                        }
+                        
 
                         document.addEventListener('DOMContentLoaded', function() {
-                            const selector = document.getElementById('aircraftSelector');
+                            const searchInput = document.getElementById('aircraftSearch');
+                            const dropdown = document.getElementById('aircraftDropdown');
                             const airplaneContainer = document.getElementById('airplaneContainer');
                             const applyPriceBtn = document.getElementById('applyPriceButton');
                             const saveButton = document.getElementById('saveSelectedSeatsButton');
                             const resetButton = document.getElementById('resetSelectedSeatsButton'); 
                             const loadButton = document.getElementById('loadSeatsButton');
+                            let currentModelKey = 'model1';
 
-                            if (selector) {
-                                selector.addEventListener('change', function() { renderAircraft(this.value); });
-                                renderAircraft(selector.value); 
+                            // 기본으로 model1 렌더링 (페이지 로드 시 비행기 표시)
+                            console.log('페이지 로드 완료 - 기본 비행기 표시');
+                            renderAircraft(currentModelKey);
+
+                            if (searchInput && dropdown) {
+                                // 검색 입력 시 드롭다운 표시/필터링
+                                searchInput.addEventListener('input', function() {
+                                    const searchValue = this.value.toLowerCase();
+                                    const options = dropdown.querySelectorAll('.aircraft-option');
+                                    let hasVisibleOptions = false;
+                                    
+                                    options.forEach(option => {
+                                        const text = option.textContent.toLowerCase();
+                                        if (text.includes(searchValue)) {
+                                            option.style.display = 'block';
+                                            hasVisibleOptions = true;
+                                        } else {
+                                            option.style.display = 'none';
+                                        }
+                                    });
+                                    
+                                    dropdown.style.display = hasVisibleOptions && searchValue ? 'block' : 'none';
+                                });
+
+                                // 포커스 시 드롭다운 표시
+                                searchInput.addEventListener('focus', function() {
+                                    dropdown.style.display = 'block';
+                                });
+
+                                // 옵션 클릭 시 선택
+                                dropdown.addEventListener('click', function(e) {
+                                    if (e.target.classList.contains('aircraft-option')) {
+                                        const selectedText = e.target.textContent;
+                                        const selectedValue = e.target.getAttribute('data-value');
+                                        
+                                        searchInput.value = selectedText;
+                                        dropdown.style.display = 'none';
+                                        currentModelKey = selectedValue;
+                                        renderAircraft(selectedValue);
+                                    }
+                                });
+
+                                // 외부 클릭 시 드롭다운 닫기
+                                document.addEventListener('click', function(e) {
+                                    if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                                        dropdown.style.display = 'none';
+                                    }
+                                });
                             } else {
-                                console.error("Aircraft selector not found!");
-                                if (airplaneContainer) { renderAircraft("model1"); }
+                                console.error("Aircraft search input or dropdown not found!");
                             }
                             if (airplaneContainer) {
                                 airplaneContainer.addEventListener('click', handleSeatClick);
@@ -760,6 +892,15 @@
                                 loadButton.addEventListener('click', loadSavedSeats);
                             } else {
                                 console.error('ID가 "loadSeatsButton"인 버튼을 찾을 수 없습니다!');
+                            }
+                            if (searchInput){
+                            	console.log("검색 입력창 정상작동합니다");
+                            	searchInput.addEventListener('keydown', function(event) {
+                            	    if (event.key === 'Enter' || event.keyCode === 13) {
+                            	        event.preventDefault(); // 폼 제출 방지
+                            	        Searchplane();
+                            	    }
+                            	});
                             }
 
                         });

@@ -19,7 +19,8 @@ public class FlightSeatSaveHandler implements CommandHandler{
 
 	@Override
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+		String id = request.getParameter("craftid");
+		System.out.println("저장하려고 받아온 값> " + id);
 		Map<String, Object> responseMap = new HashMap();
 		System.out.println("> FlightSeatSaveHandler for Initial Page Load with Data called...");
 		
@@ -42,7 +43,7 @@ public class FlightSeatSaveHandler implements CommandHandler{
         System.out.println("seatList" + seatList);
         FlightSeatSaveService saveService = new FlightSeatSaveService();
         
-        int check = saveService.seatSave(seatList);
+        int check = saveService.seatSave(seatList , id);
         
         // 4. 성공했을 경우, 보낼 응답 내용을 Map에 담기
         responseMap.put("status", "success");

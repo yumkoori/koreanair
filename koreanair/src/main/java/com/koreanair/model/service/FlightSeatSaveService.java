@@ -11,10 +11,10 @@ import com.koreanair.model.dto.FlightSeatSaveDTO;
 
 public class FlightSeatSaveService {
 	
-	public int seatSave(List<FlightSeatSaveDTO> seatList) throws Exception {
+	public int seatSave(List<FlightSeatSaveDTO> seatList , String id) throws Exception {
 		System.out.println("seatList 서비스 > " + seatList);
 		ProjectDao dao = new ProjectDaoimpl();
 		
-		return dao.seatsave(seatList);
+		return dao.seatsave(seatList, id);
 	}
 }

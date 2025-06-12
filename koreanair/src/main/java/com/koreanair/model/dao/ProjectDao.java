@@ -8,7 +8,9 @@ public interface ProjectDao {
 	
 	public String fetchFlightData(String apiUrl) throws Exception;
 	
-	public int seatsave(List<FlightSeatSaveDTO> seatList) throws Exception;
+	public int seatsave(List<FlightSeatSaveDTO> seatList , String id) throws Exception;
 	
-	public String flightSeatload(String abc) throws Exception;
+	public List<FlightSeatSaveDTO> flightSeatload(String planeType) throws Exception;
+	
+	public int searchcarftid( String craftid) throws Exception;
 }

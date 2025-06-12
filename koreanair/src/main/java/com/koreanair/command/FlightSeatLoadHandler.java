@@ -17,10 +17,13 @@ public class FlightSeatLoadHandler implements CommandHandler{
     private FlightSeatLoadService loadservice = new FlightSeatLoadService();
     private Gson gson = new Gson(); // Gson 객체는 재사용 가능하므로 멤버로 빼도 좋습니다.
     
+    
 	@Override
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		List<FlightSeatSaveDTO> seatload = loadservice.seatload();
 		System.out.println("1번 도착");
+		String planeType = request.getParameter("planeType"); 
+		List<FlightSeatSaveDTO> seatload = loadservice.seatload(planeType);
+		
 		return null;
 	}
 

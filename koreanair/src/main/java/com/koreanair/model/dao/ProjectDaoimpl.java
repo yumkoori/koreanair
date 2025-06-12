@@ -9,9 +9,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.jasper.tagplugins.jstl.core.Url;
 
+import com.koreanair.model.dto.AirCraftId;
 import com.koreanair.model.dto.FlightSeatSaveDTO;
 import com.koreanair.util.DBConn;
 
@@ -64,13 +66,64 @@ public class ProjectDaoimpl implements ProjectDao{
 
 
 	@Override
-	public int seatsave(List<FlightSeatSaveDTO> seatList) throws Exception {
+	public int seatsave(List<FlightSeatSaveDTO> seatList , String id) throws Exception {
 	    // 1. Connection과 PreparedStatement는 메서드 내의 지역 변수로 선언하는 것이 좋습니다.
 	    Connection conn = null;
 	    PreparedStatement pstmt = null;
 	    int totalSavedCount = 0;
 
-	    String sql = "INSERT INTO temporary (aircraft, row, seat, price) VALUES (?, ?, ?, ?)";
+	    String sql = "INSERT INTO flight_seat (seat_id, flight_id, class_id, status, price , row) VALUES (?, ?, ?, ?, ? , ?)";
+	    
+	    try {
+	        // 2. DBConn 유틸리티를 사용해 커넥션을 얻어옵니다.
+	        conn = DBConn.getConnection(); 
+	        
+	        // conn.setAutoCommit(false); // 트랜잭션 시작
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        
+	        // 3. 파라미터로 받은 'seatList'를 반복문으로 처리합니다.
+	        //    'dto' 변수는 여기서 각 좌석 정보를 받아와 사용합니다.
+	        for (FlightSeatSaveDTO dto : seatList) { 
+	            // 4. 'dto' 객체의 값으로 PreparedStatement를 설정합니다.
+	        	UUID uuid = UUID.randomUUID();
+	        	pstmt.setString(1, uuid.toString());
+	        	pstmt.setString(2, "FL001");
+	            pstmt.setString(3, "ECON");
+	            pstmt.setString(4, "AVAILABLE");
+	            pstmt.setInt(5, dto.getPrice()); 
+	            pstmt.setInt(6, dto.getRow());
+	            
+	            pstmt.addBatch(); // 실행할 쿼리에 추가
+	        }
+	        
+	        int[] resultCounts = pstmt.executeBatch(); // 배치 쿼리 실행
+	        // conn.commit(); // 트랜잭션 성공 (커밋)
+
+	        totalSavedCount = resultCounts.length; // 성공한 개수
+
+	    } catch (Exception e) {
+	        if (conn != null) conn.rollback(); // 오류 시 롤백
+	        System.out.println("DAO seatsave 오류");
+	        e.printStackTrace();
+	        throw e; // 오류를 상위로 전달
+	    } finally {
+	        // 5. 자원 해제
+	    	DBConn.close(conn, pstmt);  // DBConn 유틸리티에 close 메서드가 있다면 사용
+	    }
+	    
+	    return totalSavedCount;
+	}
+
+
+	@Override
+	public List<FlightSeatSaveDTO> flightSeatload(String planeType) throws Exception {
+		System.out.println(planeType + " 들고무사히 도착했습니다!!!");
+		
+		Connection conn = null;
+	    PreparedStatement pstmt = null;
+
+	    String sql = "";
 	    
 	    try {
 	        // 2. DBConn 유틸리티를 사용해 커넥션을 얻어옵니다.
@@ -107,6 +160,48 @@ public class ProjectDaoimpl implements ProjectDao{
 	    }
 	    
 	    return totalSavedCount;
+		
+	}
+
+
+	@Override
+	public int searchcarftid(String craftid) throws Exception {
+		// 1. Connection과 PreparedStatement는 메서드 내의 지역 변수로 선언하는 것이 좋습니다.
+	    Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    int checkid = 0;
+
+	    String sql = "SELECT * "
+	    		      + " FROM aircraft "
+	    		      + " WHERE aircraft_id = ? ";
+	    
+	    try {
+	        // 2. DBConn 유틸리티를 사용해 커넥션을 얻어옵니다.
+	        conn = DBConn.getConnection(); 
+	        
+	        // conn.setAutoCommit(false); // 트랜잭션 시작
+	        pstmt = conn.prepareStatement(sql);
+
+	            pstmt.setString(1, craftid);
+	       	        
+	            rs = pstmt.executeQuery();
+	        // conn.commit(); // 트랜잭션 성공 (커밋)
+	            
+	            if (rs.next()) {
+	                // 조회된 행이 있다면, checkid를 1로 변경
+	                checkid = 1;
+	            }
+
+	    } catch (Exception e) {
+	        if (conn != null) conn.rollback(); // 오류 시 롤백
+	        System.out.println("DAO seatsave 오류");
+	        e.printStackTrace();
+	        throw e; // 오류를 상위로 전달
+	    } finally {
+	        // 5. 자원 해제
+	    	DBConn.close(conn, pstmt);  // DBConn 유틸리티에 close 메서드가 있다면 사용
+	    }
+		return checkid;
 	}
 
 }
