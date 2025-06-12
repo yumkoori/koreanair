@@ -82,7 +82,8 @@ public class AuthenticationFilter implements Filter {
             "/logout.do",
             "/registerForm.do",
             "/register.do",
-            "/checkUserId.do"
+            "/checkUserId.do",
+            "/airportSearch.do" 
         };
         
         for (String publicPath : publicPaths) {

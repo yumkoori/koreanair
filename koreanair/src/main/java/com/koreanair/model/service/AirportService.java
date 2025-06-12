@@ -22,45 +22,64 @@ public class AirportService {
 
 	
 	public List<String> searchAirportCities(String keyword) throws Exception {
-	    String url = "http://openapi.airport.co.kr/service/rest/AirportCodeList/getAirportCodeList";
-	    url += "?ServiceKey=dLBL5CIKkYQdMzdojTQt8S0fxCrV6tsTTLnqWu%2BDf67TZrgwb3mAinbPtYPmX%2BbNEQD7%2FRhDKq5oo8DGlDrXcA%3D%3D&pageNo=1";
+	    String serviceKey = "dLBL5CIKkYQdMzdojTQt8S0fxCrV6tsTTLnqWu%2BDf67TZrgwb3mAinbPtYPmX%2BbNEQD7%2FRhDKq5oo8DGlDrXcA%3D%3D";
+	    int pageNo = 1;
+	    int numOfRows = 100; // 너무 크면 서버에서 막히므로 안전한 값 사용
+	    int totalCount = Integer.MAX_VALUE; // 처음엔 모름
 
 	    List<String> result = new ArrayList<>();
 
-	    // HttpURLConnection 으로 API 호출
-	    URL obj = new URL(url);
-	    HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
-	    conn.setRequestMethod("GET");
+	    while ((pageNo - 1) * numOfRows < totalCount) {
+	        String url = "http://openapi.airport.co.kr/service/rest/AirportCodeList/getAirportCodeList";
+	        url += "?ServiceKey=" + serviceKey;
+	        url += "&pageNo=" + pageNo;
+	        url += "&numOfRows=" + numOfRows;
 
-	    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-	    String inputLine;
-	    StringBuffer response = new StringBuffer();
+	        // HttpURLConnection 으로 API 호출
+	        URL obj = new URL(url);
+	        HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+	        conn.setRequestMethod("GET");
 
-	    while ((inputLine = in.readLine()) != null) {
-	        response.append(inputLine);
-	    }
-	    in.close();
+	        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+	        String inputLine;
+	        StringBuffer response = new StringBuffer();
 
-	    // XML 파싱
-	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder builder = factory.newDocumentBuilder();
-	    Document doc = builder.parse(new InputSource(new StringReader(response.toString())));
-	    doc.getDocumentElement().normalize();
-
-	    NodeList nList = doc.getElementsByTagName("item");
-
-	    for (int i = 0; i < nList.getLength(); i++) {
-	        Element element = (Element) nList.item(i);
-	        String cityKor = element.getElementsByTagName("cityKor").item(0).getTextContent();
-
-	        // keyword가 포함된 도시명만 추가
-	        if (cityKor.contains(keyword)) {
-	            result.add(cityKor);
+	        while ((inputLine = in.readLine()) != null) {
+	            response.append(inputLine);
 	        }
+	        in.close();
+
+	        String responseXml = response.toString();
+
+	        // XML 파싱
+	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder builder = factory.newDocumentBuilder();
+	        Document doc = builder.parse(new InputSource(new StringReader(responseXml)));
+	        doc.getDocumentElement().normalize();
+
+	        // 총 건수 가져오기
+	        String totalCountStr = doc.getElementsByTagName("totalCount").item(0).getTextContent();
+	        totalCount = Integer.parseInt(totalCountStr);
+
+	        // item 리스트 파싱
+	        NodeList nList = doc.getElementsByTagName("item");
+
+	        for (int i = 0; i < nList.getLength(); i++) {
+	            Element element = (Element) nList.item(i);
+	            String cityKor = element.getElementsByTagName("cityKor").item(0).getTextContent();
+
+	            // keyword가 포함된 도시명만 추가 (공백 제거 후 비교)
+	            if (cityKor.replaceAll("\\s+", "").contains(keyword.replaceAll("\\s+", ""))) {
+	                result.add(cityKor);
+	            }
+	        }
+
+	        pageNo++; // 다음 페이지로
 	    }
 
 	    return result;
 	}
+
 	
 }
 

@@ -14,11 +14,11 @@ public class AirportSearchHandler implements CommandHandler{
 	@Override
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-
 	       String keyword = request.getParameter("keyword"); // 사용자가 입력한 검색어
 
 	        AirportService service = new AirportService();
 	        List<String> cityKorList = service.searchAirportCities(keyword);
+
 
 	        // JSON 형식으로 응답
 	        response.setContentType("application/json; charset=UTF-8");

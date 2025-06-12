@@ -498,63 +498,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    // 샘플 공항/도시 데이터
-    const airports = [
-        { code: 'ICN', name: '인천국제공항', city: '인천' },
-        { code: 'GMP', name: '김포국제공항', city: '서울' },
-        { code: 'PUS', name: '김해국제공항', city: '부산' },
-        { code: 'CJU', name: '제주국제공항', city: '제주도' },
-        { code: 'TAE', name: '대구국제공항', city: '대구' },
-        { code: 'KWJ', name: '광주공항', city: '광주' },
-        { code: 'RSU', name: '여수공항', city: '여수' },
-        { code: 'USN', name: '울산공항', city: '울산' },
-        { code: 'HIN', name: '사천공항', city: '사천' },
-        { code: 'KPX', name: '포항공항', city: '포항' },
-        { code: 'NRT', name: '나리타국제공항', city: '도쿄' },
-        { code: 'HND', name: '하네다공항', city: '도쿄' },
-        { code: 'KIX', name: '간사이국제공항', city: '오사카' },
-        { code: 'NGO', name: '중부국제공항', city: '나고야' },
-        { code: 'PVG', name: '푸동국제공항', city: '상하이' },
-        { code: 'PEK', name: '베이징수도국제공항', city: '베이징' }
-    ];
-
-    // 검색 기능
-    function searchAirports(query, resultsDiv) {
-        resultsDiv.innerHTML = '';
-        if (query.length === 0) return;
-
-        const filtered = airports.filter(airport => 
-            airport.city.includes(query) || 
-            airport.name.includes(query) ||
-            airport.code.includes(query.toUpperCase())
-        );
-
-        filtered.forEach(airport => {
-            const resultItem = document.createElement('div');
-            resultItem.className = 'dropdown-result-item';
-            resultItem.innerHTML = `<strong>${airport.code}</strong> - ${airport.city} (${airport.name})`;
-            
-            resultItem.addEventListener('click', function() {
-                if (resultsDiv === departureResults) {
-                    document.querySelector('.departure .airport-code').textContent = airport.code;
-                    document.querySelector('.departure .airport-name').textContent = airport.city;
-                    departureDropdown.style.display = 'none';
-                } else {
-                    document.querySelector('.arrival .airport-code').textContent = airport.code;
-                    document.querySelector('.arrival .airport-name').textContent = airport.city;
-                    arrivalDropdown.style.display = 'none';
-                }
-            });
-            
-            resultsDiv.appendChild(resultItem);
-        });
-    }
-
     // 출발지 검색 이벤트
     if (departureSearch) {
-        departureSearch.addEventListener('input', function() {
-            searchAirports(this.value, departureResults);
-        });
 
         // 검색창에 포커스될 때 테두리 색상 변경
         departureSearch.addEventListener('focus', function() {
@@ -595,50 +540,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 모든 지역 보기 클릭 이벤트
-    if (departureAllRegions) {
-        departureAllRegions.addEventListener('click', function() {
-            departureSearch.value = '';
-            searchAirports('', departureResults);
-            // 모든 공항 표시
-            departureResults.innerHTML = '';
-            airports.forEach(airport => {
-                const resultItem = document.createElement('div');
-                resultItem.className = 'dropdown-result-item';
-                resultItem.innerHTML = `<strong>${airport.code}</strong> - ${airport.city} (${airport.name})`;
-                
-                resultItem.addEventListener('click', function() {
-                    document.querySelector('.departure .airport-code').textContent = airport.code;
-                    document.querySelector('.departure .airport-name').textContent = airport.city;
-                    departureDropdown.style.display = 'none';
-                });
-                
-                departureResults.appendChild(resultItem);
-            });
-        });
-    }
 
-    if (arrivalAllRegions) {
-        arrivalAllRegions.addEventListener('click', function() {
-            arrivalSearch.value = '';
-            searchAirports('', arrivalResults);
-            // 모든 공항 표시
-            arrivalResults.innerHTML = '';
-            airports.forEach(airport => {
-                const resultItem = document.createElement('div');
-                resultItem.className = 'dropdown-result-item';
-                resultItem.innerHTML = `<strong>${airport.code}</strong> - ${airport.city} (${airport.name})`;
-                
-                resultItem.addEventListener('click', function() {
-                    document.querySelector('.arrival .airport-code').textContent = airport.code;
-                    document.querySelector('.arrival .airport-name').textContent = airport.city;
-                    arrivalDropdown.style.display = 'none';
-                });
-                
-                arrivalResults.appendChild(resultItem);
-            });
-        });
-    }
 
     // 드롭다운 위치 설정 함수
     function positionDropdown(triggerElement, dropdown) {
@@ -735,6 +637,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // 항공편 검색 버튼 클릭 이벤트
+    const searchFlightBtn = document.querySelector('#flight .search-flights-btn');
+    if (searchFlightBtn) {
+        searchFlightBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // 검색 조건 수집
+            const departure = document.querySelector('#flight .departure .airport-name').textContent || '서울';
+            const arrival = document.querySelector('#flight .arrival .airport-name').textContent || '도착지';
+            const departureDate = document.querySelector('#flight .date-input input[type="date"]').value || '';
+            const passengers = document.querySelector('#flight .passenger-input select').value || '성인 1명';
+            const seatClass = document.querySelector('#flight .class-input select').value || '일반석';
+            
+            // URL 파라미터 생성
+            const params = new URLSearchParams({
+                departure: departure,
+                arrival: arrival,
+                departureDate: departureDate,
+                passengers: passengers,
+                seatClass: seatClass
+            });
+            
+            // search.jsp로 이동
+            window.location.href = `${window.contextPath || ''}/views/search/search.jsp?${params.toString()}`;
+        });
+    }
+
     // 스크롤 시 드롭다운 위치 재조정
     window.addEventListener('scroll', function() {
         if (departureDropdown && departureDropdown.style.display === 'block') {
@@ -756,21 +685,79 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 }); 
 
+
+
+    // 출발지 검색 자동완성
     document.getElementById("departure-search").addEventListener("input", function() {
+        console.log(window.contextPath);
+        
         let keyword = this.value;
         if (keyword.length < 1) return;
 
-        fetch("${pageContext.request.contextPath}/airportSearch?keyword=" + encodeURIComponent(keyword))
-            .then(response => response.json())
+        fetch(window.contextPath + "/airportSearch.do?keyword=" + encodeURIComponent(keyword))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
             .then(data => {
                 let resultDiv = document.getElementById("departure-results");
                 resultDiv.innerHTML = ""; // 초기화
                 data.forEach(city => {
                     let div = document.createElement("div");
                     div.textContent = city;
-                    div.classList.add("dropdown-item"); // 스타일 적용
+                    div.classList.add("dropdown-result-item");
+
+                    div.addEventListener("click", function() {
+                        document.querySelector('.departure .airport-code').textContent = "";
+                        document.querySelector('.departure .airport-name').textContent = city;
+                        document.getElementById('departure-dropdown').style.display = 'none';
+                    });
+
                     resultDiv.appendChild(div);
                 });
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
             });
     });
+
+    // 도착지 검색 자동완성
+    document.getElementById("arrival-search").addEventListener("input", function() {
+        console.log(window.contextPath);
+        
+        let keyword = this.value;
+        if (keyword.length < 1) return;
+
+        fetch(window.contextPath + "/airportSearch.do?keyword=" + encodeURIComponent(keyword))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                let resultDiv = document.getElementById("arrival-results");
+                resultDiv.innerHTML = ""; // 초기화
+                data.forEach(city => {
+                    let div = document.createElement("div");
+                    div.textContent = city;
+                    div.classList.add("dropdown-result-item");
+
+                    div.addEventListener("click", function() {
+                        document.querySelector('.arrival .airport-code').textContent = "";
+                        document.querySelector('.arrival .airport-name').textContent = city;
+                        document.getElementById('arrival-dropdown').style.display = 'none';
+                    });
+
+                    resultDiv.appendChild(div);
+                });
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+            });
+    });
+
+
 

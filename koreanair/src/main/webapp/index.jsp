@@ -84,6 +84,11 @@
 </head>
 <body>
 
+<script>
+    window.contextPath = "${pageContext.request.contextPath}";
+    console.log("contextPath:", window.contextPath);
+</script>
+
     <!-- 모듈화된 헤더 포함 -->
     <jsp:include page="views/common/header.jsp" />
 
@@ -525,6 +530,10 @@
     <!-- 모듈화된 푸터 포함 -->
     <jsp:include page="views/common/footer.jsp" />
 
+    <script>
+        // JSP에서 JavaScript로 contextPath 전달
+        window.contextPath = '${pageContext.request.contextPath}';
+    </script>
     <script src="${pageContext.request.contextPath}/js/index.js"></script>
          
 </body>
