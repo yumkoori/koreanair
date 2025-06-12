@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.koreanair.model.dto.User;
 import com.koreanair.util.DBConnection;
+import com.koreanair.util.PasswordUtil;
 
 public class UserDAO {
     
@@ -39,9 +40,9 @@ public class UserDAO {
         }
     }
     
-    // 로그인 (사용자 인증)
+    // 로그인 (사용자 인증) - BCrypt 사용
     public User loginUser(String userId, String password) {
-        String sql = "SELECT * FROM users WHERE user_id = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE user_id = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -50,23 +51,27 @@ public class UserDAO {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userId);
-            pstmt.setString(2, password);
             
             rs = pstmt.executeQuery();
             
             if (rs.next()) {
-                User user = new User();
-                user.setUserId(rs.getString("user_id"));
-                user.setPassword(rs.getString("password"));
-                user.setKoreanName(rs.getString("korean_name"));
-                user.setEnglishName(rs.getString("english_name"));
-                user.setBirthDate(rs.getDate("birth_date"));
-                user.setGender(rs.getString("gender"));
-                user.setEmail(rs.getString("email"));
-                user.setPhone(rs.getString("phone"));
-                user.setAddress(rs.getString("address"));
-                user.setRegDate(rs.getTimestamp("reg_date"));
-                return user;
+                String hashedPassword = rs.getString("password");
+                
+                // BCrypt로 비밀번호 검증
+                if (PasswordUtil.verifyPassword(password, hashedPassword)) {
+                    User user = new User();
+                    user.setUserId(rs.getString("user_id"));
+                    user.setPassword(rs.getString("password"));
+                    user.setKoreanName(rs.getString("korean_name"));
+                    user.setEnglishName(rs.getString("english_name"));
+                    user.setBirthDate(rs.getDate("birth_date"));
+                    user.setGender(rs.getString("gender"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPhone(rs.getString("phone"));
+                    user.setAddress(rs.getString("address"));
+                    user.setRegDate(rs.getTimestamp("reg_date"));
+                    return user;
+                }
             }
             
         } catch (SQLException e) {
