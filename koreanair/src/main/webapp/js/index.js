@@ -640,13 +640,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 드롭다운이 이제 absolute 위치이므로 위치 설정 함수는 불필요
+    // 드롭다운 위치 설정 함수
+    function positionDropdown(triggerElement, dropdown) {
+        const rect = triggerElement.getBoundingClientRect();
+        const dropdownWidth = 350;
+        const dropdownHeight = 500; // 최대 높이
+        
+        let top = rect.bottom + 5;
+        let left = rect.left;
+        
+        // 화면 오른쪽 경계 체크
+        if (left + dropdownWidth > window.innerWidth) {
+            left = window.innerWidth - dropdownWidth - 10;
+        }
+        
+        // 화면 왼쪽 경계 체크
+        if (left < 10) {
+            left = 10;
+        }
+        
+        // 화면 하단 경계 체크 - 위쪽으로 표시
+        if (top + dropdownHeight > window.innerHeight) {
+            top = rect.top - dropdownHeight - 5;
+            // 위쪽에도 공간이 부족하면 화면 중앙에 표시
+            if (top < 10) {
+                top = Math.max(10, (window.innerHeight - dropdownHeight) / 2);
+            }
+        }
+        
+        dropdown.style.top = top + 'px';
+        dropdown.style.left = left + 'px';
+        
+        // 강제로 z-index 설정
+        dropdown.style.zIndex = '2147483647';
+        dropdown.style.position = 'fixed';
+    }
 
     // 출발지 클릭 이벤트
     if (departureDiv) {
         departureDiv.addEventListener('click', function(e) {
             if (arrivalDropdown) arrivalDropdown.style.display = 'none';
             if (departureDropdown.style.display === 'none' || departureDropdown.style.display === '') {
+                positionDropdown(departureDiv, departureDropdown);
                 departureDropdown.style.display = 'block';
                 if (departureSearch) {
                     setTimeout(() => departureSearch.focus(), 100);
@@ -663,6 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
         arrivalDiv.addEventListener('click', function(e) {
             if (departureDropdown) departureDropdown.style.display = 'none';
             if (arrivalDropdown.style.display === 'none' || arrivalDropdown.style.display === '') {
+                positionDropdown(arrivalDiv, arrivalDropdown);
                 arrivalDropdown.style.display = 'block';
                 if (arrivalSearch) {
                     setTimeout(() => arrivalSearch.focus(), 100);
@@ -699,23 +735,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 스크롤 시 드롭다운 닫기
+    // 스크롤 시 드롭다운 위치 재조정
     window.addEventListener('scroll', function() {
         if (departureDropdown && departureDropdown.style.display === 'block') {
-            departureDropdown.style.display = 'none';
+            positionDropdown(departureDiv, departureDropdown);
         }
         if (arrivalDropdown && arrivalDropdown.style.display === 'block') {
-            arrivalDropdown.style.display = 'none';
+            positionDropdown(arrivalDiv, arrivalDropdown);
         }
     });
 
-    // 윈도우 리사이즈 시 드롭다운 닫기
+    // 윈도우 리사이즈 시 드롭다운 위치 재조정
     window.addEventListener('resize', function() {
         if (departureDropdown && departureDropdown.style.display === 'block') {
-            departureDropdown.style.display = 'none';
+            positionDropdown(departureDiv, departureDropdown);
         }
         if (arrivalDropdown && arrivalDropdown.style.display === 'block') {
-            arrivalDropdown.style.display = 'none';
+            positionDropdown(arrivalDiv, arrivalDropdown);
         }
     });
 }); 

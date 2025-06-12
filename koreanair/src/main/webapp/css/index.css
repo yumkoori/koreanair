@@ -741,6 +741,8 @@ header.scrolled {
 /* 배너 슬라이더 스타일 */
 .banner {
     padding: 40px 0;
+    position: relative;
+    z-index: 1;
 }
 
 .banner-slider {
@@ -748,6 +750,7 @@ header.scrolled {
     height: 500px;
     overflow: hidden;
     border-radius: 10px;
+    z-index: 1;
 }
 
 .slide {
@@ -760,6 +763,7 @@ header.scrolled {
     transition: opacity 0.8s ease;
     background-size: cover;
     background-position: center;
+    z-index: 1;
 }
 
 .slide.active {
@@ -1396,7 +1400,7 @@ footer {
     width: 100vw;
     height: 15px;
     background: transparent;
-    z-index: 999;
+    z-index: 99;
     opacity: 0;
     visibility: hidden;
     transition: all 0.1s ease;
@@ -1418,7 +1422,7 @@ footer {
     opacity: 0;
     visibility: hidden;
     transition: all 0.1s ease;
-    z-index: 1000;
+    z-index: 100;
     min-width: 320px;
     max-width: min(1100px, 95vw);
     width: clamp(320px, 90vw, 1100px);
@@ -1579,17 +1583,19 @@ footer {
 #departure-dropdown,
 #arrival-dropdown {
     display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
+    position: fixed !important;
+    top: auto;
+    left: auto;
     background: #fff;
     border: none;
     width: 350px;
-    z-index: 99999;
+    z-index: 2147483647 !important;
     padding: 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     overflow: visible;
+    max-height: 500px;
+    pointer-events: auto;
 }
 
 .dropdown-header {
@@ -1651,10 +1657,29 @@ footer {
 }
 
 .dropdown-results {
-    max-height: 250px;
+    max-height: 300px;
     overflow-y: auto;
     margin-top: 12px;
     border-radius: 0 0 8px 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+.dropdown-results::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dropdown-results::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+.dropdown-results::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
 }
 
 .dropdown-result-item {
@@ -1674,4 +1699,29 @@ footer {
 
 .dropdown-result-item:last-child:hover {
     border-radius: 0 0 8px 8px;
+}
+
+/* 모든 화면 크기에서 검색창이 최상단에 오도록 보장 */
+@media (min-width: 841px) {
+    #departure-dropdown,
+    #arrival-dropdown {
+        z-index: 2147483647 !important;
+        position: fixed !important;
+    }
+}
+
+@media (max-width: 840px) {
+    #departure-dropdown,
+    #arrival-dropdown {
+        z-index: 2147483647 !important;
+        position: fixed !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    #departure-dropdown,
+    #arrival-dropdown {
+        z-index: 2147483647 !important;
+        position: fixed !important;
+    }
 }
