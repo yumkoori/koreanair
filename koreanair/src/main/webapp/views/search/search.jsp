@@ -1,0 +1,734 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>항공권 검색 결과 - 항공사 웹사이트</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div class="logo">
+                    <a href="index.jsp">
+                    <svg width="150" height="40" viewBox="0 0 200 50">
+                        <path d="M20,10 C30,4 40,10 40,20 C40,30 30,36 20,30 C10,36 0,30 0,20 C0,10 10,4 20,10 Z" fill="#0064de"/>
+                        <path d="M50,15 L180,15 C185,15 190,20 190,25 C190,30 185,35 180,35 L50,35" stroke="#0064de" stroke-width="5" fill="none"/>
+                        <text x="60" y="28" font-family="Arial" font-size="15" font-weight="bold" fill="#0064de">AIRLINE</text>
+                    </svg>
+                    </a>
+                </div>
+                <nav class="top-nav">
+                    <ul>
+                        <li><a href="#">로그인</a></li>
+                        <li><a href="#">회원가입</a></li>
+                        <li><a href="#">마이페이지</a></li>
+                        <li class="language-selector">
+                            <select>
+                                <option value="ko">한국어</option>
+                                <option value="en">English</option>
+                                <option value="ja">日本語</option>
+                                <option value="zh">中文</option>
+                            </select>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="header-main">
+            <div class="container">
+                <nav class="main-nav">
+                    <ul>
+                        <li class="dropdown">
+                            <a href="#">예매</a>
+                            <div class="dropdown-content">
+                                <a href="#">항공권 예매</a>
+                                <a href="#">예매 조회</a>
+                                <a href="#">체크인</a>
+                                <a href="#">운임 안내</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">여행 정보</a>
+                            <div class="dropdown-content">
+                                <a href="#">취항지 안내</a>
+                                <a href="#">여행 상품</a>
+                                <a href="#">여행 가이드</a>
+                                <a href="#">비자 정보</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">서비스</a>
+                            <div class="dropdown-content">
+                                <a href="#">기내 서비스</a>
+                                <a href="#">공항 서비스</a>
+                                <a href="#">특별 서비스</a>
+                                <a href="#">수하물 안내</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">마일리지</a>
+                            <div class="dropdown-content">
+                                <a href="#">마일리지 적립</a>
+                                <a href="#">마일리지 사용</a>
+                                <a href="#">제휴 프로그램</a>
+                                <a href="#">마일리지 몰</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">항공사 소개</a>
+                            <div class="dropdown-content">
+                                <a href="#">회사 소개</a>
+                                <a href="#">뉴스룸</a>
+                                <a href="#">ESG 경영</a>
+                                <a href="#">채용 정보</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="search">
+                    <input type="text" placeholder="검색어를 입력하세요">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="search-condition-bar">
+        <div class="container">
+            <div class="search-conditions">
+                <div class="location-group">
+                    <div class="location-selector">
+                        <span class="location" data-type="departure">${param.departure != null ? param.departure : '인천(ICN)'}</span>
+                        <div class="location-dropdown">
+                            <div class="search-box">
+                                <input type="text" placeholder="도시 또는 공항 검색">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="recent-searches">
+                                <h4>최근 검색</h4>
+                                <ul>
+                                    <li data-code="ICN">인천국제공항 (ICN)</li>
+                                    <li data-code="GMP">김포국제공항 (GMP)</li>
+                                    <li data-code="PUS">김해국제공항 (PUS)</li>
+                                </ul>
+                            </div>
+                            <div class="popular-airports">
+                                <h4>주요 도시</h4>
+                                <ul>
+                                    <li data-code="ICN">인천국제공항 (ICN)</li>
+                                    <li data-code="NRT">나리타국제공항 (NRT)</li>
+                                    <li data-code="HND">하네다국제공항 (HND)</li>
+                                    <li data-code="PEK">베이징수도국제공항 (PEK)</li>
+                                    <li data-code="HKG">홍콩국제공항 (HKG)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="swap-locations">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                    <div class="location-selector">
+                        <span class="location" data-type="arrival">${param.arrival != null ? param.arrival : '도쿄(NRT)'}</span>
+                        <div class="location-dropdown">
+                            <div class="search-box">
+                                <input type="text" placeholder="도시 또는 공항 검색">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="recent-searches">
+                                <h4>최근 검색</h4>
+                                <ul>
+                                    <li data-code="NRT">나리타국제공항 (NRT)</li>
+                                    <li data-code="HND">하네다국제공항 (HND)</li>
+                                    <li data-code="KIX">간사이국제공항 (KIX)</li>
+                                </ul>
+                            </div>
+                            <div class="popular-airports">
+                                <h4>주요 도시</h4>
+                                <ul>
+                                    <li data-code="NRT">나리타국제공항 (NRT)</li>
+                                    <li data-code="HND">하네다국제공항 (HND)</li>
+                                    <li data-code="PEK">베이징수도국제공항 (PEK)</li>
+                                    <li data-code="HKG">홍콩국제공항 (HKG)</li>
+                                    <li data-code="SGN">떤선녓국제공항 (SGN)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider">|</div>
+                <div class="date-range">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>${param.departureDate != null && param.returnDate != null ? param.departureDate.concat(' ~ ').concat(param.returnDate) : '2024.03.20 ~ 2024.03.27'}</span>
+                    <div class="calendar-dropdown">
+                        <div class="calendar-header">
+                            <div class="month-selector">
+                                <button class="prev-month"><i class="fas fa-chevron-left"></i></button>
+                                <span class="current-month">2024년 3월</span>
+                                <button class="next-month"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="calendar-body">
+                            <div class="weekdays">
+                                <div>일</div>
+                                <div>월</div>
+                                <div>화</div>
+                                <div>수</div>
+                                <div>목</div>
+                                <div>금</div>
+                                <div>토</div>
+                            </div>
+                            <div class="days"></div>
+                        </div>
+                        <div class="calendar-footer">
+                            <button class="apply-date">적용</button>
+                            <button class="cancel-date">취소</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider">|</div>
+                <div class="passengers">
+                    <span>${param.passengers != null ? param.passengers : '성인 2명'}</span>
+                    <div class="passengers-dropdown">
+                        <div class="passenger-type">
+                            <div class="passenger-label">
+                                <span>성인</span>
+                                <small>만 12세 이상</small>
+                            </div>
+                            <div class="passenger-count">
+                                <button class="count-btn decrease"><i class="fas fa-minus"></i></button>
+                                <span class="count adult-count">2</span>
+                                <button class="count-btn increase"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="passenger-type">
+                            <div class="passenger-label">
+                                <span>소아</span>
+                                <small>만 2-11세</small>
+                            </div>
+                            <div class="passenger-count">
+                                <button class="count-btn decrease"><i class="fas fa-minus"></i></button>
+                                <span class="count child-count">0</span>
+                                <button class="count-btn increase"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="passenger-type">
+                            <div class="passenger-label">
+                                <span>유아</span>
+                                <small>만 2세 미만</small>
+                            </div>
+                            <div class="passenger-count">
+                                <button class="count-btn decrease"><i class="fas fa-minus"></i></button>
+                                <span class="count infant-count">0</span>
+                                <button class="count-btn increase"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="passengers-footer">
+                            <button class="apply-passengers">적용</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider">|</div>
+                <div class="seat-type">
+                    <span>${param.seatType != null ? param.seatType : '일반석'}</span>
+                    <div class="seat-type-dropdown">
+                        <h4>좌석 등급 선택</h4>
+                        <div class="seat-options">
+                            <div class="seat-option" data-type="economy">
+                                <span>일반석</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="seat-option" data-type="prestige">
+                                <span>프레스티지석</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="seat-option" data-type="first">
+                                <span>일등석</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="search-again-btn">
+                    <i class="fas fa-search"></i>
+                    항공편 검색
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="date-price-bar">
+        <div class="container">
+            <div class="date-price-list">
+                <div class="date-price-item active">
+                    <div class="date-day">19</div>
+                    <div class="date-weekday">월</div>
+                    <div class="price-amount">432,000원</div>
+                </div>
+                <div class="date-price-item">
+                    <div class="date-day">20</div>
+                    <div class="date-weekday">화</div>
+                    <div class="price-amount">450,000원</div>
+                </div>
+                <div class="date-price-item">
+                    <div class="date-day">21</div>
+                    <div class="date-weekday">수</div>
+                    <div class="price-amount">423,000원</div>
+                </div>
+                <div class="date-price-item">
+                    <div class="date-day">22</div>
+                    <div class="date-weekday">목</div>
+                    <div class="price-amount">448,000원</div>
+                </div>
+                <div class="date-price-item">
+                    <div class="date-day">23</div>
+                    <div class="date-weekday">금</div>
+                    <div class="price-amount">472,000원</div>
+                </div>
+                <div class="date-price-item">
+                    <div class="date-day">24</div>
+                    <div class="date-weekday">토</div>
+                    <div class="price-amount">498,000원</div>
+                </div>
+                <div class="date-price-item">
+                    <div class="date-day">25</div>
+                    <div class="date-weekday">일</div>
+                    <div class="price-amount">465,000원</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="seat-class-selection">
+        <div class="container">
+            <div class="seat-class-buttons">
+                <button class="seat-class-btn active" data-seat-type="economy">일반석</button>
+                <button class="seat-class-btn" data-seat-type="prestige">프레스티지석</button>
+                <button class="seat-class-btn" data-seat-type="first">일등석</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-options-bar">
+        <div class="container">
+            <div class="filter-buttons">
+                <div class="filter-dropdown sort-dropdown">
+                    <button class="filter-btn sort-btn">
+                        <i class="fas fa-sort"></i>
+                        <span class="selected-option">추천순 정렬</span>
+                    </button>
+                    <div class="dropdown-content sort-options">
+                        <h4>정렬 기준 선택</h4>
+                        <div class="radio-options">
+                            <label class="radio-option">
+                                <input type="radio" name="sort-option" value="recommended" checked>
+                                <span class="radio-label">추천순</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="sort-option" value="departure-time">
+                                <span class="radio-label">출발 시간 순</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="sort-option" value="arrival-time">
+                                <span class="radio-label">도착 시간 순</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="sort-option" value="duration">
+                                <span class="radio-label">여행 시간 순</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="sort-option" value="price">
+                                <span class="radio-label">최저 요금 순</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-dropdown stopover-dropdown">
+                    <button class="filter-btn stopover-btn">
+                        <i class="fas fa-plane"></i>
+                        <span class="selected-option">직항 및 경유</span>
+                    </button>
+                    <div class="dropdown-content stopover-options">
+                        <h4>경유 선택</h4>
+                        <div class="radio-options">
+                            <label class="radio-option">
+                                <input type="radio" name="stopover-option" value="all" checked>
+                                <span class="radio-label">전체</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="stopover-option" value="direct">
+                                <span class="radio-label">직항</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="stopover-option" value="stopover">
+                                <span class="radio-label">경유</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="search-results">
+        <div class="container">
+            <div class="search-summary">
+                <h2>항공권 검색 결과</h2>
+                <div class="route-info">
+                    <span class="departure">${param.departure != null ? param.departure : '서울(ICN)'}</span>
+                    <i class="fas fa-arrow-right"></i>
+                    <span class="arrival">${param.arrival != null ? param.arrival : '도쿄(NRT)'}</span>
+                    <span class="date">${param.departureDate != null ? param.departureDate : '2024년 3월 20일'}</span>
+                </div>
+                <div class="filter-options">
+                    <select class="sort-by">
+                        <option value="price">가격순</option>
+                        <option value="duration">소요시간순</option>
+                        <option value="departure">출발시간순</option>
+                    </select>
+                    <button class="filter-btn">
+                        <i class="fas fa-filter"></i> 필터
+                    </button>
+                </div>
+            </div>
+
+            <div class="flights-list">
+                <!-- Flight card with left column for flight info and 3 fare columns -->
+                <div class="flight-card new-layout">
+                    <div class="flight-info-column">
+                        <div class="flight-times">
+                            <div class="departure-block">
+                                <div class="departure-time">07:25</div>
+                                <div class="departure-code">ICN</div>
+                            </div>
+                            <div class="flight-duration">
+                                <div class="duration-line">
+                                    <i class="fas fa-plane"></i>
+                                </div>
+                                <div class="duration-time">2시간 25분</div>
+                            </div>
+                            <div class="arrival-block">
+                                <div class="arrival-time">09:50</div>
+                                <div class="arrival-code">NRT</div>
+                            </div>
+                        </div>
+                        <div class="airline-info">
+                            <span class="flight-number">KE5741</span>
+                            <i class="fas fa-plane-departure"></i>
+                            <span class="airline-name">진에어 운항</span>
+                            <button class="detail-btn">상세보기</button>
+                        </div>
+                    </div>
+                    
+                    <div class="fare-column" data-fare-type="일반석 세이버" data-fare-price="425,000" data-seats="8" data-flight-number="KE5741" data-airline="진에어" data-change-fee="60,000" data-cancel-fee="120,000" data-baggage="수하물 1개 (23kg)" data-upgrade="불가" data-mileage="850">
+                        <div class="fare-type">일반석 세이버</div>
+                        <div class="fare-price">425,000원</div>
+                        <div class="seats-available">8석</div>
+                    </div>
+                    
+                    <div class="fare-column" data-fare-type="프레스티지" data-fare-price="589,900" data-seats="4" data-flight-number="KE5741" data-airline="진에어" data-change-fee="40,000" data-cancel-fee="80,000" data-baggage="수하물 2개 (23kg)" data-upgrade="가능" data-mileage="1,250">
+                        <div class="fare-type">프레스티지</div>
+                        <div class="fare-price">589,900원</div>
+                        <div class="seats-available">4석</div>
+                    </div>
+                    
+                    <div class="fare-column disabled">
+                        <div class="fare-type">퍼스트</div>
+                        <div class="fare-price">890,000원</div>
+                        <div class="seats-available sold-out">매진</div>
+                    </div>
+                </div>
+                
+                <!-- Second flight card -->
+                <div class="flight-card new-layout">
+                    <div class="flight-info-column">
+                        <div class="flight-times">
+                            <div class="departure-block">
+                                <div class="departure-time">13:35</div>
+                                <div class="departure-code">ICN</div>
+                            </div>
+                            <div class="flight-duration">
+                                <div class="duration-line">
+                                    <i class="fas fa-plane"></i>
+                                </div>
+                                <div class="duration-time">2시간 20분</div>
+                            </div>
+                            <div class="arrival-block">
+                                <div class="arrival-time">15:55</div>
+                                <div class="arrival-code">NRT</div>
+                            </div>
+                        </div>
+                        <div class="airline-info">
+                            <span class="flight-number">OZ102</span>
+                            <i class="fas fa-plane-departure"></i>
+                            <span class="airline-name">아시아나항공 운항</span>
+                            <button class="detail-btn">상세보기</button>
+                        </div>
+                    </div>
+                    
+                    <div class="fare-column" data-fare-type="일반석 세이버" data-fare-price="438,000" data-seats="12" data-flight-number="OZ102" data-airline="아시아나항공" data-change-fee="60,000" data-cancel-fee="120,000" data-baggage="수하물 1개 (23kg)" data-upgrade="불가" data-mileage="875">
+                        <div class="fare-type">일반석 세이버</div>
+                        <div class="fare-price">438,000원</div>
+                        <div class="seats-available">12석</div>
+                    </div>
+                    
+                    <div class="fare-column" data-fare-type="프레스티지" data-fare-price="610,000" data-seats="2" data-flight-number="OZ102" data-airline="아시아나항공" data-change-fee="40,000" data-cancel-fee="80,000" data-baggage="수하물 2개 (23kg)" data-upgrade="가능" data-mileage="1,220">
+                        <div class="fare-type">프레스티지</div>
+                        <div class="fare-price">610,000원</div>
+                        <div class="seats-available">2석</div>
+                    </div>
+                    
+                    <div class="fare-column" data-fare-type="퍼스트" data-fare-price="950,000" data-seats="1" data-flight-number="OZ102" data-airline="아시아나항공" data-change-fee="30,000" data-cancel-fee="60,000" data-baggage="수하물 3개 (32kg)" data-upgrade="가능" data-mileage="1,900">
+                        <div class="fare-type">퍼스트</div>
+                        <div class="fare-price">950,000원</div>
+                        <div class="seats-available">1석</div>
+                    </div>
+                </div>
+                
+                <!-- Third flight card -->
+                <div class="flight-card new-layout">
+                    <div class="flight-info-column">
+                        <div class="flight-times">
+                            <div class="departure-block">
+                                <div class="departure-time">09:00</div>
+                                <div class="departure-code">ICN</div>
+                            </div>
+                            <div class="flight-duration">
+                                <div class="duration-line">
+                                    <i class="fas fa-plane"></i>
+                                </div>
+                                <div class="duration-time">2시간 30분</div>
+                            </div>
+                            <div class="arrival-block">
+                                <div class="arrival-time">11:30</div>
+                                <div class="arrival-code">NRT</div>
+                            </div>
+                        </div>
+                        <div class="airline-info">
+                            <span class="flight-number">KE705</span>
+                            <i class="fas fa-plane-departure"></i>
+                            <span class="airline-name">대한항공 운항</span>
+                            <button class="detail-btn">상세보기</button>
+                        </div>
+                    </div>
+                    
+                    <div class="fare-column" data-fare-type="일반석 세이버" data-fare-price="450,000" data-seats="6" data-flight-number="KE705" data-airline="대한항공" data-change-fee="60,000" data-cancel-fee="120,000" data-baggage="수하물 1개 (23kg)" data-upgrade="불가" data-mileage="900">
+                        <div class="fare-type">일반석 세이버</div>
+                        <div class="fare-price">450,000원</div>
+                        <div class="seats-available">6석</div>
+                    </div>
+                    
+                    <div class="fare-column" data-fare-type="프레스티지" data-fare-price="650,000" data-seats="5" data-flight-number="KE705" data-airline="대한항공" data-change-fee="40,000" data-cancel-fee="80,000" data-baggage="수하물 2개 (23kg)" data-upgrade="가능" data-mileage="1,300">
+                        <div class="fare-type">프레스티지</div>
+                        <div class="fare-price">650,000원</div>
+                        <div class="seats-available">5석</div>
+                    </div>
+                    
+                    <div class="fare-column disabled">
+                        <div class="fare-type">퍼스트</div>
+                        <div class="fare-price">975,000원</div>
+                        <div class="seats-available sold-out">매진</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fare details popup that will appear when a fare is clicked -->
+    <div id="fareDetailsPopup" class="fare-details-popup">
+        <div class="fare-details-content">
+            <button id="closePopupBtn" class="close-popup">&times;</button>
+            <div class="fare-details-header">
+                <div id="fareTitle" class="fare-title"></div>
+                <div id="fareLargePrice" class="fare-large-price"></div>
+                <div id="fareSeats" class="fare-seats"></div>
+            </div>
+            <div class="fare-details-info">
+                <div class="fare-flight-info">
+                    <span id="fareFlightNumber" class="fare-flight-number"></span>, 
+                    <span id="fareAirline" class="fare-airline"></span>
+                </div>
+                <div class="fare-details-grid">
+                    <div class="detail-row">
+                        <div class="detail-label">변경 수수료</div>
+                        <div id="changeFee" class="detail-value change-fee"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">환불 위약금</div>
+                        <div id="cancelFee" class="detail-value cancel-fee"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">무료 위탁 수하물</div>
+                        <div id="baggageInfo" class="detail-value baggage-info"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">마일리지 좌석승급</div>
+                        <div id="upgradePossibility" class="detail-value upgrade-possibility"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">적립 마일리지</div>
+                        <div id="mileageAccrual" class="detail-value mileage-accrual"></div>
+                    </div>
+                </div>
+                <div class="fare-actions">
+                    <button id="seatsPreviewBtn" class="seats-preview-btn">
+                        <i class="fas fa-chair"></i>
+                        좌석 정보 미리보기
+                    </button>
+                    <button id="selectFareBtn" class="select-fare-btn">선택하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flight details popup that will appear when the "상세보기" button is clicked -->
+    <div id="flightDetailsPopup" class="flight-details-popup">
+        <div class="flight-details-content">
+            <button id="closeFlightDetailsBtn" class="close-popup">&times;</button>
+            <div class="flight-details-header">
+                <h2>여정 정보</h2>
+                <div class="route-summary">
+                    <span id="flightDetailDeparture">출발지 ICN 서울/인천</span>
+                    <span id="flightDetailArrival">도착지 NRT 도쿄/나리타</span>
+                </div>
+                <div id="flightDetailDuration" class="flight-duration-summary">총 2시간 25분 여정</div>
+            </div>
+            <div class="flight-details-info">
+                <div class="flight-info-row">
+                    <div class="flight-number-aircraft">
+                        <div id="flightDetailNumber" class="flight-number">항공편명 KE5741</div>
+                        <div id="flightDetailAircraft" class="aircraft-type">항공기종 B737-800</div>
+                        <div id="flightDetailOperator" class="operator">진에어 운항</div>
+                    </div>
+                    <div class="flight-amenities">
+                        <div class="amenities-title">기내 어메니티</div>
+                        <div class="amenities-icons">
+                            <i class="fas fa-wifi" title="와이파이"></i>
+                            <i class="fas fa-plug" title="전원"></i>
+                            <i class="fas fa-tv" title="개인 모니터"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="journey-details">
+                    <div class="journey-point departure-details">
+                        <h3>출발지</h3>
+                        <div id="flightDetailDepartureCode" class="airport-code">ICN 서울/인천</div>
+                        <div id="flightDetailDepartureTime" class="time-info">출발시간 2025년 05월 22일 (목) 07:25</div>
+                        <div id="flightDetailDepartureTerminal" class="terminal-info">터미널 2</div>
+                    </div>
+                    <div class="journey-duration">
+                        <div class="duration-line">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div id="flightDetailJourneyTime" class="duration-time">2시간 25분 소요</div>
+                    </div>
+                    <div class="journey-point arrival-details">
+                        <h3>도착지</h3>
+                        <div id="flightDetailArrivalCode" class="airport-code">NRT 도쿄/나리타</div>
+                        <div id="flightDetailArrivalTime" class="time-info">도착시간 2025년 05월 22일 (목) 09:50</div>
+                        <div id="flightDetailArrivalTerminal" class="terminal-info">터미널 1</div>
+                    </div>
+                </div>
+                <div class="flight-details-actions">
+                    <button id="confirmFlightDetailsBtn" class="confirm-btn">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popupOverlay" class="popup-overlay"></div>
+
+    <!-- Fixed bottom payment bar -->
+    <div class="bottom-payment-bar">
+        <div class="container">
+            <div class="payment-content">
+                <div class="total-section">
+                    <span class="total-label">총액</span>
+                    <div class="total-amount">0원</div>
+                </div>
+                <div class="currency-section">
+                    <button class="currency-btn">
+                        <span class="currency-code">KRW</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="currency-dropdown">
+                        <div class="currency-option selected" data-currency="KRW">
+                            <span>KRW</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="currency-option" data-currency="USD">
+                            <span>USD</span>
+                        </div>
+                        <div class="currency-option" data-currency="JPY">
+                            <span>JPY</span>
+                        </div>
+                        <div class="currency-option" data-currency="EUR">
+                            <span>EUR</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="next-section">
+                    <button class="next-btn">
+                        다음 여정
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>고객 서비스</h3>
+                    <ul>
+                        <li><a href="#">고객센터</a></li>
+                        <li><a href="#">자주 묻는 질문</a></li>
+                        <li><a href="#">문의하기</a></li>
+                        <li><a href="#">예약 변경/취소</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>회사 정보</h3>
+                    <ul>
+                        <li><a href="#">회사 소개</a></li>
+                        <li><a href="#">채용 정보</a></li>
+                        <li><a href="#">투자 정보</a></li>
+                        <li><a href="#">뉴스룸</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>법적 고지</h3>
+                    <ul>
+                        <li><a href="#">이용약관</a></li>
+                        <li><a href="#">개인정보처리방침</a></li>
+                        <li><a href="#">운송약관</a></li>
+                        <li><a href="#">법적 고지문</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>소셜 미디어</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 항공사. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="${pageContext.request.contextPath}/js/search.js"></script>
+</body>
+</html> 

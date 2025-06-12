@@ -70,6 +70,12 @@ public class AuthenticationFilter implements Filter {
             return true;
         }
         
+        // views/search 디렉토리는 공개 접근 허용
+        if (path.startsWith("/views/search/")) {
+            return true;
+        }
+
+        
         // 공개 페이지들
         String[] publicPaths = {
             "/",
@@ -83,7 +89,10 @@ public class AuthenticationFilter implements Filter {
             "/registerForm.do",
             "/register.do",
             "/checkUserId.do",
-            "/airportSearch.do" 
+            "/airportSearch.do",
+            "/search/search.jsp",
+            "/views/search/search.jsp"
+            
         };
         
         for (String publicPath : publicPaths) {
