@@ -161,8 +161,43 @@
                     <div class="booking-details">
                         <div class="date-section">
                             <div class="date-input">
-                                <label>출발일</label>
-                                <input type="date" value="2025-05-28">
+                                <label id="date-label">출발일 ~ 도착일</label>
+                                <div class="date-picker-container" id="date-picker-trigger">
+                                    <input type="text" id="date-display" value="2025-05-28 ~ 2025-06-04" readonly>
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <!-- 달력 오버레이 배경 -->
+                                <div class="calendar-overlay" id="calendar-overlay"></div>
+                                
+                                <div class="calendar-popup" id="calendar-popup">
+                                    <div class="calendar-header">
+                                        <button type="button" class="calendar-nav-btn" id="prev-month">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+                                        <span class="calendar-month-year" id="calendar-month-year">2025년 5월</span>
+                                        <button type="button" class="calendar-nav-btn" id="next-month">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                    <div class="calendar-body">
+                                        <div class="calendar-weekdays">
+                                            <div>일</div>
+                                            <div>월</div>
+                                            <div>화</div>
+                                            <div>수</div>
+                                            <div>목</div>
+                                            <div>금</div>
+                                            <div>토</div>
+                                        </div>
+                                        <div class="calendar-days" id="calendar-days">
+                                            <!-- 달력 날짜들이 동적으로 생성됩니다 -->
+                                        </div>
+                                    </div>
+                                    <div class="calendar-footer">
+                                        <button type="button" class="calendar-btn calendar-clear">초기화</button>
+                                        <button type="button" class="calendar-btn calendar-apply">적용</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         

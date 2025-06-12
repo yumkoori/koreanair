@@ -637,6 +637,370 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // 달력 관련 변수들
+    let currentDate = new Date();
+    let selectedStartDate = null;
+    let selectedEndDate = null;
+    let isSelectingRange = false;
+    let currentTripType = 'round'; // 기본값: 왕복
+
+    // 달력 요소들
+    const calendarPopup = document.getElementById('calendar-popup');
+    const calendarOverlay = document.getElementById('calendar-overlay');
+    const datePickerTrigger = document.getElementById('date-picker-trigger');
+    const dateDisplay = document.getElementById('date-display');
+    const dateLabel = document.getElementById('date-label');
+    const calendarMonthYear = document.getElementById('calendar-month-year');
+    const calendarDays = document.getElementById('calendar-days');
+    const prevMonthBtn = document.getElementById('prev-month');
+    const nextMonthBtn = document.getElementById('next-month');
+    const calendarClearBtn = document.querySelector('.calendar-clear');
+    const calendarApplyBtn = document.querySelector('.calendar-apply');
+
+    // 날짜 포맷 함수
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // 날짜 표시 업데이트
+    function updateDateDisplay() {
+        if (currentTripType === 'oneway') {
+            if (selectedStartDate) {
+                dateDisplay.value = formatDate(selectedStartDate);
+            } else {
+                dateDisplay.value = '출발일 선택';
+            }
+        } else {
+            if (selectedStartDate && selectedEndDate) {
+                dateDisplay.value = `${formatDate(selectedStartDate)} ~ ${formatDate(selectedEndDate)}`;
+            } else if (selectedStartDate) {
+                dateDisplay.value = `${formatDate(selectedStartDate)} ~ 도착일을 선택하세요`;
+            } else {
+                dateDisplay.value = '출발일 ~ 도착일 선택';
+            }
+        }
+    }
+
+    // 달력 생성
+    function generateCalendar(year, month) {
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startDate = new Date(firstDay);
+        startDate.setDate(startDate.getDate() - firstDay.getDay());
+        
+        const today = new Date();
+        calendarDays.innerHTML = '';
+        
+        for (let i = 0; i < 42; i++) {
+            const date = new Date(startDate);
+            date.setDate(startDate.getDate() + i);
+            
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.textContent = date.getDate();
+            dayElement.dataset.date = formatDate(date);
+            
+            // 다른 달의 날짜
+            if (date.getMonth() !== month) {
+                dayElement.classList.add('other-month');
+            }
+            
+            // 오늘 날짜
+            if (date.toDateString() === today.toDateString()) {
+                dayElement.classList.add('today');
+            }
+            
+            // 과거 날짜 비활성화
+            if (date < today.setHours(0, 0, 0, 0)) {
+                dayElement.style.color = '#ccc';
+                dayElement.style.cursor = 'not-allowed';
+            } else {
+                // 선택된 날짜 스타일링
+                if (selectedStartDate && date.toDateString() === selectedStartDate.toDateString()) {
+                    dayElement.classList.add('start-date');
+                }
+                if (selectedEndDate && date.toDateString() === selectedEndDate.toDateString()) {
+                    dayElement.classList.add('end-date');
+                }
+                
+                // 범위 내 날짜 (왕복인 경우)
+                if (currentTripType === 'round' && selectedStartDate && selectedEndDate) {
+                    if (date > selectedStartDate && date < selectedEndDate) {
+                        dayElement.classList.add('in-range');
+                    }
+                }
+                
+                // 클릭 이벤트
+                dayElement.addEventListener('click', function() {
+                    selectDate(new Date(date));
+                });
+            }
+            
+            calendarDays.appendChild(dayElement);
+        }
+    }
+
+    // 날짜 선택 처리
+    function selectDate(date) {
+        if (currentTripType === 'oneway') {
+            selectedStartDate = date;
+            selectedEndDate = null;
+            // 편도인 경우 날짜 선택 후 달력 자동 닫기
+            setTimeout(() => {
+                if (calendarPopup.classList.contains('show')) {
+                    toggleCalendar();
+                }
+            }, 300);
+        } else {
+            if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+                // 첫 번째 날짜 선택 또는 재선택
+                selectedStartDate = date;
+                selectedEndDate = null;
+                isSelectingRange = true;
+                // 왕복인 경우 첫 번째 날짜 선택 후에는 달력을 열어둠
+            } else if (selectedStartDate && !selectedEndDate) {
+                // 두 번째 날짜 선택
+                if (date >= selectedStartDate) {
+                    selectedEndDate = date;
+                } else {
+                    selectedEndDate = selectedStartDate;
+                    selectedStartDate = date;
+                }
+                isSelectingRange = false;
+                // 왕복인 경우 두 번째 날짜 선택 후 달력 자동 닫기
+                setTimeout(() => {
+                    if (calendarPopup.classList.contains('show')) {
+                        toggleCalendar();
+                    }
+                }, 300);
+            }
+        }
+        
+        updateDateDisplay();
+        generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+    }
+
+    // 달력 위치 계산
+    function positionCalendar() {
+        if (!datePickerTrigger || !calendarPopup) return;
+        
+        const triggerRect = datePickerTrigger.getBoundingClientRect();
+        const calendarHeight = 400; // 대략적인 달력 높이
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+        
+        // 기본적으로 트리거 아래에 표시
+        let top = triggerRect.bottom + 5;
+        let left = triggerRect.left;
+        let width = Math.max(320, triggerRect.width);
+        
+        // 화면 아래로 넘어가는 경우 위에 표시
+        if (top + calendarHeight > viewportHeight) {
+            top = triggerRect.top - calendarHeight - 5;
+        }
+        
+        // 화면 오른쪽으로 넘어가는 경우 조정
+        if (left + width > viewportWidth) {
+            left = viewportWidth - width - 10;
+        }
+        
+        // 화면 왼쪽으로 넘어가는 경우 조정
+        if (left < 10) {
+            left = 10;
+        }
+        
+        calendarPopup.style.top = top + 'px';
+        calendarPopup.style.left = left + 'px';
+        calendarPopup.style.width = width + 'px';
+        calendarPopup.style.right = 'auto';
+    }
+
+    // 달력 표시/숨김
+    function toggleCalendar() {
+        const isShowing = calendarPopup.classList.contains('show');
+        
+        if (!isShowing) {
+            // 달력 열기
+            // 오버레이와 달력을 body에 직접 추가
+            document.body.appendChild(calendarOverlay);
+            document.body.appendChild(calendarPopup);
+            
+            // 오버레이 표시
+            calendarOverlay.classList.add('show');
+            calendarPopup.classList.add('show');
+            
+            // 강제로 최상단에 표시
+            calendarOverlay.style.zIndex = '999999998';
+            calendarOverlay.style.position = 'fixed';
+            
+            calendarPopup.style.zIndex = '999999999';
+            calendarPopup.style.position = 'fixed';
+            calendarPopup.style.transform = 'translateZ(0)';
+            calendarPopup.style.willChange = 'transform';
+            calendarPopup.style.isolation = 'isolate';
+            calendarPopup.style.backfaceVisibility = 'hidden';
+            calendarPopup.style.background = 'white';
+            calendarPopup.style.opacity = '1';
+            calendarPopup.style.visibility = 'visible';
+            calendarPopup.style.pointerEvents = 'auto';
+            
+            positionCalendar();
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+            updateCalendarHeader();
+        } else {
+            // 달력 닫기
+            calendarOverlay.classList.remove('show');
+            calendarPopup.classList.remove('show');
+            
+            // 원래 위치로 되돌림
+            const dateInput = document.querySelector('.date-input');
+            if (dateInput) {
+                if (calendarOverlay.parentNode === document.body) {
+                    dateInput.appendChild(calendarOverlay);
+                }
+                if (calendarPopup.parentNode === document.body) {
+                    dateInput.appendChild(calendarPopup);
+                }
+            }
+        }
+    }
+
+    // 달력 헤더 업데이트
+    function updateCalendarHeader() {
+        const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+        calendarMonthYear.textContent = `${currentDate.getFullYear()}년 ${months[currentDate.getMonth()]}`;
+    }
+
+    // 왕복/편도 버튼 클릭 이벤트
+    const tripTypeButtons = document.querySelectorAll('.trip-type-btn');
+    
+    if (tripTypeButtons.length > 0) {
+        tripTypeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 모든 버튼에서 active 클래스 제거
+                tripTypeButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // 클릭된 버튼에 active 클래스 추가
+                this.classList.add('active');
+                
+                currentTripType = this.getAttribute('data-type');
+                
+                // 라벨 업데이트
+                if (currentTripType === 'oneway') {
+                    dateLabel.textContent = '출발일';
+                    selectedEndDate = null; // 편도로 변경 시 도착일 초기화
+                } else if (currentTripType === 'round') {
+                    dateLabel.textContent = '출발일 ~ 도착일';
+                } else if (currentTripType === 'multi') {
+                    dateLabel.textContent = '출발일 ~ 도착일';
+                }
+                
+                updateDateDisplay();
+                if (calendarPopup.classList.contains('show')) {
+                    generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                }
+            });
+        });
+    }
+
+    // 이벤트 리스너들
+    if (datePickerTrigger) {
+        datePickerTrigger.addEventListener('click', toggleCalendar);
+    }
+
+    if (prevMonthBtn) {
+        prevMonthBtn.addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+            updateCalendarHeader();
+        });
+    }
+
+    if (nextMonthBtn) {
+        nextMonthBtn.addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+            updateCalendarHeader();
+        });
+    }
+
+    if (calendarClearBtn) {
+        calendarClearBtn.addEventListener('click', function() {
+            selectedStartDate = null;
+            selectedEndDate = null;
+            updateDateDisplay();
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+    }
+
+    if (calendarApplyBtn) {
+        calendarApplyBtn.addEventListener('click', function() {
+            if (calendarPopup.classList.contains('show')) {
+                toggleCalendar();
+            }
+        });
+    }
+
+    // 달력 외부 클릭 시 닫기
+    document.addEventListener('click', function(e) {
+        if (!datePickerTrigger.contains(e.target) && !calendarPopup.contains(e.target)) {
+            if (calendarPopup.classList.contains('show')) {
+                // 왕복 모드에서는 두 날짜가 모두 선택되었을 때만 외부 클릭으로 닫기
+                if (currentTripType === 'oneway' || (currentTripType === 'round' && selectedStartDate && selectedEndDate)) {
+                    toggleCalendar();
+                }
+                // 편도 모드이거나 왕복 모드에서 두 날짜가 모두 선택된 경우에만 닫기
+            }
+        }
+    });
+
+    // 오버레이 클릭 시 달력 닫기
+    if (calendarOverlay) {
+        calendarOverlay.addEventListener('click', function() {
+            if (calendarPopup.classList.contains('show')) {
+                // 왕복 모드에서는 두 날짜가 모두 선택되었을 때만 오버레이 클릭으로 닫기
+                if (currentTripType === 'oneway' || (currentTripType === 'round' && selectedStartDate && selectedEndDate)) {
+                    toggleCalendar();
+                }
+            }
+        });
+    }
+
+    // 스크롤 및 리사이즈 시 달력 위치 재조정
+    window.addEventListener('scroll', function() {
+        if (calendarPopup.classList.contains('show')) {
+            positionCalendar();
+        }
+    });
+
+    window.addEventListener('resize', function() {
+        if (calendarPopup.classList.contains('show')) {
+            positionCalendar();
+        }
+    });
+
+    // 초기 날짜 설정
+    selectedStartDate = new Date(2025, 4, 28); // 2025-05-28
+    selectedEndDate = new Date(2025, 5, 4);   // 2025-06-04
+    
+    // 페이지 로드 시 초기 상태 설정
+    const activeButton = document.querySelector('.trip-type-btn.active');
+    if (activeButton) {
+        const tripType = activeButton.getAttribute('data-type');
+        currentTripType = tripType;
+        if (tripType === 'oneway') {
+            selectedEndDate = null; // 편도인 경우 도착일 제거
+            if (dateLabel) {
+                dateLabel.textContent = '출발일';
+            }
+        }
+    }
+    
+    updateDateDisplay();
+
     // 항공편 검색 버튼 클릭 이벤트
     const searchFlightBtn = document.querySelector('#flight .search-flights-btn');
     if (searchFlightBtn) {
@@ -646,9 +1010,31 @@ document.addEventListener('DOMContentLoaded', function() {
             // 검색 조건 수집
             const departure = document.querySelector('#flight .departure .airport-name').textContent || '서울';
             const arrival = document.querySelector('#flight .arrival .airport-name').textContent || '도착지';
-            const departureDate = document.querySelector('#flight .date-input input[type="date"]').value || '';
             const passengers = document.querySelector('#flight .passenger-input select').value || '성인 1명';
             const seatClass = document.querySelector('#flight .class-input select').value || '일반석';
+            
+            // 날짜 정보 수집
+            let departureDate = '';
+            let returnDate = '';
+            
+            if (selectedStartDate) {
+                departureDate = formatDate(selectedStartDate);
+            }
+            
+            if (selectedEndDate && currentTripType === 'round') {
+                returnDate = formatDate(selectedEndDate);
+            }
+            
+            // 날짜가 선택되지 않은 경우 알림
+            if (!selectedStartDate) {
+                alert('출발일을 선택해주세요.');
+                return;
+            }
+            
+            if (currentTripType === 'round' && !selectedEndDate) {
+                alert('도착일을 선택해주세요.');
+                return;
+            }
             
             // URL 파라미터 생성
             const params = new URLSearchParams({
@@ -656,8 +1042,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 arrival: arrival,
                 departureDate: departureDate,
                 passengers: passengers,
-                seatClass: seatClass
+                seatClass: seatClass,
+                tripType: currentTripType
             });
+            
+            // 왕복인 경우에만 도착일 추가
+            if (currentTripType === 'round' && returnDate) {
+                params.append('returnDate', returnDate);
+            }
             
             // search.jsp로 이동
             window.location.href = `${window.contextPath || ''}/views/search/search.jsp?${params.toString()}`;
@@ -758,6 +1150,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Fetch error:", error);
             });
     });
+
 
 
 

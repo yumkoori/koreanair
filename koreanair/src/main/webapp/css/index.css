@@ -742,7 +742,7 @@ header.scrolled {
 .banner {
     padding: 40px 0;
     position: relative;
-    z-index: 1;
+    z-index: 0;
 }
 
 .banner-slider {
@@ -750,7 +750,7 @@ header.scrolled {
     height: 500px;
     overflow: hidden;
     border-radius: 10px;
-    z-index: 1;
+    z-index: 0;
 }
 
 .slide {
@@ -763,7 +763,7 @@ header.scrolled {
     transition: opacity 0.8s ease;
     background-size: cover;
     background-position: center;
-    z-index: 1;
+    z-index: 0;
 }
 
 .slide.active {
@@ -1724,4 +1724,252 @@ footer {
         z-index: 2147483647 !important;
         position: fixed !important;
     }
+}
+
+/* 날짜 선택기 스타일 */
+.date-picker-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 52px;
+    height: 52px;
+    box-sizing: border-box;
+}
+
+.date-picker-container:hover {
+    border-color: #1e3a8a;
+}
+
+.date-picker-container input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    font-family: 'Nanum Gothic', sans-serif;
+    flex: 1;
+    cursor: pointer;
+    color: #333;
+    height: 20px;
+    line-height: 1.4;
+    padding: 0;
+}
+
+.date-picker-container i {
+    color: #666;
+    margin-left: 10px;
+}
+
+/* 달력 팝업 */
+.calendar-popup {
+    position: fixed !important;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white !important;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    z-index: 999999999 !important;
+    margin-top: 5px;
+    display: none;
+    min-width: 320px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+.calendar-popup.show {
+    display: block;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.calendar-nav-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.calendar-nav-btn:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.calendar-month-year {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.calendar-body {
+    padding: 15px 20px;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.calendar-weekdays div {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    padding: 8px 0;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background: #f0f8ff;
+}
+
+.calendar-day.other-month {
+    color: #ccc;
+}
+
+.calendar-day.selected {
+    background: #1e3a8a;
+    color: white;
+}
+
+.calendar-day.start-date {
+    background: #1e3a8a;
+    color: white;
+}
+
+.calendar-day.end-date {
+    background: #1e3a8a;
+    color: white;
+}
+
+.calendar-day.in-range {
+    background: #e6f3ff;
+    color: #1e3a8a;
+}
+
+.calendar-day.today {
+    border: 2px solid #60a5fa;
+}
+
+.calendar-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+}
+
+.calendar-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.calendar-btn:hover {
+    background: #f5f5f5;
+}
+
+.calendar-apply {
+    background: #1e3a8a;
+    color: white;
+    border-color: #1e3a8a;
+}
+
+.calendar-apply:hover {
+    background: #1e40af;
+}
+
+/* 배너 관련 요소들의 z-index 강제 조정 */
+.banner,
+.banner-slider,
+.slide,
+.slide.active,
+.slide-content {
+    z-index: 0 !important;
+}
+
+/* 달력이 모든 요소 위에 표시되도록 강제 설정 */
+.calendar-popup.show {
+    z-index: 2147483647 !important;
+    position: fixed !important;
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+    isolation: isolate !important;
+}
+
+/* 달력 팝업을 새로운 스택 컨텍스트로 만들기 */
+.calendar-popup {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* 달력 오버레이 배경 */
+.calendar-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    z-index: 999999998 !important;
+    display: none;
+    pointer-events: auto !important;
+}
+
+.calendar-overlay.show {
+    display: block !important;
+}
+
+/* 모든 배경 이미지와 슬라이드보다 위에 표시 */
+body > .calendar-popup {
+    z-index: 999999999 !important;
+    position: fixed !important;
+    transform: translateZ(999px) !important;
+}
+
+/* 배경 이미지들을 뒤로 보내기 */
+.slide,
+.slide.active,
+.banner-slider,
+.banner {
+    transform: translateZ(-1px) !important;
 }
