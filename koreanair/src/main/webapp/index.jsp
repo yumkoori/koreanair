@@ -120,6 +120,17 @@
                             <div class="airport-input departure">
                                 <div class="airport-code">SEL</div>
                                 <div class="airport-name">서울</div>
+                                <div id="departure-dropdown">
+                                    <div class="dropdown-header">
+                                        <div class="dropdown-title">출발지 검색</div>
+                                        <button id="departure-close" class="dropdown-close">×</button>
+                                    </div>
+                                    <input type="text" placeholder="" id="departure-search" class="dropdown-search-input" />
+                                    <div id="departure-all-regions" class="dropdown-all-regions">
+                                        <span>📍</span> 모든 지역 보기
+                                    </div>
+                                    <div id="departure-results" class="dropdown-results"></div>
+                                </div>
                             </div>
                             <button class="swap-route-btn">
                                 <i class="fas fa-exchange-alt"></i>
@@ -127,6 +138,17 @@
                             <div class="airport-input arrival">
                                 <div class="airport-code">To</div>
                                 <div class="airport-name">도착지</div>
+                                <div id="arrival-dropdown">
+                                    <div class="dropdown-header">
+                                        <div class="dropdown-title">도착지 검색</div>
+                                        <button id="arrival-close" class="dropdown-close">×</button>
+                                    </div>
+                                    <input type="text" placeholder="" id="arrival-search" class="dropdown-search-input" />
+                                    <div id="arrival-all-regions" class="dropdown-all-regions">
+                                        <span>📍</span> 모든 지역 보기
+                                    </div>
+                                    <div id="arrival-results" class="dropdown-results"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -504,5 +526,6 @@
     <jsp:include page="views/common/footer.jsp" />
 
     <script src="${pageContext.request.contextPath}/js/index.js"></script>
+         
 </body>
 </html>

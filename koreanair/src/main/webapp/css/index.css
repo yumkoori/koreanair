@@ -284,13 +284,14 @@ header.scrolled {
     padding: 60px 0;
     color: white;
     font-family: 'Nanum Gothic', sans-serif;
+    overflow: visible;
 }
 
 .booking-card {
     background: transparent;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    overflow: visible;
     backdrop-filter: blur(10px);
     font-family: 'Nanum Gothic', sans-serif;
 }
@@ -344,6 +345,7 @@ header.scrolled {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     font-family: 'Nanum Gothic', sans-serif;
+    overflow: visible;
 }
 
 .booking-content.active {
@@ -469,6 +471,7 @@ header.scrolled {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
 }
 
 .airport-input:hover {
@@ -1570,4 +1573,105 @@ footer {
 
 .nav-item:hover .nav-link::after {
     width: 100%;
+}
+
+/* 출발지/도착지 검색 드롭다운 스타일 */
+#departure-dropdown,
+#arrival-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: none;
+    width: 350px;
+    z-index: 99999;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    overflow: visible;
+}
+
+.dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dropdown-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.dropdown-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.dropdown-search-input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none;
+}
+
+.dropdown-search-input:focus {
+    border-color: #0066cc;
+}
+
+.dropdown-all-regions {
+    margin-top: 16px;
+    color: #0066cc;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-all-regions span {
+    margin-right: 8px;
+}
+
+/* 검색 결과가 없을 때도 하단이 둥글게 보이도록 */
+.dropdown-all-regions:last-child {
+    border-radius: 0 0 8px 8px;
+    margin-bottom: -12px;
+    padding-bottom: 12px;
+}
+
+.dropdown-results {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 12px;
+    border-radius: 0 0 8px 8px;
+}
+
+.dropdown-result-item {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-result-item:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.dropdown-result-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-result-item:last-child:hover {
+    border-radius: 0 0 8px 8px;
 }

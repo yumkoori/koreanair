@@ -481,4 +481,260 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // 출발지/도착지 검색 기능
+    const departureDiv = document.querySelector('.airport-input.departure');
+    const arrivalDiv = document.querySelector('.airport-input.arrival');
+    const departureDropdown = document.getElementById('departure-dropdown');
+    const arrivalDropdown = document.getElementById('arrival-dropdown');
+    const departureSearch = document.getElementById('departure-search');
+    const arrivalSearch = document.getElementById('arrival-search');
+    const departureResults = document.getElementById('departure-results');
+    const arrivalResults = document.getElementById('arrival-results');
+    const departureClose = document.getElementById('departure-close');
+    const arrivalClose = document.getElementById('arrival-close');
+    const departureAllRegions = document.getElementById('departure-all-regions');
+    const arrivalAllRegions = document.getElementById('arrival-all-regions');
+
+
+
+    // 샘플 공항/도시 데이터
+    const airports = [
+        { code: 'ICN', name: '인천국제공항', city: '인천' },
+        { code: 'GMP', name: '김포국제공항', city: '서울' },
+        { code: 'PUS', name: '김해국제공항', city: '부산' },
+        { code: 'CJU', name: '제주국제공항', city: '제주도' },
+        { code: 'TAE', name: '대구국제공항', city: '대구' },
+        { code: 'KWJ', name: '광주공항', city: '광주' },
+        { code: 'RSU', name: '여수공항', city: '여수' },
+        { code: 'USN', name: '울산공항', city: '울산' },
+        { code: 'HIN', name: '사천공항', city: '사천' },
+        { code: 'KPX', name: '포항공항', city: '포항' },
+        { code: 'NRT', name: '나리타국제공항', city: '도쿄' },
+        { code: 'HND', name: '하네다공항', city: '도쿄' },
+        { code: 'KIX', name: '간사이국제공항', city: '오사카' },
+        { code: 'NGO', name: '중부국제공항', city: '나고야' },
+        { code: 'PVG', name: '푸동국제공항', city: '상하이' },
+        { code: 'PEK', name: '베이징수도국제공항', city: '베이징' }
+    ];
+
+    // 검색 기능
+    function searchAirports(query, resultsDiv) {
+        resultsDiv.innerHTML = '';
+        if (query.length === 0) return;
+
+        const filtered = airports.filter(airport => 
+            airport.city.includes(query) || 
+            airport.name.includes(query) ||
+            airport.code.includes(query.toUpperCase())
+        );
+
+        filtered.forEach(airport => {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'dropdown-result-item';
+            resultItem.innerHTML = `<strong>${airport.code}</strong> - ${airport.city} (${airport.name})`;
+            
+            resultItem.addEventListener('click', function() {
+                if (resultsDiv === departureResults) {
+                    document.querySelector('.departure .airport-code').textContent = airport.code;
+                    document.querySelector('.departure .airport-name').textContent = airport.city;
+                    departureDropdown.style.display = 'none';
+                } else {
+                    document.querySelector('.arrival .airport-code').textContent = airport.code;
+                    document.querySelector('.arrival .airport-name').textContent = airport.city;
+                    arrivalDropdown.style.display = 'none';
+                }
+            });
+            
+            resultsDiv.appendChild(resultItem);
+        });
+    }
+
+    // 출발지 검색 이벤트
+    if (departureSearch) {
+        departureSearch.addEventListener('input', function() {
+            searchAirports(this.value, departureResults);
+        });
+
+        // 검색창에 포커스될 때 테두리 색상 변경
+        departureSearch.addEventListener('focus', function() {
+            this.style.borderColor = '#0066cc';
+        });
+        departureSearch.addEventListener('blur', function() {
+            this.style.borderColor = '#e0e0e0';
+        });
+    }
+
+    // 도착지 검색 이벤트
+    if (arrivalSearch) {
+        arrivalSearch.addEventListener('input', function() {
+            searchAirports(this.value, arrivalResults);
+        });
+
+        // 검색창에 포커스될 때 테두리 색상 변경
+        arrivalSearch.addEventListener('focus', function() {
+            this.style.borderColor = '#0066cc';
+        });
+        arrivalSearch.addEventListener('blur', function() {
+            this.style.borderColor = '#e0e0e0';
+        });
+    }
+
+    // X 버튼 클릭 이벤트
+    if (departureClose) {
+        departureClose.addEventListener('click', function(e) {
+            e.stopPropagation();
+            departureDropdown.style.display = 'none';
+        });
+    }
+    
+    if (arrivalClose) {
+        arrivalClose.addEventListener('click', function(e) {
+            e.stopPropagation();
+            arrivalDropdown.style.display = 'none';
+        });
+    }
+
+    // 모든 지역 보기 클릭 이벤트
+    if (departureAllRegions) {
+        departureAllRegions.addEventListener('click', function() {
+            departureSearch.value = '';
+            searchAirports('', departureResults);
+            // 모든 공항 표시
+            departureResults.innerHTML = '';
+            airports.forEach(airport => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'dropdown-result-item';
+                resultItem.innerHTML = `<strong>${airport.code}</strong> - ${airport.city} (${airport.name})`;
+                
+                resultItem.addEventListener('click', function() {
+                    document.querySelector('.departure .airport-code').textContent = airport.code;
+                    document.querySelector('.departure .airport-name').textContent = airport.city;
+                    departureDropdown.style.display = 'none';
+                });
+                
+                departureResults.appendChild(resultItem);
+            });
+        });
+    }
+
+    if (arrivalAllRegions) {
+        arrivalAllRegions.addEventListener('click', function() {
+            arrivalSearch.value = '';
+            searchAirports('', arrivalResults);
+            // 모든 공항 표시
+            arrivalResults.innerHTML = '';
+            airports.forEach(airport => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'dropdown-result-item';
+                resultItem.innerHTML = `<strong>${airport.code}</strong> - ${airport.city} (${airport.name})`;
+                
+                resultItem.addEventListener('click', function() {
+                    document.querySelector('.arrival .airport-code').textContent = airport.code;
+                    document.querySelector('.arrival .airport-name').textContent = airport.city;
+                    arrivalDropdown.style.display = 'none';
+                });
+                
+                arrivalResults.appendChild(resultItem);
+            });
+        });
+    }
+
+    // 드롭다운이 이제 absolute 위치이므로 위치 설정 함수는 불필요
+
+    // 출발지 클릭 이벤트
+    if (departureDiv) {
+        departureDiv.addEventListener('click', function(e) {
+            if (arrivalDropdown) arrivalDropdown.style.display = 'none';
+            if (departureDropdown.style.display === 'none' || departureDropdown.style.display === '') {
+                departureDropdown.style.display = 'block';
+                if (departureSearch) {
+                    setTimeout(() => departureSearch.focus(), 100);
+                }
+            } else {
+                departureDropdown.style.display = 'none';
+            }
+            e.stopPropagation();
+        });
+    }
+
+    // 도착지 클릭 이벤트
+    if (arrivalDiv) {
+        arrivalDiv.addEventListener('click', function(e) {
+            if (departureDropdown) departureDropdown.style.display = 'none';
+            if (arrivalDropdown.style.display === 'none' || arrivalDropdown.style.display === '') {
+                arrivalDropdown.style.display = 'block';
+                if (arrivalSearch) {
+                    setTimeout(() => arrivalSearch.focus(), 100);
+                }
+            } else {
+                arrivalDropdown.style.display = 'none';
+            }
+            e.stopPropagation();
+        });
+    }
+
+    // 드롭다운 내부 클릭 시 이벤트 전파 방지
+    if (departureDropdown) {
+        departureDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+    
+    if (arrivalDropdown) {
+        arrivalDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+
+    // 바깥 클릭 시 모든 드롭다운 닫기
+    document.addEventListener('click', function(e) {
+        if (departureDiv && arrivalDiv && 
+            !departureDiv.contains(e.target) && 
+            !arrivalDiv.contains(e.target) &&
+            !departureDropdown.contains(e.target) &&
+            !arrivalDropdown.contains(e.target)) {
+            if (departureDropdown) departureDropdown.style.display = 'none';
+            if (arrivalDropdown) arrivalDropdown.style.display = 'none';
+        }
+    });
+
+    // 스크롤 시 드롭다운 닫기
+    window.addEventListener('scroll', function() {
+        if (departureDropdown && departureDropdown.style.display === 'block') {
+            departureDropdown.style.display = 'none';
+        }
+        if (arrivalDropdown && arrivalDropdown.style.display === 'block') {
+            arrivalDropdown.style.display = 'none';
+        }
+    });
+
+    // 윈도우 리사이즈 시 드롭다운 닫기
+    window.addEventListener('resize', function() {
+        if (departureDropdown && departureDropdown.style.display === 'block') {
+            departureDropdown.style.display = 'none';
+        }
+        if (arrivalDropdown && arrivalDropdown.style.display === 'block') {
+            arrivalDropdown.style.display = 'none';
+        }
+    });
 }); 
+
+    document.getElementById("departure-search").addEventListener("input", function() {
+        let keyword = this.value;
+        if (keyword.length < 1) return;
+
+        fetch("${pageContext.request.contextPath}/airportSearch?keyword=" + encodeURIComponent(keyword))
+            .then(response => response.json())
+            .then(data => {
+                let resultDiv = document.getElementById("departure-results");
+                resultDiv.innerHTML = ""; // 초기화
+                data.forEach(city => {
+                    let div = document.createElement("div");
+                    div.textContent = city;
+                    div.classList.add("dropdown-item"); // 스타일 적용
+                    resultDiv.appendChild(div);
+                });
+            });
+    });
+
