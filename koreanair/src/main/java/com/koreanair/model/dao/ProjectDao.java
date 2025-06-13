@@ -10,7 +10,9 @@ public interface ProjectDao {
 	
 	public int seatsave(List<FlightSeatSaveDTO> seatList , String id) throws Exception;
 	
-	public List<FlightSeatSaveDTO> flightSeatload(String planeType) throws Exception;
+	public List<FlightSeatSaveDTO> flightSeatload(String flight_id) throws Exception;
 	
-	public int searchcarftid( String craftid) throws Exception;
+	public int searchcarftid( String flight_id) throws Exception;
+	
+	public boolean checkDuplicateSeat(List<FlightSeatSaveDTO> seatList) throws Exception;
 }

@@ -8,10 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import org.apache.jasper.tagplugins.jstl.core.Url;
 
 import com.koreanair.model.dto.AirCraftId;
 import com.koreanair.model.dto.FlightSeatSaveDTO;
@@ -72,7 +71,7 @@ public class ProjectDaoimpl implements ProjectDao{
 	    PreparedStatement pstmt = null;
 	    int totalSavedCount = 0;
 
-	    String sql = "INSERT INTO flight_seat (seat_id, flight_id, class_id, status, price , row) VALUES (?, ?, ?, ?, ? , ?)";
+	    String sql = "INSERT INTO flight_seat (seat_id, flight_id, class_id, status, price , row , seat) VALUES (?, ?, ?, ?, ? , ? , ?)";
 	    
 	    try {
 	        // 2. DBConn 유틸리티를 사용해 커넥션을 얻어옵니다.
@@ -93,6 +92,7 @@ public class ProjectDaoimpl implements ProjectDao{
 	            pstmt.setString(4, "AVAILABLE");
 	            pstmt.setInt(5, dto.getPrice()); 
 	            pstmt.setInt(6, dto.getRow());
+	            pstmt.setString(7, dto.getSeat());
 	            
 	            pstmt.addBatch(); // 실행할 쿼리에 추가
 	        }
@@ -117,63 +117,54 @@ public class ProjectDaoimpl implements ProjectDao{
 
 
 	@Override
-	public List<FlightSeatSaveDTO> flightSeatload(String planeType) throws Exception {
-		System.out.println(planeType + " 들고무사히 도착했습니다!!!");
-		
-		Connection conn = null;
+	public List<FlightSeatSaveDTO> flightSeatload(String flight_id) throws Exception {
+	    System.out.println(flight_id + " 들고무사히 도착했습니다!!!");
+
+	    Connection conn = null;
 	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
 
-	    String sql = "";
-	    
+	    String sql = "SELECT * FROM flight_seat WHERE flight_id = ? AND `row` BETWEEN 7 AND 52";
+	    List<FlightSeatSaveDTO> list = new ArrayList();
+
 	    try {
-	        // 2. DBConn 유틸리티를 사용해 커넥션을 얻어옵니다.
-	        conn = DBConn.getConnection(); 
-	        
-	        // conn.setAutoCommit(false); // 트랜잭션 시작
+	        conn = DBConn.getConnection();
 	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, flight_id);
+	        rs = pstmt.executeQuery();
 
-	        // 3. 파라미터로 받은 'seatList'를 반복문으로 처리합니다.
-	        //    'dto' 변수는 여기서 각 좌석 정보를 받아와 사용합니다.
-	        for (FlightSeatSaveDTO dto : seatList) { 
-	            // 4. 'dto' 객체의 값으로 PreparedStatement를 설정합니다.
-	            pstmt.setString(1, dto.getAircraft());
-	            pstmt.setInt(2, dto.getRow()); 
-	            pstmt.setString(3, dto.getSeat());
-	            pstmt.setInt(4, dto.getPrice());
-	            
-	            pstmt.addBatch(); // 실행할 쿼리에 추가
+	        while (rs.next()) {
+	            FlightSeatSaveDTO dto = new FlightSeatSaveDTO();
+	            dto.setSeat(rs.getString("seat"));
+	            dto.setPrice(rs.getInt("price"));
+	            dto.setRow(rs.getInt("row"));
+	            list.add(dto);
 	        }
-	        
-	        int[] resultCounts = pstmt.executeBatch(); // 배치 쿼리 실행
-	        // conn.commit(); // 트랜잭션 성공 (커밋)
-
-	        totalSavedCount = resultCounts.length; // 성공한 개수
 
 	    } catch (Exception e) {
-	        if (conn != null) conn.rollback(); // 오류 시 롤백
+	        if (conn != null) conn.rollback();
 	        System.out.println("DAO seatsave 오류");
 	        e.printStackTrace();
-	        throw e; // 오류를 상위로 전달
+	        throw e;
 	    } finally {
-	        // 5. 자원 해제
-	    	DBConn.close(conn, pstmt);  // DBConn 유틸리티에 close 메서드가 있다면 사용
+	        if (rs != null) try { rs.close(); } catch (Exception e) {}
+	        DBConn.close(conn, pstmt);
 	    }
-	    
-	    return totalSavedCount;
-		
+
+	    return list;
 	}
 
 
 	@Override
-	public int searchcarftid(String craftid) throws Exception {
+	public int searchcarftid(String flight_id) throws Exception {
 		// 1. Connection과 PreparedStatement는 메서드 내의 지역 변수로 선언하는 것이 좋습니다.
 	    Connection conn = null;
 	    PreparedStatement pstmt = null;
 	    int checkid = 0;
 
 	    String sql = "SELECT * "
-	    		      + " FROM aircraft "
-	    		      + " WHERE aircraft_id = ? ";
+	    		      + " FROM flight "
+	    		      + " WHERE flight_id = ? ";
 	    
 	    try {
 	        // 2. DBConn 유틸리티를 사용해 커넥션을 얻어옵니다.
@@ -182,7 +173,7 @@ public class ProjectDaoimpl implements ProjectDao{
 	        // conn.setAutoCommit(false); // 트랜잭션 시작
 	        pstmt = conn.prepareStatement(sql);
 
-	            pstmt.setString(1, craftid);
+	            pstmt.setString(1, flight_id);
 	       	        
 	            rs = pstmt.executeQuery();
 	        // conn.commit(); // 트랜잭션 성공 (커밋)
@@ -203,5 +194,56 @@ public class ProjectDaoimpl implements ProjectDao{
 	    }
 		return checkid;
 	}
+
+
+	@Override
+	public boolean checkDuplicateSeat(List<FlightSeatSaveDTO> seatList) throws Exception {
+	    Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    String sql = "SELECT COUNT(*) FROM flight_seat WHERE flight_id = ? AND row = ? AND seat = ?";
+
+	    try {
+	        conn = DBConn.getConnection();
+	        pstmt = conn.prepareStatement(sql);
+
+	        for (FlightSeatSaveDTO seat : seatList) {
+	            pstmt.setString(1, seat.getFlight_id());   
+	            pstmt.setInt(2, seat.getRow());            
+	            pstmt.setString(3, seat.getSeat());        
+
+	            rs = pstmt.executeQuery();
+
+	            if (rs.next()) {
+	                int count = rs.getInt(1);
+	                if (count > 0) {
+	                    // 중복이 발견되면 true 반환 (중복 있음)
+	                    System.out.println("중복 좌석 발견: Flight_id=" + seat.getFlight_id() + 
+	                                     ", Row=" + seat.getRow() + ", Seat=" + seat.getSeat());
+	                    return true;
+	                }
+	            }
+	            
+	            // ResultSet을 닫고 다음 쿼리를 위해 준비
+	            if (rs != null) {
+	                rs.close();
+	                rs = null;
+	            }
+	        }
+
+	    } catch (Exception e) {
+	        System.out.println("DAO checkDuplicateSeat 오류");
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        if (rs != null) try { rs.close(); } catch (Exception e) {}
+	        if (pstmt != null) try { pstmt.close(); } catch (Exception e) {}
+	        if (conn != null) try { conn.close(); } catch (Exception e) {}
+	    }
+
+	    return false; // 중복 없음
+	}
+
 
 }

@@ -8,10 +8,10 @@ import com.koreanair.model.dto.FlightSeatSaveDTO;
 
 public class AirCraftIdService {
 	
-	public int searchaircraftid( String craftid ) throws Exception{
-	System.out.println(craftid);
+	public int searchaircraftid( String flight_id ) throws Exception{
+	System.out.println(flight_id);
 	ProjectDao dao = new ProjectDaoimpl();
 	
-	return dao.searchcarftid(craftid);
+	return dao.searchcarftid(flight_id);
 	}
 }

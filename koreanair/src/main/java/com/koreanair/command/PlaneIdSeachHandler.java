@@ -13,13 +13,13 @@ public class PlaneIdSeachHandler implements CommandHandler{
 	@Override
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		System.out.println("PlaneIdSeachHandler 도착!");
-		String craftid = request.getParameter("searchword");
-		System.out.println("searchword = " + craftid);
+		String flight_id = request.getParameter("searchword");
+		System.out.println("searchword = " + flight_id);
 		
 		AirCraftIdService getcraftid = new AirCraftIdService();
 		
 		
-		int check = getcraftid.searchaircraftid(craftid);
+		int check = getcraftid.searchaircraftid(flight_id);
 		
 		
         // 1. 클라이언트(브라우저)에게 지금부터 보내는 데이터가 JSON 형식임을 알려줍니다.

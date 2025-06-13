@@ -240,10 +240,8 @@
                         <div id="flightFilterContainer" class="btn-group" role="group" aria-label="Flight Type Filters">
                           <label style="display:block; margin-bottom:5px;">유형 선택</label>
                           <div>
-                            <button type="button" class="btn btn-default filter-btn active" data-filter="all">국내 + 국제 </button>
-                            <button type="button" class="btn btn-default filter-btn" data-filter="domestic">국내선</button>
-                            <button type="button" class="btn btn-default filter-btn" data-filter="international">국제선</button>
-                            <button type="button" class="btn btn-info filter-btn" data-filter="realtime">오늘 실시간</button>
+                            <button type="button" class="btn btn-default filter-btn active" data-filter="all">전체 스케줄</button>
+                            <button type="button" class="btn btn-info filter-btn" data-filter="realtime">실시간 현황</button>
                           </div>
                         </div>
                       </div>
@@ -317,7 +315,7 @@
     // --- 1. 핸들러가 넘겨준 데이터를 JavaScript 변수로 바로 받기 (수정된 방식) ---
     // 핸들러에서 request.setAttribute("initialData", jsonString)으로 넘겨준 값입니다.
     // 이 방식이 더 간단하고 안전합니다.
-    const initialData = ${initialData};
+    var initialData = ${initialData != null ? initialData : '[]'};
 
 
     $(document).ready(function() {
@@ -353,12 +351,7 @@
             if (filter === 'realtime') {
                 filterText = " 실시간 현황";
             } else {
-                switch(filter) {
-                    case 'domestic': filterText = " 국내선 스케줄"; break;
-                    case 'international': filterText = " 국제선 스케줄"; break;
-                    case 'all':
-                    default: filterText = " 전체 스케줄"; break;
-                }
+                filterText = " 전체 스케줄";
             }
             $scheduleDateDisplay.text(dateFormatted + filterText);
         }
@@ -421,39 +414,77 @@
             showLoading();
             updateScheduleDisplayTitle(dateToQuery, filterToApply);
 
-            $.ajax({
-                url: '${pageContext.request.contextPath}/adminpage/index5.wi', // 핸들러 경로
-                type: 'GET',
-                data: { 
-                    date: dateToQuery,
-                    flightType: filterToApply 
-                },
-                dataType: 'json',
-                cache: false,
-                success: function(data) {
-                    currentSchedules = [];
-                    if (Array.isArray(data) && data.length > 0 && data[0] && data[0].error) {
-                        $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">스케줄 조회 실패: ' + data[0].error + '</td></tr>');
-                    } else if (Array.isArray(data)) {
-                        currentSchedules = data;
-                    } else {
-                        $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">잘못된 형식의 응답입니다.</td></tr>');
+            // 실시간 데이터는 WorkspaceFlightData.jsp를 통해 API에서 직접 가져오기
+            if (filterToApply === 'realtime') {
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/views/adminpage/WorkspaceFlightData.jsp',
+                    type: 'GET',
+                    data: { 
+                        date: dateToQuery,
+                        flightType: 'realtime'
+                    },
+                    dataType: 'json',
+                    cache: false,
+                    success: function(data) {
+                        currentSchedules = [];
+                        if (Array.isArray(data) && data.length > 0 && data[0] && data[0].error) {
+                            $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">실시간 데이터 조회 실패: ' + data[0].error + '</td></tr>');
+                        } else if (Array.isArray(data)) {
+                            currentSchedules = data;
+                        } else {
+                            $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">잘못된 형식의 응답입니다.</td></tr>');
+                        }
+                        
+                        currentPage = 1; 
+                        renderTable();
+                        renderPagination();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">실시간 데이터를 불러오는 중 오류가 발생했습니다. (서버 응답 코드: ' + jqXHR.status + ')</td></tr>');
+                        currentSchedules = [];
+                        renderTable();
+                        renderPagination();
+                    },
+                    complete: function() {
+                        hideLoading();
                     }
-                    
-                    currentPage = 1; 
-                    renderTable();
-                    renderPagination();
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">스케줄을 불러오는 중 오류가 발생했습니다. (서버 응답 코드: ' + jqXHR.status + ')</td></tr>');
-                    currentSchedules = [];
-                    renderTable();
-                    renderPagination();
-                },
-                complete: function() {
-                    hideLoading();
-                }
-            });
+                });
+            } else {
+                // 기본 스케줄 데이터는 기존 핸들러 사용
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/adminpage/index5.wi',
+                    type: 'GET',
+                    data: { 
+                        date: dateToQuery,
+                        flightType: filterToApply 
+                    },
+                    dataType: 'json',
+                    cache: false,
+                    success: function(data) {
+                        currentSchedules = [];
+                        if (Array.isArray(data) && data.length > 0 && data[0] && data[0].error) {
+                            $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">스케줄 조회 실패: ' + data[0].error + '</td></tr>');
+                        } else if (Array.isArray(data)) {
+                            currentSchedules = data;
+                        } else {
+                            $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">잘못된 형식의 응답입니다.</td></tr>');
+                        }
+                        
+                        currentPage = 1; 
+                        renderTable();
+                        renderPagination();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $flightScheduleTableBody.empty().append('<tr><td colspan="7" class="text-center">스케줄을 불러오는 중 오류가 발생했습니다. (서버 응답 코드: ' + jqXHR.status + ')</td></tr>');
+                        currentSchedules = [];
+                        renderTable();
+                        renderPagination();
+                    },
+                    complete: function() {
+                        hideLoading();
+                    }
+                });
+            }
         }
 
         function renderTable() {
@@ -536,13 +567,20 @@
         });
 
         // --- 페이지 첫 로딩 시 실행될 로직 ---
-        currentSchedules = initialData;
-        renderTable();
-        renderPagination();
-        
+        // 페이지 로드 시 바로 오늘 날짜의 전체 스케줄을 로드
         $dateSelectorInput.val(selectedDate); 
         $filterButtons.filter('[data-filter="all"]').removeClass('btn-default').addClass('active btn-success'); 
         updateScheduleDisplayTitle(selectedDate, 'all');
+        
+        // 초기 데이터가 있으면 바로 표시, 없으면 서버에서 가져오기
+        if (initialData && Array.isArray(initialData) && initialData.length > 0) {
+            currentSchedules = initialData;
+            renderTable();
+            renderPagination();
+        } else {
+            // 초기 데이터가 없으면 서버에서 오늘 날짜의 전체 스케줄을 가져오기
+            loadAndDisplaySchedules(selectedDate, 'all');
+        }
 
         $('ul.nav.side-menu a[href$="index5.html"]').closest('li').removeClass('current-page active');
         $('ul.nav.side-menu a[href*="index5.wi"]').closest('li').addClass('current-page');

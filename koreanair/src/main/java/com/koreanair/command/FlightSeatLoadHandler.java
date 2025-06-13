@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.koreanair.model.dto.FlightScheduleDTO;
 import com.koreanair.model.dto.FlightSeatSaveDTO;
 import com.koreanair.model.service.FlightScheduleService;
@@ -21,10 +22,22 @@ public class FlightSeatLoadHandler implements CommandHandler{
 	@Override
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		System.out.println("1번 도착");
-		String planeType = request.getParameter("planeType"); 
-		List<FlightSeatSaveDTO> seatload = loadservice.seatload(planeType);
+		String flight_id = request.getParameter("flight_id"); 
+		List<FlightSeatSaveDTO> seatload = loadservice.seatload(flight_id);
 		
-		return null;
+		 // JSON 변환
+	    Gson gson = new GsonBuilder().create();
+	    String json = gson.toJson(seatload);
+
+	    // 응답 설정
+	    response.setContentType("application/json");
+	    response.setCharacterEncoding("UTF-8");
+
+	    // JSON 응답 출력
+	    response.getWriter().write(json);
+
+	    // 컨트롤러에서 직접 응답했으므로 null 반환
+	    return null;
 	}
 
 }

@@ -660,13 +660,13 @@
 
                             // 현재 페이지 URL에서 craftid 파라미터 값을 가져옵니다
                             const urlParams = new URLSearchParams(window.location.search);
-                            const craftId = urlParams.get('craftid') || '';
+                            const flight_id = urlParams.get('flight_id') || '';
 
                             const contextPath = "${pageContext.request.contextPath}";
-                            const url = `\${contextPath}/seatsave.wi?craftid=\${encodeURIComponent(craftId)}`;
+                            const url = `\${contextPath}/seatsave.wi?flight_id=\${encodeURIComponent(flight_id)}`;
                             const jsonData = JSON.stringify(seatsReadyForDB);
                             
-                            console.log("저장 시 사용할 craftid:", craftId);
+                            console.log("저장 시 사용할 flight_id:", flight_id);
                             console.log("저장 요청 URL:", url);
 
                             fetch(url, {
@@ -705,46 +705,106 @@
                         }
                         
                         function loadSavedSeats() {
-                            alert("버튼 클릭 실행 성공!");
+                            console.log("저장된 좌석 불러오기 시작");
                             
-                            // 현재 페이지 URL에서 craftid 파라미터 값을 가져옵니다
+                            // 현재 페이지 URL에서 flight_id 파라미터 값을 가져옵니다
                             const urlParams = new URLSearchParams(window.location.search);
-                            const craftId = urlParams.get('craftid') || ''; // craftid가 없으면 빈 문자열
+                            const flight_id = urlParams.get('flight_id') || 'FL001'; // 기본값 설정
 
                             // 기본 URL 설정
                             const contextPath = "${pageContext.request.contextPath}";
                             const baseUrl = `\${contextPath}/seatload.wi`;
 
-                            // craftid만 파라미터로 전달
-                            const finalUrl = `\${baseUrl}?craftid=\${encodeURIComponent(craftId)}`;
+                            // flight_id만 파라미터로 전달
+                            const finalUrl = `\${baseUrl}?flight_id=\${encodeURIComponent(flight_id)}`;
 
-                            console.log("현재 URL의 craftid:", craftId);
+                            console.log("현재 URL의 flight_id:", flight_id);
                             console.log("최종 요청 URL:", finalUrl);
                             
-                            fetch(finalUrl) // GET 요청은 URL만 넘겨주면 됩니다.
+                            fetch(finalUrl)
                             .then(response => {
-                                // 1. HTTP 응답 상태를 확인합니다. (성공: 200~299)
                                 if (!response.ok) {
-                                    // 서버가 에러 코드를 응답한 경우, 여기서 에러를 발생시켜 catch 블록으로 보냅니다.
-                                    throw new Error(`서버 에러 발생! 상태: ${response.status}`);
+                                    throw new Error(`서버 에러 발생! 상태: \${response.status}`);
                                 }
-                                
-                                // 2. 서버가 보낸 응답을 JSON 객체로 파싱합니다.
                                 return response.json();
                             })
-                            .then(userData => {
-                                // 3. 성공적으로 받은 데이터(JSON이 변환된 자바스크립트 객체)를 사용합니다.
-                                console.log('성공적으로 받은 사용자 데이터:', userData);
+                            .then(savedSeatsData => {
+                                console.log('DB에서 불러온 좌석 데이터:', savedSeatsData);
                                 
-                                // 예: 화면에 사용자 이름 표시
-                                // document.getElementById('username').textContent = userData.name;
+                                if (!savedSeatsData || savedSeatsData.length === 0) {
+                                    alert('저장된 좌석 데이터가 없습니다.');
+                                    return;
+                                }
+
+                                // 기존 선택 상태 초기화
+                                resetSelectedSeats();
+                                seatsReadyForDB = [];
+
+                                let loadedCount = 0;
+                                savedSeatsData.forEach(seatData => {
+                                    const row = seatData.row;
+                                    const seat = seatData.seat;
+                                    const price = seatData.price;
+                                    
+                                    // 해당 좌석 요소 찾기
+                                    const seatElement = document.querySelector('#airplaneContainer .seat[data-row="' + row + '"][data-seat="' + seat + '"]');
+                                    
+                                    if (seatElement) {
+                                        // 1. 노란색 하이라이트 추가
+                                        seatElement.classList.add('seat-selected-highlight');
+                                        
+                                        // 2. 가격 표시
+                                        if (price && price > 0) {
+                                            seatElement.innerHTML = '<span class="seat-letter">' + seat + '</span><span class="seat-price-display">' + price.toLocaleString() + '</span>';
+                                        }
+                                        
+                                        // 3. selectedSeatsMap에 추가 (선택된 상태로 관리)
+                                        const seatKey = row + '-' + seat;
+                                        selectedSeatsMap.set(seatKey, { 
+                                            row: row, 
+                                            seat: seat, 
+                                            price: price 
+                                        });
+                                        
+                                        // 4. seatsReadyForDB에도 추가 (저장 준비 상태)
+                                        const currentSearchValue = document.getElementById('aircraftSearch').value;
+                                        let selectedModelKey = 'model1';
+                                        const aircraftOptions = document.querySelectorAll('.aircraft-option');
+                                        aircraftOptions.forEach(option => {
+                                            if (option.textContent === currentSearchValue) {
+                                                selectedModelKey = option.getAttribute('data-value');
+                                            }
+                                        });
+                                        const aircraftModelName = aircraftData[selectedModelKey].name;
+                                        
+                                        seatsReadyForDB.push({
+                                            aircraft: aircraftModelName,
+                                            row: row,
+                                            seat: seat,
+                                            price: price
+                                        });
+                                        
+                                        loadedCount++;
+                                    } else {
+                                        console.warn(`좌석을 찾을 수 없습니다: Row \${row}, Seat \${seat}`);
+                                    }
+                                });
+
+                                // 선택된 좌석 정보 업데이트
+                                updateSelectedSeatsDisplay();
+                                
+                                console.log(`\${loadedCount}개의 좌석이 성공적으로 로드되었습니다.`);
+                                console.log('현재 selectedSeatsMap:', selectedSeatsMap);
+                                console.log('현재 seatsReadyForDB:', seatsReadyForDB);
+                                
+                                alert(`\${loadedCount}개의 저장된 좌석을 성공적으로 불러왔습니다!`);
                             })
                             .catch(error => {
-                                // 4. 네트워크 오류 또는 위 .then() 블록에서 throw된 에러를 처리합니다.
                                 console.error('요청 실패:', error);
-                                alert('데이터를 불러오는 데 실패했습니다.');
+                                alert('데이터를 불러오는 데 실패했습니다: ' + error.message);
                             });
                         }
+                        
                         function Searchplane(){
                         	const searchInput = document.getElementById('aircraftSearch');
                         	const searchValue = searchInput.value.trim();
@@ -780,7 +840,7 @@
                         				
                         				// URL에 검색어를 craftid 파라미터로 추가
                         				const currentUrl = new URL(window.location);
-                        				currentUrl.searchParams.set('craftid', searchValue);
+                        				currentUrl.searchParams.set('flight_id', searchValue);
                         				window.history.pushState({}, '', currentUrl);
                         				
                         			} else {
