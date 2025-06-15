@@ -28,16 +28,20 @@ public class FilghtSearchHandler implements CommandHandler{
 		
 		
 		SearchFlightDTO dto = SearchFlightDTO.builder()
-			.departure("ICN")
-			.arrival("PUS")
-			.departureDate("2025-06-10")
-			.returnDate(null)
-			.passengers("성인 1")
-			.seatClass("ECON")
-			.tripType("round")
+			.departure(request.getParameter("departure"))
+			.arrival(request.getParameter("arrival"))
+			.departureDate(request.getParameter("departureDate"))
+			.returnDate(request.getParameter("returnDate"))
+			.passengers(1)
+			.seatClass(request.getParameter("seatClass"))
+			.tripType(request.getParameter("tripType"))
 			.build();
 		
 		List<SearchFlightResultDTO> flightList = searchService.searchFlight(dto);
+		
+	
+		
+		
 		
 		System.out.println(flightList.size());
 		

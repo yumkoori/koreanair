@@ -15,7 +15,7 @@ public class SearchFlightDTO {
     private String arrival;        // 도착지 (예: 밀라노)
     private String departureDate;  // 출발일 (yyyy-MM-dd)
     private String returnDate;     // 귀국일 (yyyy-MM-dd, 왕복일 경우 필수)
-    private String passengers;     // 탑승객 정보 (예: 성인 1명)
+    private int passengers;     // 탑승객 정보 (예: 성인 1명)
     private String seatClass;      // 좌석 등급 (예: 일반석)
     private String tripType;       // 여정 유형 (oneway / round)
 }

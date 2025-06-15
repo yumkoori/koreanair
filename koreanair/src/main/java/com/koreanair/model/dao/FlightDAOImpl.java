@@ -43,50 +43,60 @@ public class FlightDAOImpl implements FlightDAO{
 	}
 	
 	public List<SearchFlightResultDTO> getSearchFlight(SearchFlightDTO searchFlightDTO) {
-        String sql = "SELECT"
-        		+ "    f.flight_id,"
-        		+ "    ac.airline AS airline_name,"
-        		+ "    f.departure_time,"
-        		+ "    f.arrival_time,"
-        		+ "    TIMESTAMPDIFF(MINUTE, f.departure_time, f.arrival_time) AS duration_minutes,"
-        		+ "    COUNT(fs.seat_id) AS available_seat_count"
-        		+ " FROM"
-        		+ "    flight f"
-        		+ " JOIN aircraft ac ON f.aircraft_id = ac.aircraft_id"
-        		+ " JOIN flight_seat fs ON f.flight_id = fs.flight_id"
-        		+ " WHERE"
-        		+ "    f.departure_airport_id = 'ICN'  "
-        		+ "    AND f.arrival_airport_id = 'PUS'  "
-        		+ "    AND DATE(f.departure_time) = '2025-06-10' "
-        		+ "    AND fs.class_id = 'ECON' "
-        		+ "    AND fs.status = 'AVAILABLE'  "
-        		+ " GROUP BY"
-        		+ "    f.flight_id, ac.airline, f.departure_time, f.arrival_time"
-        		+ " HAVING"
-        		+ "    available_seat_count >= 1 "
-        		+ " ORDER BY"
-        		+ "    f.departure_time ASC;"
-        		+ "";
+		String sql = "SELECT"
+		        + "    f.flight_id,"
+		        + "    ac.airline AS airline_name,"
+		        + "    f.departure_time,"
+		        + "    f.arrival_time,"
+		        + "    TIMESTAMPDIFF(MINUTE, f.departure_time, f.arrival_time) AS duration_minutes,"
+		        + "    COUNT(fs.seat_id) AS available_seat_count"
+		        + " FROM"
+		        + "    flight f"
+		        + " JOIN aircraft ac ON f.aircraft_id = ac.aircraft_id"
+		        + " JOIN flight_seat fs ON f.flight_id = fs.flight_id"
+		        + " JOIN seat_class sc ON sc.class_id = fs.class_id"
+		        + " WHERE"
+		        + "    f.departure_airport_id = ? "
+		        + "    AND f.arrival_airport_id = ? "
+		        + "    AND DATE(f.departure_time) = ? "
+		        + "    AND (sc.class_name = ? AND fs.status = 'AVAILABLE')"
+		        + " GROUP BY"
+		        + "    f.flight_id, ac.airline, f.departure_time, f.arrival_time"
+		        + " HAVING"
+		        + "    available_seat_count >= 1 "
+		        + " ORDER BY"
+		        + "    f.departure_time ASC";
+
         
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<SearchFlightResultDTO> flights = new ArrayList<SearchFlightResultDTO>();
         
+        
+        System.out.println("실행되는 SQL:");
+        System.out.println("Departure: " + searchFlightDTO.getDeparture());
+        System.out.println("Arrival: " + searchFlightDTO.getArrival());
+        System.out.println("Date: " + searchFlightDTO.getDepartureDate());
+        
         try {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
-//            pstmt.setString(1, userId);
-            
+            pstmt.setString(1, searchFlightDTO.getDeparture());
+            pstmt.setString(2, searchFlightDTO.getArrival());
+            pstmt.setString(3, searchFlightDTO.getDepartureDate());
+            pstmt.setString(4, searchFlightDTO.getSeatClass());
+
+
             rs = pstmt.executeQuery();
             
             if (rs.next()) {
                 SearchFlightResultDTO sftd = SearchFlightResultDTO.builder()
                 .flightId(rs.getString("flight_id"))
-                .airlineName("airline_name")
-                .departureTime(null)
-                .arrivalTime(null)
-                .durationMinutes(0)
+                .airlineName(rs.getString("airline_name"))
+                .departureTime(rs.getTimestamp("departure_time").toLocalDateTime())
+                .arrivalTime(rs.getTimestamp("arrival_time").toLocalDateTime())
+                .durationMinutes(rs.getInt("duration_minutes"))
                 .availableSeatCount(rs.getInt("available_seat_count"))
                 .build();
             	
@@ -118,7 +128,7 @@ public class FlightDAOImpl implements FlightDAO{
         		+ "    COUNT(fs.seat_id) AS available_seat_count"
         		+ " FROM flight_seat fs"
         		+ " JOIN seat_class sc ON fs.class_id = sc.class_id"
-        		+ " WHERE fs.flight_id = 'FL001'"
+        		+ " WHERE fs.flight_id = ?"
         		+ "  AND fs.status = 'AVAILABLE'"
         		+ " GROUP BY sc.class_id, sc.class_name, sc.detail_class_name"
         		+ " ORDER BY sc.class_id;";
@@ -132,7 +142,7 @@ public class FlightDAOImpl implements FlightDAO{
         try {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
-//            pstmt.setString(1, userId);
+            pstmt.setString(1, flightId);
             
             rs = pstmt.executeQuery();
             
@@ -151,6 +161,7 @@ public class FlightDAOImpl implements FlightDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+        	System.out.println(sql);
             closeResources(conn, pstmt, rs);
         }
         

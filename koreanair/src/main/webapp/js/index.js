@@ -1008,18 +1008,18 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             // 검색 조건 수집
-            const departure = document.querySelector('#flight .departure .airport-name').textContent.trim() || '서울';
-            const arrival = document.querySelector('#flight .arrival .airport-name').textContent.trim() || '도착지';
+            const departure = document.querySelector('#flight .departure .airport-code').textContent.trim() || 'SEL';
+            const arrival = document.querySelector('#flight .arrival .airport-code').textContent.trim() || 'To';
             const passengers = document.querySelector('#flight .passenger-input select').value || '성인 1명';
             const seatClass = document.querySelector('#flight .class-input select').value || '일반석';
             
             // 출발지/도착지 검증
-            if (!departure || departure === '출발지') {
+            if (!departure || departure === 'SEL' || departure === 'From') {
                 alert('출발지를 선택해주세요.');
                 return;
             }
             
-            if (!arrival || arrival === '도착지') {
+            if (!arrival || arrival === 'To') {
                 alert('도착지를 선택해주세요.');
                 return;
             }
