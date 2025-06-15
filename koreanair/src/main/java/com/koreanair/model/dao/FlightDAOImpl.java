@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.koreanair.model.dto.FareDTO;
 import com.koreanair.model.dto.FlightDTO;
@@ -13,6 +15,7 @@ import com.koreanair.model.dto.SearchFlightDTO;
 import com.koreanair.model.dto.SearchFlightResultDTO;
 import com.koreanair.model.dto.SeatAvailabilityDTO;
 import com.koreanair.model.dto.SeatMapDTO;
+import com.koreanair.model.dto.SeatPriceDTO;
 import com.koreanair.model.dto.User;
 import com.koreanair.util.DBConnection;
 
@@ -121,16 +124,20 @@ public class FlightDAOImpl implements FlightDAO{
 
 	@Override
 	public List<SeatAvailabilityDTO> getReservedSeats(String flightId) {
-        String sql = "SELECT "
+        String sql = "SELECT"
         		+ "    sc.class_id,"
         		+ "    sc.class_name,"
         		+ "    sc.detail_class_name,"
-        		+ "    COUNT(fs.seat_id) AS available_seat_count"
-        		+ " FROM flight_seat fs"
-        		+ " JOIN seat_class sc ON fs.class_id = sc.class_id"
-        		+ " WHERE fs.flight_id = ?"
-        		+ "  AND fs.status = 'AVAILABLE'"
-        		+ " GROUP BY sc.class_id, sc.class_name, sc.detail_class_name"
+        		+ "    IFNULL(COUNT(fs.seat_id), 0) AS available_seat_count,"
+        		+ "    sp.price"
+        		+ " FROM seat_price sp"
+        		+ " JOIN seat_class sc ON sp.class_id = sc.class_id"
+        		+ " LEFT JOIN flight_seat fs "
+        		+ "    ON fs.flight_id = sp.flight_id "
+        		+ "    AND fs.class_id = sp.class_id "
+        		+ "    AND fs.status = 'AVAILABLE'"
+        		+ " WHERE sp.flight_id = ?"
+        		+ " GROUP BY sc.class_id, sc.class_name, sc.detail_class_name, sp.price"
         		+ " ORDER BY sc.class_id;";
         
         Connection conn = null;
@@ -146,16 +153,19 @@ public class FlightDAOImpl implements FlightDAO{
             
             rs = pstmt.executeQuery();
             
-            if (rs.next()) {
+            while (rs.next()) {
                 SeatAvailabilityDTO dto = SeatAvailabilityDTO.builder()
-                		.classId(rs.getString("class_id"))
-                		.className(rs.getString("class_name"))
-                		.detailClassName(rs.getString("detail_class_name"))
-                		.availableSeatCount(rs.getInt("available_seat_count"))
-                		.build();
+                	.classId(rs.getString("class_id"))
+                	.className(rs.getString("class_name"))
+                	.detailClassName(rs.getString("detail_class_name"))
+                	.availableSeatCount(rs.getInt("available_seat_count"))
+                	.price(rs.getInt("price"))
+                	.build();
             	
                 availabilitySeats.add(dto);
             }
+            System.out.println(availabilitySeats); // 루프 밖으로 옮기세요
+
        
             
         } catch (SQLException e) {
@@ -175,6 +185,37 @@ public class FlightDAOImpl implements FlightDAO{
 		
 	}
 	
+	@Override
+	public Map<String, Integer> getSeatsPrice(String flightId) {
+		String sql = "select * from seat_price where flight_id = ?;";
+		
+		Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+		
+	    Map<String, Integer> map = new HashMap<String, Integer>();
+	    
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, flightId);
+            
+            rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+            	map.put(rs.getString("class_id"), rs.getInt("price"));
+            }
+       
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+        	System.out.println(sql);
+            closeResources(conn, pstmt, rs);
+        }
+		
+		return map;
+	}
     // 리소스 정리
     private void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         if (rs != null) {
@@ -199,5 +240,6 @@ public class FlightDAOImpl implements FlightDAO{
             }
         }
     }
+
 
 }

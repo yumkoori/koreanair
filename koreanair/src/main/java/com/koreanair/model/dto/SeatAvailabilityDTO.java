@@ -15,4 +15,5 @@ public class SeatAvailabilityDTO {
     private String className;          // 좌석 등급명 (이코노미, 프레스티지 등)
     private String detailClassName;    // 좌석 상세명
     private int availableSeatCount;    // 사용가능 좌석 수
+    private int price;
 }

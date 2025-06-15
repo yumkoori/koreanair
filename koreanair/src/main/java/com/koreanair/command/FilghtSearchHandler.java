@@ -19,13 +19,11 @@ public class FilghtSearchHandler implements CommandHandler{
 	
 	@Override
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		System.out.println("process 호출됨.");
-		
 		FlightSearchService searchService = new FlightSearchService();
 		FlightSeatService seatService = new FlightSeatService();
 		
 		Map<SearchFlightResultDTO, List<SeatAvailabilityDTO>> map = new HashMap<SearchFlightResultDTO, List<SeatAvailabilityDTO>>();
-		
+		Map<String, Map<String,Integer>> priceMap = new HashMap<String, Map<String,Integer>>();
 		
 		SearchFlightDTO dto = SearchFlightDTO.builder()
 			.departure(request.getParameter("departure"))
@@ -39,24 +37,22 @@ public class FilghtSearchHandler implements CommandHandler{
 		
 		List<SearchFlightResultDTO> flightList = searchService.searchFlight(dto);
 		
-	
-		
-		
-		
-		System.out.println(flightList.size());
 		
 		for (int i = 0; i < flightList.size(); i++) {
-			System.out.println(flightList.get(i).getFlightId());
-			List<SeatAvailabilityDTO> seatList = seatService.getAvailabilitySeatsInfo(flightList.get(i).getFlightId());
+			String flightId = flightList.get(i).getFlightId();
+			List<SeatAvailabilityDTO> seatList = seatService.getAvailabilitySeatsInfo(flightId);
 			map.put(flightList.get(i), seatList);
 			
+			Map<String, Integer> seatPriceMap = seatService.getSeatsPriceByflightId(flightId);
+			priceMap.put(flightId, seatPriceMap);
 		}
-		
-		System.out.println(map);
-		
+
+		request.setAttribute("seatsPriceMap", priceMap);
 		request.setAttribute("flightList", flightList);
 		request.setAttribute("flightSeat", map);
 		
+		
+		System.out.println(map);
 		return "/views/search/search.jsp";
 	}
 

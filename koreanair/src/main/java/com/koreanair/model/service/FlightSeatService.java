@@ -1,6 +1,7 @@
 package com.koreanair.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.koreanair.model.dao.FlightDAO;
 import com.koreanair.model.dao.FlightDAOImpl;
@@ -13,7 +14,12 @@ public class FlightSeatService {
 	public List<SeatAvailabilityDTO> getAvailabilitySeatsInfo(String flightId) {
 		
 		return dao.getReservedSeats(flightId);
-		
+	}
+	
+	public Map<String, Integer> getSeatsPriceByflightId(String flightId) {
+		return dao.getSeatsPrice(flightId);
 		
 	}
+	
+	
 }

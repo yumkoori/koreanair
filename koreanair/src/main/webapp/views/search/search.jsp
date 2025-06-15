@@ -403,8 +403,7 @@
 									<div class="departure-code">${param.departure}</div>
 								</div>
 								<div class="flight-duration">
-									<div class="duration-time">${flight.durationMinutes}분
-									</div>
+									<div class="duration-time">${flight.durationMinutes}분</div>
 
 									<div class="flight-path">
 										<div class="path-line"></div>
@@ -444,54 +443,70 @@
 							<!-- 일반석 -->
 							<div class="fare-column economy">
 								<div class="fare-type">일반석</div>
-								<c:choose>
-									<c:when test="${economySeats > 0}">
-										<div class="fare-price">
-											<span class="currency">₩</span><span class="amount">85,600</span>
-										</div>
-									</c:when>
-									<c:otherwise>
-										<div class="fare-price no-available">매진</div>
-										<!-- 가격 없음 표시 -->
-									</c:otherwise>
-								</c:choose>
-								<div
-									class="fare-status ${economySeats > 0 ? 'available' : 'unavailable'}">${economySeats}석</div>
+								<c:forEach var="seat" items="${flightSeat[flight]}">
+									<c:if test="${seat.className == '일반석'}">
+										<c:choose>
+											<c:when test="${seat.availableSeatCount > 0}">
+												<div class="fare-price">
+													<span class="currency">₩</span> <span class="amount">${seat.price}</span>
+												</div>
+											</c:when>
+											<c:otherwise>
+												<div class="fare-price no-available">매진</div>
+											</c:otherwise>
+										</c:choose>
+										<div
+											class="fare-status ${seat.availableSeatCount > 0 ? 'available' : 'unavailable'}">
+											${seat.availableSeatCount}석</div>
+									</c:if>
+								</c:forEach>
 							</div>
 
 							<!-- 프레스티지석 -->
 							<div class="fare-column prestige">
 								<div class="fare-type">프레스티지석</div>
-								<c:choose>
-									<c:when test="${prestigeSeats > 0}">
-										<div class="fare-price">
-											<span class="currency">₩</span><span class="amount">185,600</span>
-										</div>
-									</c:when>
-									<c:otherwise>
-										<div class="fare-price no-available">매진</div>
-									</c:otherwise>
-								</c:choose>
-								<div
-									class="fare-status ${prestigeSeats > 0 ? 'available' : 'unavailable'}">${prestigeSeats}석</div>
+								<c:forEach var="seat" items="${flightSeat[flight]}">
+									<c:if test="${seat.className == '프레스티지석'}">
+										<c:choose>
+											<c:when test="${seat.availableSeatCount > 0}">
+												<div class="fare-price">
+													<span class="currency">₩</span><span class="amount">${seat.price}</span>
+												</div>
+											</c:when>
+											<c:otherwise>
+												<div class="fare-price no-available">매진</div>
+											</c:otherwise>
+										</c:choose>
+										<div
+											class="fare-status ${seat.availableSeatCount > 0 ? 'available' : 'unavailable'}">
+											${seat.availableSeatCount}석</div>
+									</c:if>
+								</c:forEach>
 							</div>
+
 
 							<!-- 일등석 -->
 							<div class="fare-column first">
 								<div class="fare-type">일등석</div>
-								<c:choose>
-									<c:when test="${firstSeats > 0}">
-										<div class="fare-price">
-											<span class="currency">₩</span><span class="amount">285,600</span>
-										</div>
-									</c:when>
-									<c:otherwise>
-										<div class="fare-price no-available">매진</div>
-									</c:otherwise>
-								</c:choose>
-								<div
-									class="fare-status ${firstSeats > 0 ? 'available' : 'unavailable'}">${firstSeats}석</div>
+								<c:forEach var="seat" items="${flightSeat[flight]}">
+									<c:if test="${seat.className == '일등석'}">
+										<c:choose>
+											<c:when test="${seat.availableSeatCount > 0}">
+												<div class="fare-price">
+													<span class="currency">₩</span><span class="amount">${seat.price}</span>
+												</div>
+											</c:when>
+											<c:otherwise>
+												<div class="fare-price no-available">매진</div>
+											</c:otherwise>
+										</c:choose>
+										<div
+											class="fare-status ${seat.availableSeatCount > 0 ? 'available' : 'unavailable'}">
+											${seat.availableSeatCount}석</div>
+									</c:if>
+								</c:forEach>
 							</div>
+
 						</div>
 					</div>
 				</c:forEach>
