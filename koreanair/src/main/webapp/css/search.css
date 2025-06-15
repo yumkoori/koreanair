@@ -1399,12 +1399,25 @@ footer {
 /* New flight card layout with info column and 3 fare columns */
 .flight-card.new-layout {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr 3fr;
     grid-auto-rows: 1fr; /* Equal height rows */
     padding: 20px;
     margin-bottom: 15px;
     align-items: stretch; /* Stretch children to fill height */
-    gap: 10px;
+    gap: 0;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fare-columns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    height: 100% !important;
+    gap: 0 !important;
+    align-items: stretch !important;
+    grid-auto-flow: column !important;
 }
 
 /* Flight info column - First column */
@@ -1444,23 +1457,34 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    position: relative;
 }
 
-.duration-line {
+.flight-path {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     width: 120px;
+}
+
+.path-line {
+    width: 100%;
     height: 2px;
     background-color: #ddd;
     position: relative;
 }
 
-.duration-line i {
+.flight-path i {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #0064de;
     font-size: 14px;
+    background-color: white;
+    padding: 2px;
 }
 
 .duration-time {
@@ -1471,8 +1495,9 @@ footer {
 .airline-info {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
-    margin-top: 5px;
+    margin-top: 10px;
     padding-top: 10px;
     border-top: 1px dashed #eee;
     width: 100%;
@@ -1496,8 +1521,8 @@ footer {
     margin-right: 5px;
 }
 
-.detail-btn {
-    padding: 5px 10px;
+.details-btn {
+    padding: 6px 12px;
     background-color: white;
     border: 1px solid #ddd;
     color: #666;
@@ -1507,7 +1532,7 @@ footer {
     transition: all 0.2s ease;
 }
 
-.detail-btn:hover {
+.details-btn:hover {
     border-color: #0064de;
     color: #0064de;
 }
@@ -1519,13 +1544,14 @@ footer {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 15px 10px;
-    gap: 15px;
+    padding: 20px 15px;
+    gap: 8px;
     border-left: 1px solid #eee;
     cursor: pointer;
     transition: background-color 0.2s ease;
     height: 100%;
     position: relative;
+    min-height: 120px;
 }
 
 .fare-column:hover {
@@ -1568,42 +1594,48 @@ footer {
 }
 
 .fare-type {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     color: #333;
     margin: 0;
-    line-height: 1.3;
+    line-height: 1.2;
+    margin-bottom: 5px;
 }
 
 .fare-price {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     color: #0064de;
-    margin: 5px 0;
-    line-height: 1.3;
-}
-
-.seats-available {
-    font-size: 14px;
-    color: #666;
     margin: 0;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
-.seats-available.sold-out {
+.fare-price .currency {
+    font-size: 16px;
+    margin-right: 2px;
+}
+
+.fare-price .amount {
+    font-size: 20px;
+}
+
+.fare-status {
+    font-size: 12px;
+    color: #d93025;
+    margin: 0;
+    line-height: 1.2;
+    margin-top: 5px;
+}
+
+.fare-status.available {
+    color: #d93025;
+}
+
+.fare-status.sold-out {
     color: #999;
 }
 
-/* Make sure flight-card has equal height columns */
-.flight-card.new-layout {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    grid-auto-rows: 1fr; /* Equal height rows */
-    padding: 20px;
-    margin-bottom: 15px;
-    align-items: stretch; /* Stretch children to fill height */
-    gap: 10px;
-}
+
 
 /* Ensure flight-info-column content is centered */
 .flight-info-column {
@@ -1619,6 +1651,12 @@ footer {
     .flight-card.new-layout {
         align-items: stretch;
         min-height: 150px;
+    }
+    
+    .fare-columns {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+        grid-auto-flow: column !important;
     }
     
     .fare-column {
@@ -1830,33 +1868,33 @@ footer {
         padding-bottom: 15px;
     }
     
-    .fare-column {
-        border-left: none;
-        border-top: 1px solid #eee;
-        padding-top: 20px;
-        flex-direction: row;
-        justify-content: space-between;
-        text-align: left;
+    .fare-columns {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
     
-    .fare-column > div {
-        margin: 0;
+    .fare-column {
+        border-left: none;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 15px;
+        min-height: 100px;
     }
 }
 
 @media (max-width: 576px) {
+    .fare-columns {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
     .fare-column {
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    
-    .fare-type, .fare-price {
-        width: 50%;
-    }
-    
-    .seats-available {
-        width: 100%;
-        text-align: left;
+        border-left: none;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 15px;
+        min-height: 80px;
     }
 }
 
@@ -2250,5 +2288,72 @@ body {
     .arrival-details {
         order: 2;
     }
+}
+
+/* CRITICAL: Force fare columns to display horizontally - highest priority */
+body section div div.flights-list div div.fare-columns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: 1fr !important;
+    width: 100% !important;
+    gap: 0 !important;
+}
+
+.flight-card.new-layout .fare-columns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: 1fr !important;
+    width: 100% !important;
+    flex-direction: row !important;
+}
+
+.flight-card.new-layout .fare-columns .fare-column {
+    display: flex !important;
+    flex-direction: column !important;
+    border-left: 1px solid #eee !important;
+}
+
+.flight-card.new-layout .fare-columns .fare-column:first-child {
+    border-left: none !important;
+}
+
+/* Override any conflicting styles with maximum specificity */
+@media screen and (min-width: 1px) {
+    body section div div.flights-list div div.fare-columns {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+    }
+    
+    .flight-card.new-layout .fare-columns {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+    }
+}
+
+/* ULTIMATE OVERRIDE - 3 columns only */
+div.fare-columns,
+.fare-columns,
+div[class*="fare-columns"],
+*[class*="fare-columns"] {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-auto-flow: column !important;
+}
+
+/* Force 3 columns with highest specificity */
+html body section div div.flights-list div div.fare-columns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-areas: "col1 col2 col3" !important;
+}
+
+/* Ensure fare-column takes exactly 1/3 width */
+.fare-column {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 33.333% !important;
 }
 
