@@ -44,22 +44,34 @@ public class DeleteAccountHandler implements CommandHandler {
             return "redirect:/loginForm.do";
         }
         
-        String confirmPassword = request.getParameter("confirmPassword");
+        String loginType = request.getParameter("loginType");
         
-        if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
-            request.setAttribute("error", "비밀번호를 입력해주세요.");
-            return "/views/login/dashboard.jsp";
-        }
-        
-        // 현재 사용자 정보를 다시 조회하여 비밀번호 확인
-        User currentUser = userDAO.loginUser(user.getUserId(), confirmPassword);
-        if (currentUser == null) {
-            request.setAttribute("error", "비밀번호가 일치하지 않습니다.");
-            return "/views/login/dashboard.jsp";
+        // 카카오 사용자가 아닌 경우에만 비밀번호 확인
+        if (!"kakao".equals(loginType) && !"kakao".equals(user.getLoginType())) {
+            String confirmPassword = request.getParameter("confirmPassword");
+            
+            if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
+                request.setAttribute("error", "비밀번호를 입력해주세요.");
+                return "/views/login/dashboard.jsp";
+            }
+            
+            // 현재 사용자 정보를 다시 조회하여 비밀번호 확인
+            User currentUser = userDAO.loginUser(user.getUserId(), confirmPassword);
+            if (currentUser == null) {
+                request.setAttribute("error", "비밀번호가 일치하지 않습니다.");
+                return "/views/login/dashboard.jsp";
+            }
         }
         
         // 회원탈퇴 처리
-        boolean success = userDAO.deleteUser(user.getUserId());
+        boolean success;
+        if ("kakao".equals(user.getLoginType()) || user.getUserId() == null) {
+            // 카카오 계정이거나 user_id가 없는 경우 이메일 기준으로 삭제
+            success = userDAO.deleteUserByEmail(user.getEmail());
+        } else {
+            // 일반 계정의 경우 user_id 기준으로 삭제
+            success = userDAO.deleteUser(user.getUserId());
+        }
         
         if (success) {
             session.invalidate(); // 세션 무효화

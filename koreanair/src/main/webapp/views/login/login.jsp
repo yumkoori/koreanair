@@ -63,6 +63,18 @@
                 <button type="submit" class="btn btn-primary">로그인</button>
             </form>
             
+            <div class="social-login" style="margin-top: 1.5rem;">
+                <div style="text-align: center; margin-bottom: 1rem; color: #666;">
+                    <span style="background: white; padding: 0 10px;">또는</span>
+                    <hr style="margin-top: -12px; border: none; border-top: 1px solid #ddd;">
+                </div>
+                <a href="kakao/login.do" class="btn btn-kakao" style="width: 100%; background-color: #FEE500; color: #000; border: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" 
+                         alt="카카오 로그인" style="width: 20px; height: 20px;">
+                    카카오로 로그인
+                </a>
+            </div>
+            
             <div class="actions" style="margin-top: 1rem;">
                 <a href="registerForm.do" class="btn btn-secondary">회원가입</a>
             </div>
