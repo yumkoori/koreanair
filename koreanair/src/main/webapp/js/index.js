@@ -1001,17 +1001,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     updateDateDisplay();
 
-    // 항공편 검색 버튼 클릭 이벤트
-    const searchFlightBtn = document.querySelector('#flight .search-flights-btn');
-    if (searchFlightBtn) {
-        searchFlightBtn.addEventListener('click', function(e) {
+    // 항공편 검색 폼 submit 이벤트
+    const searchForm = document.getElementById('searchForm');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             // 검색 조건 수집
-            const departure = document.querySelector('#flight .departure .airport-name').textContent || '서울';
-            const arrival = document.querySelector('#flight .arrival .airport-name').textContent || '도착지';
+            const departure = document.querySelector('#flight .departure .airport-name').textContent.trim() || '서울';
+            const arrival = document.querySelector('#flight .arrival .airport-name').textContent.trim() || '도착지';
             const passengers = document.querySelector('#flight .passenger-input select').value || '성인 1명';
             const seatClass = document.querySelector('#flight .class-input select').value || '일반석';
+            
+            // 출발지/도착지 검증
+            if (!departure || departure === '출발지') {
+                alert('출발지를 선택해주세요.');
+                return;
+            }
+            
+            if (!arrival || arrival === '도착지') {
+                alert('도착지를 선택해주세요.');
+                return;
+            }
             
             // 날짜 정보 수집
             let departureDate = '';
@@ -1036,23 +1047,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // URL 파라미터 생성
-            const params = new URLSearchParams({
-                departure: departure,
-                arrival: arrival,
-                departureDate: departureDate,
-                passengers: passengers,
-                seatClass: seatClass,
-                tripType: currentTripType
-            });
+            // Hidden input에 값 설정
+            document.getElementById('departureInput').value = departure;
+            document.getElementById('arrivalInput').value = arrival;
+            document.getElementById('departureDateInput').value = departureDate;
+            document.getElementById('returnDateInput').value = returnDate;
+            document.getElementById('passengersInput').value = passengers;
+            document.getElementById('seatClassInput').value = seatClass;
+            document.getElementById('tripTypeInput').value = currentTripType;
             
-            // 왕복인 경우에만 도착일 추가
-            if (currentTripType === 'round' && returnDate) {
-                params.append('returnDate', returnDate);
-            }
-            
-            // search.jsp로 이동
-            window.location.href = `${window.contextPath || ''}/views/search/search.jsp?${params.toString()}`;
+            // 폼 제출
+            this.submit();
         });
     }
 
@@ -1078,79 +1083,51 @@ document.addEventListener('DOMContentLoaded', function() {
 }); 
 
 
+document.querySelector('#departure-search').addEventListener('input', function () {
+    const keyword = this.value.trim();
+    if (keyword.length === 0) return;
 
-    // 출발지 검색 자동완성
-    document.getElementById("departure-search").addEventListener("input", function() {
-        console.log(window.contextPath);
-        
-        let keyword = this.value;
-        if (keyword.length < 1) return;
-
-        fetch(window.contextPath + "/airportSearch.do?keyword=" + encodeURIComponent(keyword))
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then(data => {
-                let resultDiv = document.getElementById("departure-results");
-                resultDiv.innerHTML = ""; // 초기화
-                data.forEach(city => {
-                    let div = document.createElement("div");
-                    div.textContent = city;
-                    div.classList.add("dropdown-result-item");
-
-                    div.addEventListener("click", function() {
-                        document.querySelector('.departure .airport-code').textContent = "";
-                        document.querySelector('.departure .airport-name').textContent = city;
-                        document.getElementById('departure-dropdown').style.display = 'none';
-                    });
-
-                    resultDiv.appendChild(div);
+    fetch(`${window.contextPath}/autocomplete.do?keyword=${encodeURIComponent(keyword)}`)
+        .then(response => response.json())
+        .then(data => {
+            const resultsContainer = document.getElementById('departure-results');
+            resultsContainer.innerHTML = '';
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = `${item.airportId} - ${item.airportName}`;
+                div.addEventListener('click', () => {
+                    document.querySelector('.departure .airport-code').textContent = item.airportId;
+                    document.querySelector('.departure .airport-name').textContent = item.airportName;
+                    resultsContainer.innerHTML = '';
                 });
-            })
-            .catch(error => {
-                console.error("Fetch error:", error);
+                resultsContainer.appendChild(div);
             });
-    });
+        })
+        .catch(console.error);
+});
 
-    // 도착지 검색 자동완성
-    document.getElementById("arrival-search").addEventListener("input", function() {
-        console.log(window.contextPath);
-        
-        let keyword = this.value;
-        if (keyword.length < 1) return;
 
-        fetch(window.contextPath + "/airportSearch.do?keyword=" + encodeURIComponent(keyword))
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then(data => {
-                let resultDiv = document.getElementById("arrival-results");
-                resultDiv.innerHTML = ""; // 초기화
-                data.forEach(city => {
-                    let div = document.createElement("div");
-                    div.textContent = city;
-                    div.classList.add("dropdown-result-item");
+document.querySelector('#arrival-search').addEventListener('input', function () {
+    const keyword = this.value.trim();
+    if (keyword.length === 0) return;
 
-                    div.addEventListener("click", function() {
-                        document.querySelector('.arrival .airport-code').textContent = "";
-                        document.querySelector('.arrival .airport-name').textContent = city;
-                        document.getElementById('arrival-dropdown').style.display = 'none';
-                    });
-
-                    resultDiv.appendChild(div);
+    fetch(`${window.contextPath}/autocomplete.do?keyword=${encodeURIComponent(keyword)}`)
+        .then(response => response.json())
+        .then(data => {
+            const resultsContainer = document.getElementById('arrival-results');
+            resultsContainer.innerHTML = '';
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = `${item.airportId} - ${item.airportName}`;
+                div.addEventListener('click', () => {
+                    document.querySelector('.arrival .airport-code').textContent = item.airportId;
+                    document.querySelector('.arrival .airport-name').textContent = item.airportName;
+                    resultsContainer.innerHTML = '';
                 });
-            })
-            .catch(error => {
-                console.error("Fetch error:", error);
+                resultsContainer.appendChild(div);
             });
-    });
-
-
-
-
+        })
+        .catch(console.error);
+});

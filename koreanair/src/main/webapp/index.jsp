@@ -105,130 +105,140 @@
                 
                 <%-- 항공권 예매 탭 (기존 코드 그대로 유지) --%>
                 <div class="booking-content active" id="flight">
-                    <div class="trip-type-section">
-                        <div class="trip-type-buttons">
-                            <button class="trip-type-btn active" data-type="round">왕복</button>
-                            <button class="trip-type-btn" data-type="oneway">편도</button>
-                            <button class="trip-type-btn" data-type="multi">다구간</button>
-                        </div>
-                        <div class="special-options">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="award-ticket">
-                                <span class="checkmark"></span>
-                                가까운 날짜 함께 조회
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="route-section">
-                        <div class="route-inputs">
-                            <div class="airport-input departure">
-                                <div class="airport-code">SEL</div>
-                                <div class="airport-name">서울</div>
-                                <div id="departure-dropdown">
-                                    <div class="dropdown-header">
-                                        <div class="dropdown-title">출발지 검색</div>
-                                        <button id="departure-close" class="dropdown-close">×</button>
-                                    </div>
-                                    <input type="text" placeholder="" id="departure-search" class="dropdown-search-input" />
-                                    <div id="departure-all-regions" class="dropdown-all-regions">
-                                        <span>📍</span> 모든 지역 보기
-                                    </div>
-                                    <div id="departure-results" class="dropdown-results"></div>
-                                </div>
+                    <form id="searchForm" action="flightSearch.do" method="get">
+                        <!-- Hidden inputs for form submission -->
+                        <input type="hidden" name="departure" id="departureInput">
+                        <input type="hidden" name="arrival" id="arrivalInput">
+                        <input type="hidden" name="departureDate" id="departureDateInput">
+                        <input type="hidden" name="returnDate" id="returnDateInput">
+                        <input type="hidden" name="passengers" id="passengersInput">
+                        <input type="hidden" name="seatClass" id="seatClassInput">
+                        <input type="hidden" name="tripType" id="tripTypeInput">
+                        
+                        <div class="trip-type-section">
+                            <div class="trip-type-buttons">
+                                <button type="button" class="trip-type-btn active" data-type="round">왕복</button>
+                                <button type="button" class="trip-type-btn" data-type="oneway">편도</button>
+                                <button type="button" class="trip-type-btn" data-type="multi">다구간</button>
                             </div>
-                            <button class="swap-route-btn">
-                                <i class="fas fa-exchange-alt"></i>
-                            </button>
-                            <div class="airport-input arrival">
-                                <div class="airport-code">To</div>
-                                <div class="airport-name">도착지</div>
-                                <div id="arrival-dropdown">
-                                    <div class="dropdown-header">
-                                        <div class="dropdown-title">도착지 검색</div>
-                                        <button id="arrival-close" class="dropdown-close">×</button>
-                                    </div>
-                                    <input type="text" placeholder="" id="arrival-search" class="dropdown-search-input" />
-                                    <div id="arrival-all-regions" class="dropdown-all-regions">
-                                        <span>📍</span> 모든 지역 보기
-                                    </div>
-                                    <div id="arrival-results" class="dropdown-results"></div>
-                                </div>
+                            <div class="special-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="award-ticket">
+                                    <span class="checkmark"></span>
+                                    가까운 날짜 함께 조회
+                                </label>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="booking-details">
-                        <div class="date-section">
-                            <div class="date-input">
-                                <label id="date-label">출발일 ~ 도착일</label>
-                                <div class="date-picker-container" id="date-picker-trigger">
-                                    <input type="text" id="date-display" value="2025-05-28 ~ 2025-06-04" readonly>
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                                <!-- 달력 오버레이 배경 -->
-                                <div class="calendar-overlay" id="calendar-overlay"></div>
-                                
-                                <div class="calendar-popup" id="calendar-popup">
-                                    <div class="calendar-header">
-                                        <button type="button" class="calendar-nav-btn" id="prev-month">
-                                            <i class="fas fa-chevron-left"></i>
-                                        </button>
-                                        <span class="calendar-month-year" id="calendar-month-year">2025년 5월</span>
-                                        <button type="button" class="calendar-nav-btn" id="next-month">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </button>
-                                    </div>
-                                    <div class="calendar-body">
-                                        <div class="calendar-weekdays">
-                                            <div>일</div>
-                                            <div>월</div>
-                                            <div>화</div>
-                                            <div>수</div>
-                                            <div>목</div>
-                                            <div>금</div>
-                                            <div>토</div>
+                        
+                        <div class="route-section">
+                            <div class="route-inputs">
+                                <div class="airport-input departure">
+                                    <div class="airport-code">SEL</div>
+                                    <div class="airport-name">서울</div>
+                                    <div id="departure-dropdown">
+                                        <div class="dropdown-header">
+                                            <div class="dropdown-title">출발지 검색</div>
+                                            <button type="button" id="departure-close" class="dropdown-close">×</button>
                                         </div>
-                                        <div class="calendar-days" id="calendar-days">
-                                            <!-- 달력 날짜들이 동적으로 생성됩니다 -->
+                                        <input type="text" placeholder="" id="departure-search" class="dropdown-search-input" />
+                                        <div id="departure-all-regions" class="dropdown-all-regions">
+                                            <span>📍</span> 모든 지역 보기
                                         </div>
+                                        <div id="departure-results" class="dropdown-results"></div>
                                     </div>
-                                    <div class="calendar-footer">
-                                        <button type="button" class="calendar-btn calendar-clear">초기화</button>
-                                        <button type="button" class="calendar-btn calendar-apply">적용</button>
+                                </div>
+                                <button type="button" class="swap-route-btn">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>
+                                <div class="airport-input arrival">
+                                    <div class="airport-code">To</div>
+                                    <div class="airport-name">도착지</div>
+                                    <div id="arrival-dropdown">
+                                        <div class="dropdown-header">
+                                            <div class="dropdown-title">도착지 검색</div>
+                                            <button type="button" id="arrival-close" class="dropdown-close">×</button>
+                                        </div>
+                                        <input type="text" placeholder="" id="arrival-search" class="dropdown-search-input" />
+                                        <div id="arrival-all-regions" class="dropdown-all-regions">
+                                            <span>📍</span> 모든 지역 보기
+                                        </div>
+                                        <div id="arrival-results" class="dropdown-results"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="passenger-section">
-                            <div class="passenger-input">
-                                <label>탑승객</label>
-                                <select>
-                                    <option>성인 1명</option>
-                                    <option>성인 2명</option>
-                                    <option>성인 3명</option>
-                                    <option>성인 4명</option>
-                                </select>
+                        <div class="booking-details">
+                            <div class="date-section">
+                                <div class="date-input">
+                                    <label id="date-label">출발일 ~ 도착일</label>
+                                    <div class="date-picker-container" id="date-picker-trigger">
+                                        <input type="text" id="date-display" value="2025-05-28 ~ 2025-06-04" readonly>
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <!-- 달력 오버레이 배경 -->
+                                    <div class="calendar-overlay" id="calendar-overlay"></div>
+                                    
+                                    <div class="calendar-popup" id="calendar-popup">
+                                        <div class="calendar-header">
+                                            <button type="button" class="calendar-nav-btn" id="prev-month">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <span class="calendar-month-year" id="calendar-month-year">2025년 5월</span>
+                                            <button type="button" class="calendar-nav-btn" id="next-month">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        <div class="calendar-body">
+                                            <div class="calendar-weekdays">
+                                                <div>일</div>
+                                                <div>월</div>
+                                                <div>화</div>
+                                                <div>수</div>
+                                                <div>목</div>
+                                                <div>금</div>
+                                                <div>토</div>
+                                            </div>
+                                            <div class="calendar-days" id="calendar-days">
+                                                <!-- 달력 날짜들이 동적으로 생성됩니다 -->
+                                            </div>
+                                        </div>
+                                        <div class="calendar-footer">
+                                            <button type="button" class="calendar-btn calendar-clear">초기화</button>
+                                            <button type="button" class="calendar-btn calendar-apply">적용</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="passenger-section">
+                                <div class="passenger-input">
+                                    <label>탑승객</label>
+                                    <select>
+                                        <option>성인 1명</option>
+                                        <option>성인 2명</option>
+                                        <option>성인 3명</option>
+                                        <option>성인 4명</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="class-section">
+                                <div class="class-input">
+                                    <label>좌석 등급</label>
+                                    <select>
+                                        <option>일반석</option>
+                                        <option>프레스티지석</option>
+                                        <option>일등석</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="search-section">
+                                <button type="submit" class="search-flights-btn">항공편 검색</button>
                             </div>
                         </div>
-                        
-                        <div class="class-section">
-                            <div class="class-input">
-                                <label>좌석 등급</label>
-                                <select>
-                                    <option>선택하세요</option>
-                                    <option>일반석</option>
-                                    <option>비즈니스석</option>
-                                    <option>일등석</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="search-section">
-                            <button class="search-flights-btn">항공편 검색</button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
                 
                 <%-- 예약 조회 탭 (조건부 렌더링으로 수정된 부분) --%>

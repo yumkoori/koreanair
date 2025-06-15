@@ -91,7 +91,9 @@ public class AuthenticationFilter implements Filter {
             "/checkUserId.do",
             "/airportSearch.do",
             "/search/search.jsp",
-            "/views/search/search.jsp"
+            "/views/search/search.jsp",
+            "/flightSearch.do",
+            "/autocomplete.do"
             
         };
         

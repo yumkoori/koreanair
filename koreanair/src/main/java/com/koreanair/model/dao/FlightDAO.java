@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.koreanair.model.dto.FareDTO;
 import com.koreanair.model.dto.FlightDTO;
+import com.koreanair.model.dto.SearchFlightDTO;
+import com.koreanair.model.dto.SearchFlightResultDTO;
+import com.koreanair.model.dto.SeatAvailabilityDTO;
 import com.koreanair.model.dto.SeatMapDTO;
 
 public interface FlightDAO {
@@ -24,10 +27,10 @@ public interface FlightDAO {
     SeatMapDTO getSeatMapByFlightId(String flightId);
     
     // 항공편별 현재 좌석 예약 현황 조회 (예약된 좌석 목록 조회)
-    List<String> getReservedSeats(String flightId);
+    List<SeatAvailabilityDTO> getReservedSeats(String flightId);
     
     // 항공편 가격 설정 (운임, 유류할증료, 수수료 등)
     void updateFare(String flightId, FareDTO fare);
     
-    
+    List<SearchFlightResultDTO> getSearchFlight(SearchFlightDTO searchFlightDTO); 
 }

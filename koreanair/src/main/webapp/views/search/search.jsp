@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -399,145 +401,50 @@
                 </div>
             </div>
 
-            <div class="flights-list">
-                <!-- Flight card with left column for flight info and 3 fare columns -->
-                <div class="flight-card new-layout">
-                    <div class="flight-info-column">
-                        <div class="flight-times">
-                            <div class="departure-block">
-                                <div class="departure-time">07:25</div>
-                                <div class="departure-code">ICN</div>
-                            </div>
-                            <div class="flight-duration">
-                                <div class="duration-line">
-                                    <i class="fas fa-plane"></i>
-                                </div>
-                                <div class="duration-time">2시간 25분</div>
-                            </div>
-                            <div class="arrival-block">
-                                <div class="arrival-time">09:50</div>
-                                <div class="arrival-code">NRT</div>
-                            </div>
-                        </div>
-                        <div class="airline-info">
-                            <span class="flight-number">KE5741</span>
-                            <i class="fas fa-plane-departure"></i>
-                            <span class="airline-name">진에어 운항</span>
-                            <button class="detail-btn">상세보기</button>
-                        </div>
+<div class="flights-list">
+    <c:forEach var="flight" items="${flightList}">
+    
+        <div class="flight-card new-layout">
+            <!-- flight 기본 정보 -->
+            <div class="flight-info-column">
+                <div class="flight-times">
+                    <div class="departure-block">
+                        <div class="departure-time">${flight.departureTime}</div>
+                        <div class="departure-code">${param.departure}</div>
                     </div>
-                    
-                    <div class="fare-column" data-fare-type="일반석 세이버" data-fare-price="425,000" data-seats="8" data-flight-number="KE5741" data-airline="진에어" data-change-fee="60,000" data-cancel-fee="120,000" data-baggage="수하물 1개 (23kg)" data-upgrade="불가" data-mileage="850">
-                        <div class="fare-type">일반석 세이버</div>
-                        <div class="fare-price">425,000원</div>
-                        <div class="seats-available">8석</div>
+                    <div class="flight-duration">
+                        <div class="duration-time">${flight.durationMinutes}분</div>
                     </div>
-                    
-                    <div class="fare-column" data-fare-type="프레스티지" data-fare-price="589,900" data-seats="4" data-flight-number="KE5741" data-airline="진에어" data-change-fee="40,000" data-cancel-fee="80,000" data-baggage="수하물 2개 (23kg)" data-upgrade="가능" data-mileage="1,250">
-                        <div class="fare-type">프레스티지</div>
-                        <div class="fare-price">589,900원</div>
-                        <div class="seats-available">4석</div>
-                    </div>
-                    
-                    <div class="fare-column disabled">
-                        <div class="fare-type">퍼스트</div>
-                        <div class="fare-price">890,000원</div>
-                        <div class="seats-available sold-out">매진</div>
+                    <div class="arrival-block">
+                        <div class="arrival-time">${flight.arrivalTime}</div>
+                        <div class="arrival-code">${param.arrival}</div>
                     </div>
                 </div>
-                
-                <!-- Second flight card -->
-                <div class="flight-card new-layout">
-                    <div class="flight-info-column">
-                        <div class="flight-times">
-                            <div class="departure-block">
-                                <div class="departure-time">13:35</div>
-                                <div class="departure-code">ICN</div>
-                            </div>
-                            <div class="flight-duration">
-                                <div class="duration-line">
-                                    <i class="fas fa-plane"></i>
-                                </div>
-                                <div class="duration-time">2시간 20분</div>
-                            </div>
-                            <div class="arrival-block">
-                                <div class="arrival-time">15:55</div>
-                                <div class="arrival-code">NRT</div>
-                            </div>
-                        </div>
-                        <div class="airline-info">
-                            <span class="flight-number">OZ102</span>
-                            <i class="fas fa-plane-departure"></i>
-                            <span class="airline-name">아시아나항공 운항</span>
-                            <button class="detail-btn">상세보기</button>
-                        </div>
-                    </div>
-                    
-                    <div class="fare-column" data-fare-type="일반석 세이버" data-fare-price="438,000" data-seats="12" data-flight-number="OZ102" data-airline="아시아나항공" data-change-fee="60,000" data-cancel-fee="120,000" data-baggage="수하물 1개 (23kg)" data-upgrade="불가" data-mileage="875">
-                        <div class="fare-type">일반석 세이버</div>
-                        <div class="fare-price">438,000원</div>
-                        <div class="seats-available">12석</div>
-                    </div>
-                    
-                    <div class="fare-column" data-fare-type="프레스티지" data-fare-price="610,000" data-seats="2" data-flight-number="OZ102" data-airline="아시아나항공" data-change-fee="40,000" data-cancel-fee="80,000" data-baggage="수하물 2개 (23kg)" data-upgrade="가능" data-mileage="1,220">
-                        <div class="fare-type">프레스티지</div>
-                        <div class="fare-price">610,000원</div>
-                        <div class="seats-available">2석</div>
-                    </div>
-                    
-                    <div class="fare-column" data-fare-type="퍼스트" data-fare-price="950,000" data-seats="1" data-flight-number="OZ102" data-airline="아시아나항공" data-change-fee="30,000" data-cancel-fee="60,000" data-baggage="수하물 3개 (32kg)" data-upgrade="가능" data-mileage="1,900">
-                        <div class="fare-type">퍼스트</div>
-                        <div class="fare-price">950,000원</div>
-                        <div class="seats-available">1석</div>
-                    </div>
-                </div>
-                
-                <!-- Third flight card -->
-                <div class="flight-card new-layout">
-                    <div class="flight-info-column">
-                        <div class="flight-times">
-                            <div class="departure-block">
-                                <div class="departure-time">09:00</div>
-                                <div class="departure-code">ICN</div>
-                            </div>
-                            <div class="flight-duration">
-                                <div class="duration-line">
-                                    <i class="fas fa-plane"></i>
-                                </div>
-                                <div class="duration-time">2시간 30분</div>
-                            </div>
-                            <div class="arrival-block">
-                                <div class="arrival-time">11:30</div>
-                                <div class="arrival-code">NRT</div>
-                            </div>
-                        </div>
-                        <div class="airline-info">
-                            <span class="flight-number">KE705</span>
-                            <i class="fas fa-plane-departure"></i>
-                            <span class="airline-name">대한항공 운항</span>
-                            <button class="detail-btn">상세보기</button>
-                        </div>
-                    </div>
-                    
-                    <div class="fare-column" data-fare-type="일반석 세이버" data-fare-price="450,000" data-seats="6" data-flight-number="KE705" data-airline="대한항공" data-change-fee="60,000" data-cancel-fee="120,000" data-baggage="수하물 1개 (23kg)" data-upgrade="불가" data-mileage="900">
-                        <div class="fare-type">일반석 세이버</div>
-                        <div class="fare-price">450,000원</div>
-                        <div class="seats-available">6석</div>
-                    </div>
-                    
-                    <div class="fare-column" data-fare-type="프레스티지" data-fare-price="650,000" data-seats="5" data-flight-number="KE705" data-airline="대한항공" data-change-fee="40,000" data-cancel-fee="80,000" data-baggage="수하물 2개 (23kg)" data-upgrade="가능" data-mileage="1,300">
-                        <div class="fare-type">프레스티지</div>
-                        <div class="fare-price">650,000원</div>
-                        <div class="seats-available">5석</div>
-                    </div>
-                    
-                    <div class="fare-column disabled">
-                        <div class="fare-type">퍼스트</div>
-                        <div class="fare-price">975,000원</div>
-                        <div class="seats-available sold-out">매진</div>
-                    </div>
+                <div class="airline-info">
+                    <span class="flight-number">${flight.flightId}</span>
+                    <span class="airline-name">${flight.airlineName}</span>
                 </div>
             </div>
+            
+            <!-- 좌석 정보 -->
+            <div class="fare-columns">
+                <c:forEach var="seat" items="${flightSeat[flight]}">
+                    <div class="fare-column">
+                        <div class="fare-type">${seat.detailClassName}</div> <!-- 세부 좌석명 -->
+                        <div class="seats-available">${seat.availableSeatCount}석 남음</div>
+                    </div>
+                </c:forEach>
+            </div>
+            
+        </div>
+        
+    </c:forEach>
+</div>
+
+
+       
+       
+       
         </div>
     </section>
 

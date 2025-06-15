@@ -18,11 +18,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.koreanair.model.dao.AirportDAO;
+import com.koreanair.model.dto.AirportDTO;
+
 public class AirportService {
 
-	
+    private AirportDAO dao = new AirportDAO();
+
 	public List<String> searchAirportCities(String keyword) throws Exception {
-	    String serviceKey = "dLBL5CIKkYQdMzdojTQt8S0fxCrV6tsTTLnqWu%2BDf67TZrgwb3mAinbPtYPmX%2BbNEQD7%2FRhDKq5oo8DGlDrXcA%3D%3D";
+	    String serviceKey = "8P8uJUdkLc4fdMmPElOLwBHcmo5822gwkjaY%2Fy8hWEf%2FUqhENmeY7NbJFpg%2Bsf%2FkvNj3UHtZWDSphVKixegI5g%3D%3D";
 	    int pageNo = 1;
 	    int numOfRows = 100; // 너무 크면 서버에서 막히므로 안전한 값 사용
 	    int totalCount = Integer.MAX_VALUE; // 처음엔 모름
@@ -79,6 +83,10 @@ public class AirportService {
 
 	    return result;
 	}
+
+	public List<AirportDTO> searchAirportsByKeyword(String keyword) {
+        return dao.findAirportsByKeyword(keyword);
+    }
 
 	
 }
