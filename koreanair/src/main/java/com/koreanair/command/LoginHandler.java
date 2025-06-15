@@ -37,6 +37,25 @@ public class LoginHandler implements CommandHandler {
     // 로그인 폼 표시
     private String showLoginForm(HttpServletRequest request, HttpServletResponse response) 
             throws Exception {
+        
+        // 세션에서 메시지들 확인
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            // 회원가입 성공 메시지 확인
+            String signupSuccessMessage = (String) session.getAttribute("signupSuccessMessage");
+            if (signupSuccessMessage != null) {
+                request.setAttribute("message", signupSuccessMessage);
+                session.removeAttribute("signupSuccessMessage");
+            }
+            
+            // 카카오 연동 성공 메시지 확인
+            String linkSuccessMessage = (String) session.getAttribute("linkSuccessMessage");
+            if (linkSuccessMessage != null) {
+                request.setAttribute("message", linkSuccessMessage);
+                session.removeAttribute("linkSuccessMessage");
+            }
+        }
+        
         return "/views/login/login.jsp";
     }
     
