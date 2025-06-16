@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 현재 페이지 URL 경로 확인
     const currentPath = window.location.pathname;
-    const isSearchResults = currentPath.includes('search-results.html');
+    const isSearchResults = currentPath.includes('search-results.html') || currentPath.includes('flightSearch.do');
     
     // 모든 페이지에서 공통적으로 사용되는 코드
     initializeCommonFunctionality();
@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 페이지별 초기화
     if (isSearchResults) {
         initializeSearchResultsPage();
+        // JSP 페이지에서도 날짜 카드 기능 활성화
+        initializeDatePriceBar();
     } else {
         initializeHomePage();
     }
@@ -1049,23 +1051,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.classList.add('active');
                     
                     // 날짜와 요일 정보 가져오기
-                    const day = this.querySelector('.date-day').textContent;
+                    const day = this.querySelector('.date-day').textContent.padStart(2, '0');
                     const weekday = this.querySelector('.date-weekday').textContent;
                     const price = this.querySelector('.price-amount').textContent;
                     
                     console.log(`선택된 날짜: ${day}일(${weekday}), 가격: ${price}`);
                     
-                    // 여기에 날짜 변경에 따른 추가 로직 구현 가능
-                    // 예: 선택한 날짜에 대한 항공편 목록 필터링 등
+                    // 현재 URL에서 쿼리 파라미터 가져오기
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const currentDepartureDate = urlParams.get('departureDate');
                     
-                    // 선택한 날짜로 검색 조건 막대의 날짜 업데이트
-                    updateSearchDate(day, weekday);
-                    
-                    // 상단으로 부드럽게 스크롤 (선택 사항)
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
+                    if (currentDepartureDate) {
+                        // 원래 기준 날짜 설정 (처음 요청된 날짜를 계속 유지)
+                        let originalDepartureDate = urlParams.get('originalDepartureDate');
+                        if (!originalDepartureDate) {
+                            // 첫 요청인 경우 현재 departureDate를 원래 날짜로 설정
+                            originalDepartureDate = currentDepartureDate;
+                        }
+                        
+                        // 원래 기준 날짜에서 연도와 월 추출
+                        const [originalYear, originalMonth, originalDay] = originalDepartureDate.split('-');
+                        
+                        // 새로운 날짜 생성 (원래 기준 날짜의 연도/월 사용)
+                        const newDepartureDate = `${originalYear}-${originalMonth}-${day}`;
+                        
+                        // 새로운 URL 생성
+                        urlParams.set('departureDate', newDepartureDate);
+                        urlParams.set('originalDepartureDate', originalDepartureDate); // 원래 기준 날짜 유지
+                        // returnDate는 원래 값을 그대로 유지 (변경하지 않음)
+                        
+                        // 페이지 새로고침으로 새로운 날짜로 검색
+                        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+                        window.location.href = newUrl;
+                    }
                 });
             });
             

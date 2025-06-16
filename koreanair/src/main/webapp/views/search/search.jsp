@@ -267,41 +267,65 @@
 	<div class="date-price-bar">
 		<div class="container">
 			<div class="date-price-list">
-				<div class="date-price-item active">
-					<div class="date-day">19</div>
-					<div class="date-weekday">월</div>
-					<div class="price-amount">432,000원</div>
+				<%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter, java.time.DayOfWeek" %>
+				<%@ page import="java.util.Locale" %>
+				<%
+					String departureDateParam = request.getParameter("departureDate");
+					String originalDepartureDateParam = request.getParameter("originalDepartureDate");
+					
+					// 원래 기준 날짜 설정 (처음 요청된 날짜)
+					LocalDate originalBaseDate;
+					if (originalDepartureDateParam != null && !originalDepartureDateParam.isEmpty()) {
+						try {
+							originalBaseDate = LocalDate.parse(originalDepartureDateParam);
+						} catch (Exception e) {
+							// originalDepartureDate가 없거나 잘못된 경우, departureDate를 원래 날짜로 사용
+							originalBaseDate = departureDateParam != null ? LocalDate.parse(departureDateParam) : LocalDate.now();
+						}
+					} else {
+						// 첫 요청인 경우 departureDate를 원래 날짜로 설정
+						originalBaseDate = departureDateParam != null ? LocalDate.parse(departureDateParam) : LocalDate.now();
+					}
+					
+					// 현재 선택된 날짜
+					LocalDate currentSelectedDate;
+					if (departureDateParam != null && !departureDateParam.isEmpty()) {
+						try {
+							currentSelectedDate = LocalDate.parse(departureDateParam);
+						} catch (Exception e) {
+							currentSelectedDate = originalBaseDate;
+						}
+					} else {
+						currentSelectedDate = originalBaseDate;
+					}
+					
+					// 항상 원래 기준 날짜를 중심으로 앞뒤 3일씩 총 7일 생성
+					LocalDate[] dates = new LocalDate[7];
+					for (int i = 0; i < 7; i++) {
+						dates[i] = originalBaseDate.minusDays(3).plusDays(i);
+					}
+					
+					// 요일 이름 배열 (한국어)
+					String[] dayNames = {"일", "월", "화", "수", "목", "금", "토"};
+					
+					// 임시 가격 배열 (실제로는 DB에서 가져와야 함)
+					String[] prices = {"432,000원", "450,000원", "423,000원", "448,000원", "472,000원", "498,000원", "465,000원"};
+					
+					for (int i = 0; i < dates.length; i++) {
+						LocalDate currentDate = dates[i];
+						int dayOfMonth = currentDate.getDayOfMonth();
+						String dayOfWeek = dayNames[currentDate.getDayOfWeek().getValue() % 7];
+						// 현재 선택된 날짜와 비교해서 active 클래스 적용
+						boolean isActive = currentDate.equals(currentSelectedDate);
+				%>
+				<div class="date-price-item <%= isActive ? "active" : "" %>">
+					<div class="date-day"><%= dayOfMonth %></div>
+					<div class="date-weekday"><%= dayOfWeek %></div>
+					<div class="price-amount"><%= prices[i] %></div>
 				</div>
-				<div class="date-price-item">
-					<div class="date-day">20</div>
-					<div class="date-weekday">화</div>
-					<div class="price-amount">450,000원</div>
-				</div>
-				<div class="date-price-item">
-					<div class="date-day">21</div>
-					<div class="date-weekday">수</div>
-					<div class="price-amount">423,000원</div>
-				</div>
-				<div class="date-price-item">
-					<div class="date-day">22</div>
-					<div class="date-weekday">목</div>
-					<div class="price-amount">448,000원</div>
-				</div>
-				<div class="date-price-item">
-					<div class="date-day">23</div>
-					<div class="date-weekday">금</div>
-					<div class="price-amount">472,000원</div>
-				</div>
-				<div class="date-price-item">
-					<div class="date-day">24</div>
-					<div class="date-weekday">토</div>
-					<div class="price-amount">498,000원</div>
-				</div>
-				<div class="date-price-item">
-					<div class="date-day">25</div>
-					<div class="date-weekday">일</div>
-					<div class="price-amount">465,000원</div>
-				</div>
+				<%
+					}
+				%>
 			</div>
 		</div>
 	</div>

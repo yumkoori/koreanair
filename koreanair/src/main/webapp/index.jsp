@@ -133,8 +133,8 @@
                         <div class="route-section">
                             <div class="route-inputs">
                                 <div class="airport-input departure">
-                                    <div class="airport-code">SEL</div>
-                                    <div class="airport-name">서울</div>
+                                    <div class="airport-code">CJU</div>
+                                    <div class="airport-name">제주</div>
                                     <div id="departure-dropdown">
                                         <div class="dropdown-header">
                                             <div class="dropdown-title">출발지 검색</div>
@@ -151,8 +151,8 @@
                                     <i class="fas fa-exchange-alt"></i>
                                 </button>
                                 <div class="airport-input arrival">
-                                    <div class="airport-code">To</div>
-                                    <div class="airport-name">도착지</div>
+                                    <div class="airport-code">GMP</div>
+                                    <div class="airport-name">김포</div>
                                     <div id="arrival-dropdown">
                                         <div class="dropdown-header">
                                             <div class="dropdown-title">도착지 검색</div>
@@ -173,7 +173,7 @@
                                 <div class="date-input">
                                     <label id="date-label">출발일 ~ 도착일</label>
                                     <div class="date-picker-container" id="date-picker-trigger">
-                                        <input type="text" id="date-display" value="2025-05-28 ~ 2025-06-04" readonly>
+                                        <input type="text" id="date-display" value="2025-07-15 ~ 2025-07-16" readonly>
                                         <i class="fas fa-calendar-alt"></i>
                                     </div>
                                     <!-- 달력 오버레이 배경 -->
@@ -215,7 +215,7 @@
                                 <div class="passenger-input">
                                     <label>탑승객</label>
                                     <select>
-                                        <option>성인 1명</option>
+                                        <option selected>성인 1명</option>
                                         <option>성인 2명</option>
                                         <option>성인 3명</option>
                                         <option>성인 4명</option>
@@ -223,16 +223,7 @@
                                 </div>
                             </div>
                             
-                            <div class="class-section">
-                                <div class="class-input">
-                                    <label>좌석 등급</label>
-                                    <select>
-                                        <option>일반석</option>
-                                        <option>프레스티지석</option>
-                                        <option>일등석</option>
-                                    </select>
-                                </div>
-                            </div>
+
                             
                             <div class="search-section">
                                 <button type="submit" class="search-flights-btn">항공편 검색</button>

@@ -62,7 +62,7 @@ public class FlightDAOImpl implements FlightDAO{
 		        + "    f.departure_airport_id = ? "
 		        + "    AND f.arrival_airport_id = ? "
 		        + "    AND DATE(f.departure_time) = ? "
-		        + "    AND (sc.class_name = ? AND fs.status = 'AVAILABLE')"
+		        + "    AND fs.status = 'AVAILABLE'"
 		        + " GROUP BY"
 		        + "    f.flight_id, ac.airline, f.departure_time, f.arrival_time"
 		        + " HAVING"
@@ -88,12 +88,11 @@ public class FlightDAOImpl implements FlightDAO{
             pstmt.setString(1, searchFlightDTO.getDeparture());
             pstmt.setString(2, searchFlightDTO.getArrival());
             pstmt.setString(3, searchFlightDTO.getDepartureDate());
-            pstmt.setString(4, searchFlightDTO.getSeatClass());
 
 
             rs = pstmt.executeQuery();
             
-            if (rs.next()) {
+            while (rs.next()) {
                 SearchFlightResultDTO sftd = SearchFlightResultDTO.builder()
                 .flightId(rs.getString("flight_id"))
                 .airlineName(rs.getString("airline_name"))
@@ -104,6 +103,8 @@ public class FlightDAOImpl implements FlightDAO{
                 .build();
             	
                flights.add(sftd);
+               
+               System.out.println(flights);
             }
             
         } catch (SQLException e) {

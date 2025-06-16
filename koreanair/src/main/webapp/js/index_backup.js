@@ -1007,9 +1007,33 @@ document.addEventListener('DOMContentLoaded', function() {
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // 테스트용 고정값으로 직접 이동
-            const url = 'flightSearch.do?departure=CJU&arrival=GMP&departureDate=2025-07-15&returnDate=2025-07-16&passengers=%EC%84%B1%EC%9D%B8+1%EB%AA%85&seatClass=%EC%9D%BC%EB%B0%98%EC%84%9D&tripType=round';
-            window.location.href = url;
+                        try {
+                // 기본값 설정
+                const departure = 'CJU';
+                const arrival = 'GMP'; 
+                const departureDate = '2025-07-15';
+                const returnDate = '2025-07-16';
+                const passengers = '성인 1명';
+                const seatClass = '일반석';
+                const tripType = 'round';
+                
+                // URL 직접 생성하여 이동
+                const params = new URLSearchParams({
+                    departure: departure,
+                    arrival: arrival,
+                    departureDate: departureDate,
+                    returnDate: returnDate,
+                    passengers: passengers,
+                    seatClass: seatClass,
+                    tripType: tripType
+                });
+                
+                const url = 'flightSearch.do?' + params.toString();
+                window.location.href = url;
+            } catch (error) {
+                console.error('폼 제출 중 오류 발생:', error);
+                alert('검색 중 오류가 발생했습니다. 페이지를 새로고침 후 다시 시도해주세요.');
+            }
         });
     }
 
