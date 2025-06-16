@@ -22,7 +22,7 @@ public class FlightScheduleService {
     // DAO 인터페이스와 구현 클래스를 스크린샷의 이름에 맞게 사용합니다.
     private final ProjectDao projectDao;
     
-    private final String serviceKey = "dLBL5CIKkYQdMzdojTQt8S0fxCrV6tsTTLnqWu%2BDf67TZrgwb3mAinbPtYPmX%2BbNEQD7%2FRhDKq5oo8DGlDrXcA%3D%3D";
+    private final String serviceKey = "UNnuFixx2cWRxnujKddwl8pYBr1uw946cRcT6JayP4%2B5uvZqT0FnuZFWETlNz8N7%2BeSga0fya9NJzMv%2BUVm7wg%3D%3D";
 
     public FlightScheduleService() {
         this.projectDao = new ProjectDaoimpl(); // 클래스 이름 'ProjectDaoimpl' 사용
@@ -31,12 +31,16 @@ public class FlightScheduleService {
     /**
      * 핸들러로부터 요청을 받아 항공편 데이터를 DTO 리스트로 반환하는 메인 메소드
      */
+                                                    //처음에는  오늘날짜             all     
     public List<FlightScheduleDTO> getFlightData(String requestedDate, String flightType) throws Exception {
+    	System.out.println("서비스에 도착");
+    	
         if (flightType == null || flightType.trim().isEmpty()) {
             flightType = "all";
         }
         if ("realtime".equalsIgnoreCase(flightType)) {
             requestedDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+            System.out.println("8888");
         }
         if (requestedDate == null || requestedDate.trim().isEmpty()) {
             throw new IllegalArgumentException("날짜 파라미터가 필요합니다.");
