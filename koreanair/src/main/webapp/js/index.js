@@ -1234,8 +1234,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 탑승객 정보 가져오기 (기본값: 성인 1명)
             let passengers = '성인 1명';
-            if (passengerDisplay && passengerDisplay.textContent.trim()) {
-                passengers = passengerDisplay.textContent.trim();
+            const passengerDisplayElement = document.querySelector('.passenger-display');
+            if (passengerDisplayElement && passengerDisplayElement.textContent.trim()) {
+                passengers = passengerDisplayElement.textContent.trim();
             }
             
             // 좌석 등급 (기본값: 일반석)
@@ -1256,7 +1257,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const url = `flightSearch.do?${params.toString()}`;
-            console.log('검색 URL:', url);
             window.location.href = url;
         });
     }

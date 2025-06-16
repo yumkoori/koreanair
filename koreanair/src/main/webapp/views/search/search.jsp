@@ -505,8 +505,10 @@
 							<!-- 일반석 -->
 							<div class="fare-column economy">
 								<div class="fare-type">일반석</div>
+								<c:set var="economyFound" value="false" />
 								<c:forEach var="seat" items="${flightSeat[flight]}">
 									<c:if test="${seat.className == '일반석'}">
+										<c:set var="economyFound" value="true" />
 										<c:choose>
 											<c:when test="${seat.availableSeatCount > 0}">
 												<div class="fare-price">
@@ -522,13 +524,19 @@
 											${seat.availableSeatCount}석</div>
 									</c:if>
 								</c:forEach>
+								<c:if test="${!economyFound}">
+									<div class="fare-price no-available">매진</div>
+									<div class="fare-status unavailable">좌석 정보 없음</div>
+								</c:if>
 							</div>
 
 							<!-- 프레스티지석 -->
 							<div class="fare-column prestige">
 								<div class="fare-type">프레스티지석</div>
+								<c:set var="prestigeFound" value="false" />
 								<c:forEach var="seat" items="${flightSeat[flight]}">
 									<c:if test="${seat.className == '프레스티지석'}">
+										<c:set var="prestigeFound" value="true" />
 										<c:choose>
 											<c:when test="${seat.availableSeatCount > 0}">
 												<div class="fare-price">
@@ -544,14 +552,20 @@
 											${seat.availableSeatCount}석</div>
 									</c:if>
 								</c:forEach>
+								<c:if test="${!prestigeFound}">
+									<div class="fare-price no-available">매진</div>
+									<div class="fare-status unavailable">좌석 정보 없음</div>
+								</c:if>
 							</div>
 
 
 							<!-- 일등석 -->
 							<div class="fare-column first">
 								<div class="fare-type">일등석</div>
+								<c:set var="firstFound" value="false" />
 								<c:forEach var="seat" items="${flightSeat[flight]}">
 									<c:if test="${seat.className == '일등석'}">
+										<c:set var="firstFound" value="true" />
 										<c:choose>
 											<c:when test="${seat.availableSeatCount > 0}">
 												<div class="fare-price">
@@ -567,6 +581,10 @@
 											${seat.availableSeatCount}석</div>
 									</c:if>
 								</c:forEach>
+								<c:if test="${!firstFound}">
+									<div class="fare-price no-available">매진</div>
+									<div class="fare-status unavailable">좌석 정보 없음</div>
+								</c:if>
 							</div>
 
 						</div>

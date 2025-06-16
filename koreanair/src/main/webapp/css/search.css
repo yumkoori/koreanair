@@ -2357,3 +2357,24 @@ html body section div div.flights-list div div.fare-columns {
     flex: 1 1 33.333% !important;
 }
 
+/* 좌석 정보 없음 및 매진 스타일 */
+.fare-price.no-available {
+    color: #999 !important;
+    font-style: italic !important;
+    background-color: #f5f5f5 !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    text-align: center !important;
+    font-weight: 500 !important;
+}
+
+.fare-status.unavailable {
+    color: #999 !important;
+    background-color: #f5f5f5 !important;
+    font-style: italic !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    text-align: center !important;
+    font-size: 12px !important;
+}
+
