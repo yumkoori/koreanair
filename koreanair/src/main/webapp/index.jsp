@@ -214,12 +214,57 @@
                             <div class="passenger-section">
                                 <div class="passenger-input">
                                     <label>탑승객</label>
-                                    <select>
-                                        <option selected>성인 1명</option>
-                                        <option>성인 2명</option>
-                                        <option>성인 3명</option>
-                                        <option>성인 4명</option>
-                                    </select>
+                                    <div class="passenger-selector">
+                                        <span class="passenger-display">성인 1명</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                        <div class="passengers-dropdown">
+                                            <div class="passenger-type">
+                                                <div class="passenger-label">
+                                                    <span>성인</span> <small>만 12세 이상</small>
+                                                </div>
+                                                <div class="passenger-count">
+                                                    <button type="button" class="count-btn decrease">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                    <span class="count adult-count">1</span>
+                                                    <button type="button" class="count-btn increase">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="passenger-type">
+                                                <div class="passenger-label">
+                                                    <span>소아</span> <small>만 2-11세</small>
+                                                </div>
+                                                <div class="passenger-count">
+                                                    <button type="button" class="count-btn decrease">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                    <span class="count child-count">0</span>
+                                                    <button type="button" class="count-btn increase">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="passenger-type">
+                                                <div class="passenger-label">
+                                                    <span>유아</span> <small>만 2세 미만</small>
+                                                </div>
+                                                <div class="passenger-count">
+                                                    <button type="button" class="count-btn decrease">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                    <span class="count infant-count">0</span>
+                                                    <button type="button" class="count-btn increase">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="passengers-footer">
+                                                <button type="button" class="apply-passengers">적용</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             

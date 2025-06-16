@@ -157,7 +157,19 @@
 				</div>
 				<div class="divider">|</div>
 				<div class="date-range">
-					<i class="far fa-calendar-alt"></i> <span>${param.departureDate != null && param.returnDate != null ? param.departureDate.concat(' ~ ').concat(param.returnDate) : '2024.03.20 ~ 2024.03.27'}</span>
+					<%
+						String departureDateDisplay = request.getParameter("departureDate");
+						String returnDateDisplay = request.getParameter("returnDate");
+						String dateRangeDisplay = "2024.03.20 ~ 2024.03.27"; // 기본값
+						
+						if (departureDateDisplay != null && returnDateDisplay != null) {
+							// 2025-07-15 형식을 2025.07.15 형식으로 변환
+							String formattedDepartureDate = departureDateDisplay.replace("-", ".");
+							String formattedReturnDate = returnDateDisplay.replace("-", ".");
+							dateRangeDisplay = formattedDepartureDate + " ~ " + formattedReturnDate;
+						}
+					%>
+					<i class="far fa-calendar-alt"></i> <span><%= dateRangeDisplay %></span>
 					<div class="calendar-dropdown">
 						<div class="calendar-header">
 							<div class="month-selector">
@@ -190,7 +202,18 @@
 				</div>
 				<div class="divider">|</div>
 				<div class="passengers">
-					<span>${param.passengers != null ? param.passengers : '성인 2명'}</span>
+					<%
+						String passengersParam = request.getParameter("passengers");
+						String displayPassengers = "성인 2명"; // 기본값
+						if (passengersParam != null && !passengersParam.isEmpty()) {
+							// request.getParameter()는 자동으로 URL 디코딩을 수행함
+							displayPassengers = passengersParam;
+							
+							// 혹시 문자가 깨져있다면 정리
+							displayPassengers = displayPassengers.replaceAll("\\s+", " ").trim();
+						}
+					%>
+					<span><%= displayPassengers %></span>
 					<div class="passengers-dropdown">
 						<div class="passenger-type">
 							<div class="passenger-label">
@@ -353,15 +376,7 @@
 		</div>
 	</div>
 
-	<div class="seat-class-selection">
-		<div class="container">
-			<div class="seat-class-buttons">
-				<button class="seat-class-btn active" data-seat-type="economy">일반석</button>
-				<button class="seat-class-btn" data-seat-type="prestige">프레스티지석</button>
-				<button class="seat-class-btn" data-seat-type="first">일등석</button>
-			</div>
-		</div>
-	</div>
+
 
 	<div class="filter-options-bar">
 		<div class="container">

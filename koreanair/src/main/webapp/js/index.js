@@ -1,4 +1,207 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== INDEX.JS 로드됨 ===');
+    console.log('DOMContentLoaded 이벤트 발생');
+    
+
+    
+    // ===== 탑승객 선택 기능을 최우선으로 실행 =====
+    console.log('=== 탑승객 선택 기능 초기화 시작 ===');
+    
+    // 즉시 실행되는 탑승객 기능
+    function initPassengerSelector() {
+        console.log('initPassengerSelector 함수 실행');
+        
+        const passengerSelector = document.querySelector('.passenger-selector');
+        const passengerDisplay = document.querySelector('.passenger-display');
+        const passengersDropdown = document.querySelector('.passengers-dropdown');
+        
+        console.log('찾은 요소들:');
+        console.log('- passengerSelector:', passengerSelector);
+        console.log('- passengerDisplay:', passengerDisplay);
+        console.log('- passengersDropdown:', passengersDropdown);
+        
+        if (passengerSelector) {
+            console.log('탑승객 선택기 HTML:', passengerSelector.outerHTML.substring(0, 100) + '...');
+            
+
+             
+             // 직접 클릭 이벤트 추가
+             passengerSelector.onclick = function(e) {
+                 console.log('=== 탑승객 선택기 클릭됨! ===');
+                 e.preventDefault();
+                 e.stopPropagation();
+                 
+
+                 
+                 // 기존 커스텀 드롭다운이 있으면 제거
+                 const existingCustomDropdown = document.getElementById('custom-passenger-dropdown');
+                 if (existingCustomDropdown) {
+                     existingCustomDropdown.remove();
+                     console.log('기존 커스텀 드롭다운 제거됨');
+                     return;
+                 }
+                 
+                 // 새로운 드롭다운 생성
+                 const customDropdown = document.createElement('div');
+                 customDropdown.id = 'custom-passenger-dropdown';
+                 customDropdown.innerHTML = `
+                     <div style="padding: 20px; background: #fff;">
+                         <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px;">탑승객 선택</div>
+                         
+                         <div style="margin-bottom: 20px;">
+                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+                                 <div>
+                                     <div style="font-weight: 600; color: #333; font-size: 14px; margin-bottom: 4px;">성인</div>
+                                     <div style="font-size: 12px; color: #666;">만 12세 이상</div>
+                                 </div>
+                                 <div style="display: flex; align-items: center; gap: 16px;">
+                                     <button class="custom-count-btn decrease" data-type="adult" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">−</button>
+                                     <span class="custom-count adult-count" style="min-width: 24px; text-align: center; font-weight: 600; font-size: 16px; color: #333;">1</span>
+                                     <button class="custom-count-btn increase" data-type="adult" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">+</button>
+                                 </div>
+                             </div>
+                             
+                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid #f5f5f5;">
+                                 <div>
+                                     <div style="font-weight: 600; color: #333; font-size: 14px; margin-bottom: 4px;">소아</div>
+                                     <div style="font-size: 12px; color: #666;">만 2-11세</div>
+                                 </div>
+                                 <div style="display: flex; align-items: center; gap: 16px;">
+                                     <button class="custom-count-btn decrease" data-type="child" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">−</button>
+                                     <span class="custom-count child-count" style="min-width: 24px; text-align: center; font-weight: 600; font-size: 16px; color: #333;">0</span>
+                                     <button class="custom-count-btn increase" data-type="child" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">+</button>
+                                 </div>
+                             </div>
+                             
+                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid #f5f5f5;">
+                                 <div>
+                                     <div style="font-weight: 600; color: #333; font-size: 14px; margin-bottom: 4px;">유아</div>
+                                     <div style="font-size: 12px; color: #666;">만 2세 미만</div>
+                                 </div>
+                                 <div style="display: flex; align-items: center; gap: 16px;">
+                                     <button class="custom-count-btn decrease" data-type="infant" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">−</button>
+                                     <span class="custom-count infant-count" style="min-width: 24px; text-align: center; font-weight: 600; font-size: 16px; color: #333;">0</span>
+                                     <button class="custom-count-btn increase" data-type="infant" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">+</button>
+                                 </div>
+                             </div>
+                         </div>
+                         
+                         <div style="display: flex; gap: 12px; margin-top: 24px;">
+                             <button id="custom-cancel-btn" style="flex: 1; padding: 12px 16px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; color: #333; transition: all 0.2s;">취소</button>
+                             <button id="custom-apply-btn" style="flex: 1; padding: 12px 16px; border: none; background: #0066cc; color: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s;">확인</button>
+                         </div>
+                     </div>
+                 `;
+                 
+                 // 위치와 스타일 설정 (search.jsp 스타일과 동일하게)
+                 const rect = passengerSelector.getBoundingClientRect();
+                 const viewportWidth = window.innerWidth;
+                 const viewportHeight = window.innerHeight;
+                 
+                 // 드롭다운이 화면을 벗어나지 않도록 위치 조정
+                 let dropdownTop = rect.bottom + 4;
+                 let dropdownLeft = rect.left;
+                 let dropdownWidth = Math.min(rect.width, 350); // 최대 350px로 제한
+                 
+                 // 오른쪽으로 벗어나는 경우 조정
+                 if (dropdownLeft + dropdownWidth > viewportWidth - 20) {
+                     dropdownLeft = viewportWidth - dropdownWidth - 20;
+                 }
+                 
+                 // 아래로 벗어나는 경우 위쪽에 표시
+                 if (dropdownTop + 300 > viewportHeight) {
+                     dropdownTop = rect.top - 304; // 드롭다운 높이만큼 위로
+                 }
+                 
+                 customDropdown.style.cssText = `
+                     position: fixed !important;
+                     top: ${dropdownTop}px !important;
+                     left: ${dropdownLeft}px !important;
+                     width: ${dropdownWidth}px !important;
+                     max-width: 350px !important;
+                     z-index: 999999 !important;
+                     background: #ffffff !important;
+                     border: 1px solid #ddd !important;
+                     border-radius: 8px !important;
+                     box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+                     font-family: 'Nanum Gothic', sans-serif !important;
+                     display: block !important;
+                     visibility: visible !important;
+                     opacity: 1 !important;
+                     max-height: 300px !important;
+                     overflow: visible !important;
+                 `;
+                 
+                 // body에 추가
+                 document.body.appendChild(customDropdown);
+                 console.log('커스텀 드롭다운 생성됨');
+                 
+                 // 버튼 이벤트 추가
+                 const countBtns = customDropdown.querySelectorAll('.custom-count-btn');
+                 countBtns.forEach(btn => {
+                     btn.onclick = function(e) {
+                         e.stopPropagation();
+                         const type = this.dataset.type;
+                         const isIncrease = this.classList.contains('increase');
+                         const countSpan = customDropdown.querySelector(`.${type}-count`);
+                         let currentCount = parseInt(countSpan.textContent);
+                         
+                         if (isIncrease) {
+                             if (currentCount < 9) {
+                                 currentCount++;
+                             }
+                         } else {
+                             if (currentCount > 0) {
+                                 currentCount--;
+                             }
+                         }
+                         
+                         countSpan.textContent = currentCount;
+                         
+                         // 전역 변수 업데이트
+                         if (type === 'adult') adultCount = currentCount;
+                         else if (type === 'child') childCount = currentCount;
+                         else if (type === 'infant') infantCount = currentCount;
+                     };
+                 });
+                 
+                 // 취소 버튼 이벤트
+                 const cancelBtn = customDropdown.querySelector('#custom-cancel-btn');
+                 cancelBtn.onclick = function() {
+                     customDropdown.remove();
+                     console.log('드롭다운 취소 및 닫힘');
+                 };
+                 
+                 // 적용 버튼 이벤트
+                 const applyBtn = customDropdown.querySelector('#custom-apply-btn');
+                 applyBtn.onclick = function() {
+                     updatePassengerDisplay();
+                     customDropdown.remove();
+                     console.log('드롭다운 적용 및 닫힘');
+                 };
+                 
+                 // 외부 클릭 시 닫기
+                 document.addEventListener('click', function closeDropdown(e) {
+                     if (!customDropdown.contains(e.target) && !passengerSelector.contains(e.target)) {
+                         customDropdown.remove();
+                         document.removeEventListener('click', closeDropdown);
+                         console.log('외부 클릭으로 드롭다운 닫힘');
+                     }
+                 });
+             };
+            
+            console.log('탑승객 선택기에 onclick 이벤트 추가됨');
+        } else {
+            console.log('탑승객 선택기를 찾을 수 없음');
+        }
+    }
+    
+    // 즉시 실행
+    initPassengerSelector();
+    
+    // 1초 후 재시도
+    setTimeout(initPassengerSelector, 1000);
+    
     // 탭 기능 구현
     const tabBtns = document.querySelectorAll('.tab-btn');
     const bookingContents = document.querySelectorAll('.booking-content');
@@ -1007,8 +1210,53 @@ document.addEventListener('DOMContentLoaded', function() {
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // 테스트용 고정값으로 직접 이동
-            const url = 'flightSearch.do?departure=CJU&arrival=GMP&departureDate=2025-07-15&returnDate=2025-07-16&passengers=%EC%84%B1%EC%9D%B8+1%EB%AA%85&seatClass=%EC%9D%BC%EB%B0%98%EC%84%9D&tripType=round';
+            // 입력값 가져오기
+            const departureCode = document.querySelector('.departure .airport-code').textContent || 'CJU';
+            const arrivalCode = document.querySelector('.arrival .airport-code').textContent || 'GMP';
+            
+            // 날짜 값 가져오기 (기본값: 2025-07-15 ~ 2025-07-16)
+            let departureDate = '2025-07-15';
+            let returnDate = '2025-07-16';
+            
+            if (selectedStartDate) {
+                const year = selectedStartDate.getFullYear();
+                const month = String(selectedStartDate.getMonth() + 1).padStart(2, '0');
+                const day = String(selectedStartDate.getDate()).padStart(2, '0');
+                departureDate = `${year}-${month}-${day}`;
+            }
+            
+            if (selectedEndDate && currentTripType !== 'oneway') {
+                const year = selectedEndDate.getFullYear();
+                const month = String(selectedEndDate.getMonth() + 1).padStart(2, '0');
+                const day = String(selectedEndDate.getDate()).padStart(2, '0');
+                returnDate = `${year}-${month}-${day}`;
+            }
+            
+            // 탑승객 정보 가져오기 (기본값: 성인 1명)
+            let passengers = '성인 1명';
+            if (passengerDisplay && passengerDisplay.textContent.trim()) {
+                passengers = passengerDisplay.textContent.trim();
+            }
+            
+            // 좌석 등급 (기본값: 일반석)
+            const seatClass = '일반석';
+            
+            // 여행 타입 가져오기 (기본값: round)
+            const tripType = currentTripType || 'round';
+            
+            // URL 생성
+            const params = new URLSearchParams({
+                departure: departureCode,
+                arrival: arrivalCode,
+                departureDate: departureDate,
+                returnDate: returnDate,
+                passengers: passengers,
+                seatClass: seatClass,
+                tripType: tripType
+            });
+            
+            const url = `flightSearch.do?${params.toString()}`;
+            console.log('검색 URL:', url);
             window.location.href = url;
         });
     }
@@ -1032,6 +1280,36 @@ document.addEventListener('DOMContentLoaded', function() {
             positionDropdown(arrivalDiv, arrivalDropdown);
         }
     });
+
+    // 기존 탑승객 선택 코드 (단순화됨)
+    let adultCount = 1;
+    let childCount = 0;
+    let infantCount = 0;
+
+    // 탑승객 수 업데이트 함수 (단순화됨)
+    function updatePassengerDisplay() {
+        const passengerDisplay = document.querySelector('.passenger-display');
+        if (passengerDisplay) {
+            let displayText = '';
+            const parts = [];
+            
+            if (adultCount > 0) {
+                parts.push(`성인 ${adultCount}명`);
+            }
+            if (childCount > 0) {
+                parts.push(`소아 ${childCount}명`);
+            }
+            if (infantCount > 0) {
+                parts.push(`유아 ${infantCount}명`);
+            }
+            
+            displayText = parts.join(', ');
+            passengerDisplay.textContent = displayText;
+        }
+    }
+
+    // 초기 상태 설정
+    updatePassengerDisplay();
 }); 
 
 

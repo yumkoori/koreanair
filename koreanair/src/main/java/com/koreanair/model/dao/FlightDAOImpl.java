@@ -57,19 +57,17 @@ public class FlightDAOImpl implements FlightDAO{
 		        + " FROM"
 		        + "    flight f"
 		        + " JOIN aircraft ac ON f.aircraft_id = ac.aircraft_id"
-		        + " JOIN flight_seat fs ON f.flight_id = fs.flight_id"
-		        + " JOIN seat_class sc ON sc.class_id = fs.class_id"
+		        + " LEFT JOIN flight_seat fs ON f.flight_id = fs.flight_id AND fs.status = 'AVAILABLE'"
+		        + " LEFT JOIN seat_class sc ON sc.class_id = fs.class_id"
 		        + " WHERE"
 		        + "    f.departure_airport_id = ? "
 		        + "    AND f.arrival_airport_id = ? "
 		        + "    AND DATE(f.departure_time) = ? "
-		        + "    AND fs.status = 'AVAILABLE'"
 		        + " GROUP BY"
 		        + "    f.flight_id, ac.airline, f.departure_time, f.arrival_time"
-		        + " HAVING"
-		        + "    available_seat_count >= 1 "
 		        + " ORDER BY"
 		        + "    f.departure_time ASC";
+
 
         
         Connection conn = null;
@@ -82,7 +80,8 @@ public class FlightDAOImpl implements FlightDAO{
         System.out.println("Departure: " + searchFlightDTO.getDeparture());
         System.out.println("Arrival: " + searchFlightDTO.getArrival());
         System.out.println("Date: " + searchFlightDTO.getDepartureDate());
-        
+        System.out.print(sql);
+       
         try {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
@@ -112,7 +111,6 @@ public class FlightDAOImpl implements FlightDAO{
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt, rs);
-            System.out.println(sql);
         }
         
         return flights;
