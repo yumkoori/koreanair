@@ -268,7 +268,7 @@
 		<div class="container">
 			<div class="date-price-list">
 				<%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter, java.time.DayOfWeek" %>
-				<%@ page import="java.util.Locale" %>
+				<%@ page import="java.util.Locale, java.util.Map" %>
 				<%
 					String departureDateParam = request.getParameter("departureDate");
 					String originalDepartureDateParam = request.getParameter("originalDepartureDate");
@@ -308,8 +308,31 @@
 					// 요일 이름 배열 (한국어)
 					String[] dayNames = {"일", "월", "화", "수", "목", "금", "토"};
 					
-					// 임시 가격 배열 (실제로는 DB에서 가져와야 함)
-					String[] prices = {"432,000원", "450,000원", "423,000원", "448,000원", "472,000원", "498,000원", "465,000원"};
+					// 각 날짜별 최저가 계산
+					String[] prices = new String[7];
+					
+					// weekLowPrices 맵에서 각 날짜별 최저가 가져오기
+					Map<String, Integer> weekLowPrices = (Map<String, Integer>) request.getAttribute("weekLowPrices");
+					
+					if (weekLowPrices != null) {
+						// 각 날짜에 해당하는 가격 매핑
+						for (int i = 0; i < dates.length; i++) {
+							LocalDate currentDate = dates[i];
+							String dateKey = currentDate.toString(); // 2025-07-15 형식
+							
+							Integer priceValue = weekLowPrices.get(dateKey);
+							if (priceValue != null && priceValue > 0) {
+								prices[i] = String.format("%,d원", priceValue);
+							} else {
+								prices[i] = "가격정보없음";
+							}
+						}
+					} else {
+						// weekLowPrices 정보가 없는 경우 기본값
+						for (int i = 0; i < 7; i++) {
+							prices[i] = "가격정보없음";
+						}
+					}
 					
 					for (int i = 0; i < dates.length; i++) {
 						LocalDate currentDate = dates[i];

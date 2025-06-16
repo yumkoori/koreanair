@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -217,6 +218,75 @@ public class FlightDAOImpl implements FlightDAO{
 		
 		return map;
 	}
+	
+	@Override
+	public Map<String, Integer> getWeekLowPrices(SearchFlightDTO searchdto) {
+
+		String sql = "WITH RECURSIVE date_range AS ("
+				+ "    SELECT DATE(?) - INTERVAL 3 DAY AS target_date"
+				+ "    UNION ALL"
+				+ "    SELECT target_date + INTERVAL 1 DAY"
+				+ "    FROM date_range"
+				+ "    WHERE target_date + INTERVAL 1 DAY <= DATE(?) + INTERVAL 3 DAY"
+				+ "),"
+				+ " ranked_prices AS ("
+				+ "    SELECT "
+				+ "        DATE(f.departure_time) AS flight_date,"
+				+ "        sp.price,"
+				+ "        ROW_NUMBER() OVER (PARTITION BY DATE(f.departure_time) ORDER BY sp.price ASC) AS rn"
+				+ "    FROM flight f"
+				+ "    JOIN flight_seat fs ON f.flight_id = fs.flight_id"
+				+ "    JOIN seat_price sp ON fs.flight_id = sp.flight_id AND fs.class_id = sp.class_id"
+				+ "    WHERE "
+				+ "        f.departure_airport_id = ?"
+				+ "        AND f.arrival_airport_id = ?"
+				+ "        AND fs.status = 'AVAILABLE'"
+				+ " )"
+				+ " SELECT "
+				+ "    d.target_date,"
+				+ "    rp.price"
+				+ " FROM date_range d"
+				+ " LEFT JOIN ranked_prices rp"
+				+ "    ON d.target_date = rp.flight_date AND rp.rn = 1"
+				+ " ORDER BY d.target_date;"
+				+ "";
+		
+		Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+		
+	    Map<String, Integer> weekMap = new LinkedHashMap<String, Integer>();
+	    
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+ 
+            pstmt.setDate(1, java.sql.Date.valueOf(searchdto.getDepartureDate()));
+            pstmt.setDate(2, java.sql.Date.valueOf(searchdto.getDepartureDate()));
+
+            pstmt.setString(3, searchdto.getDeparture());
+            pstmt.setString(4, searchdto.getArrival());
+
+
+            rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+            	weekMap.put(rs.getString("target_date"), rs.getInt("price"));
+            }
+       
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+        	System.out.println(sql);
+            closeResources(conn, pstmt, rs);
+        }
+		
+        
+        System.out.println("최저가 호출됨");
+		return weekMap;
+	}
+	
     // 리소스 정리
     private void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         if (rs != null) {
@@ -241,6 +311,7 @@ public class FlightDAOImpl implements FlightDAO{
             }
         }
     }
+
 
 
 }

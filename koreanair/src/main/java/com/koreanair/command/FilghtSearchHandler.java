@@ -50,9 +50,9 @@ public class FilghtSearchHandler implements CommandHandler{
 		request.setAttribute("seatsPriceMap", priceMap);
 		request.setAttribute("flightList", flightList);
 		request.setAttribute("flightSeat", map);
+		request.setAttribute("weekLowPrices", searchService.getWeekLowPrice(dto));
 		
-		
-		System.out.println(map);
+		System.out.println(searchService.getWeekLowPrice(dto));
 		return "/views/search/search.jsp";
 	}
 

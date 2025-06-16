@@ -36,4 +36,6 @@ public interface FlightDAO {
     void updateFare(String flightId, FareDTO fare);
     
     List<SearchFlightResultDTO> getSearchFlight(SearchFlightDTO searchFlightDTO); 
+    
+    Map<String,Integer> getWeekLowPrices(SearchFlightDTO dto);
 }
