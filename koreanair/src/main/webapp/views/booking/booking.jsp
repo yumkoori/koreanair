@@ -331,6 +331,14 @@
                                 </label>
                             </div>
                         </div>
+
+                        <!-- 승객 정보 저장 버튼 -->
+                        <div class="form-actions">
+                            <button type="button" class="save-btn" onclick="savePassengerInfo()">
+                                <i class="fas fa-save"></i>
+                                저장
+                            </button>
+                        </div>
                     </form>
                 </section>
             </div>

@@ -475,4 +475,122 @@ function showFlightDetails() {
             modal.remove();
         }
     });
+}
+
+// 승객 정보 저장 함수
+function savePassengerInfo() {
+    console.log('승객 정보 저장 시작');
+    
+    // 폼 유효성 검사
+    const form = document.getElementById('passengerForm');
+    const requiredFields = form.querySelectorAll('input[required], select[required]');
+    let isValid = true;
+    let errorMessages = [];
+    
+    // 필수 필드 검증
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            isValid = false;
+            const label = field.parentElement.querySelector('label');
+            const fieldName = label ? label.textContent.replace('*', '').trim() : field.name;
+            errorMessages.push(`${fieldName}을(를) 입력해주세요.`);
+            field.classList.add('error');
+        } else {
+            field.classList.remove('error');
+        }
+    });
+    
+    // 이메일 형식 검증
+    const emailField = document.getElementById('email');
+    if (emailField && emailField.value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailField.value)) {
+            isValid = false;
+            errorMessages.push('올바른 이메일 형식을 입력해주세요.');
+            emailField.classList.add('error');
+        }
+    }
+    
+    // 전화번호 형식 검증
+    const phoneField = document.getElementById('phone');
+    if (phoneField && phoneField.value) {
+        const phoneRegex = /^010-\d{4}-\d{4}$/;
+        if (!phoneRegex.test(phoneField.value)) {
+            isValid = false;
+            errorMessages.push('전화번호를 010-0000-0000 형식으로 입력해주세요.');
+            phoneField.classList.add('error');
+        }
+    }
+    
+    if (!isValid) {
+        alert('입력 정보를 확인해주세요:\n\n' + errorMessages.join('\n'));
+        // 첫 번째 오류 필드로 스크롤
+        const firstError = form.querySelector('.error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstError.focus();
+        }
+        return;
+    }
+    
+    // 승객 정보 수집
+    const passengerData = {
+        title: document.getElementById('title1').value,
+        lastName: document.getElementById('lastName1').value,
+        firstName: document.getElementById('firstName1').value,
+        koreanName: document.getElementById('koreanName1').value,
+        birthDate: document.getElementById('birthDate1').value,
+        gender: document.getElementById('gender1').value,
+        nationality: document.getElementById('nationality1').value,
+        passportNumber: document.getElementById('passportNumber1').value,
+        passportExpiry: document.getElementById('passportExpiry1').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        countryCode: document.querySelector('select[name="countryCode"]').value,
+        // 특별 서비스
+        wheelchairService: document.querySelector('input[name="passengers[0].wheelchairService"]').checked,
+        specialMeal: document.querySelector('input[name="passengers[0].specialMeal"]').checked,
+        infantService: document.querySelector('input[name="passengers[0].infantService"]').checked,
+        // 약관 동의
+        agreeTerms: document.querySelector('input[name="agreeTerms"]').checked,
+        agreePrivacy: document.querySelector('input[name="agreePrivacy"]').checked,
+        agreeMarketing: document.querySelector('input[name="agreeMarketing"]').checked
+    };
+    
+    // 저장 버튼 상태 변경
+    const saveBtn = document.querySelector('.save-btn');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 저장 중...';
+    saveBtn.style.background = '#ccc';
+    
+    // 로컬 스토리지에 임시 저장 (실제로는 서버로 전송)
+    try {
+        localStorage.setItem('passengerInfo', JSON.stringify(passengerData));
+        
+        // 저장 성공 시뮬레이션 (1초 후)
+        setTimeout(() => {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-check"></i> 저장 완료';
+            saveBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+            
+            // 성공 메시지
+            alert('승객 정보가 성공적으로 저장되었습니다.');
+            
+            // 3초 후 원래 상태로 복원
+            setTimeout(() => {
+                saveBtn.innerHTML = originalText;
+            }, 3000);
+            
+        }, 1000);
+        
+    } catch (error) {
+        console.error('저장 중 오류 발생:', error);
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalText;
+        saveBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+        alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+    
+    console.log('승객 정보:', passengerData);
 } 
