@@ -311,7 +311,9 @@ header {
 }
 
 /* 승객 정보 */
-.passenger-info {
+.passenger-info,
+.contact-info,
+.terms-info {
     background: white;
     border-radius: 15px;
     padding: 30px;
@@ -699,40 +701,188 @@ header {
     }
 }
 
-/* 승객 정보 저장 버튼 */
-.form-actions {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #f0f0f0;
-    text-align: center;
+/* 승객 카드 스타일 */
+.passenger-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.save-btn {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+.passenger-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.passenger-card-header {
+    padding: 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.passenger-card-header:hover {
+    background: #e9ecef;
+}
+
+.passenger-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.passenger-title h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.passenger-badge {
+    background: #0064de;
     color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.passenger-summary {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.summary-text {
+    color: #666;
+    font-size: 14px;
+}
+
+.toggle-icon {
+    color: #666;
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.toggle-icon.rotated {
+    transform: rotate(180deg);
+}
+
+.passenger-card-content {
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.passenger-card-content.collapsed {
+    display: none;
+}
+
+/* 승객 폼 그리드 */
+.passenger-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.passenger-form-grid .form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* 할인 섹션 */
+.discount-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.discount-section h4 {
+    margin: 0 0 15px 0;
     font-size: 16px;
     font-weight: 600;
+    color: #333;
+}
+
+.discount-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* 도움말 아이콘 */
+.help-icon {
+    color: #999;
+    margin-left: 5px;
+    cursor: help;
+    font-size: 12px;
+}
+
+.help-icon:hover {
+    color: #0064de;
+}
+
+/* 승객 저장 버튼 */
+.passenger-form-actions {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.passenger-save-btn {
+    background: #0064de;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    min-width: 120px;
 }
 
-.save-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
-    background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+.passenger-save-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
 }
 
-.save-btn:active {
+.passenger-save-btn:active {
     transform: translateY(0);
 }
 
-.save-btn i {
-    font-size: 14px;
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .passenger-form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .discount-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .passenger-card-header {
+        padding: 15px;
+    }
+    
+    .passenger-card-content {
+        padding: 15px;
+    }
+    
+    .passenger-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .passenger-summary {
+        margin-left: 0;
+        margin-top: 10px;
+    }
 } 

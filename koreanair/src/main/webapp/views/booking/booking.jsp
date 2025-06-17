@@ -163,118 +163,145 @@
                         </div>
                     </div>
 
-                    <form id="passengerForm" class="passenger-form">
+                    <!-- 승객 정보 입력 폼 (분리됨) -->
+                    <form id="passengerInfoForm" class="passenger-info-form">
                         <%
                             // 승객 정보 파싱
                             String passengersParam = request.getParameter("passengers");
                             String passengerDisplay = passengersParam != null ? passengersParam : "성인 1명";
                         %>
                         
-                        <!-- 승객 정보 표시 -->
-                        <div class="passenger-section">
-                            <div class="passenger-header">
-                                <h3>성인 1</h3>
-                                <div class="passenger-type-badge">성인</div>
-                            </div>
-                            <div class="passenger-info-summary" style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
-                                <span style="color: #666; font-size: 14px;">선택된 승객: </span>
-                                <span style="font-weight: 500;"><%=passengerDisplay%></span>
+                        <!-- 승객 정보 카드 -->
+                        <div class="passenger-card" id="passengerCard1">
+                            <!-- 승객 헤더 (클릭 시 토글) -->
+                            <div class="passenger-card-header" onclick="togglePassengerCard('passengerCard1')">
+                                <div class="passenger-title">
+                                    <h3>성인 1</h3>
+                                    <span class="passenger-badge">성인</span>
+                                </div>
+                                <div class="passenger-summary" id="passengerSummary1" style="display: none;">
+                                    <span class="summary-text">김 또는 KIM / 대한 또는 DAEHAN</span>
+                                </div>
+                                <i class="fas fa-chevron-down toggle-icon" id="toggleIcon1"></i>
                             </div>
                             
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="title1" class="required">호칭</label>
-                                    <select id="title1" name="passengers[0].title" required>
-                                        <option value="">선택해주세요</option>
-                                        <option value="MR">Mr. (남성)</option>
-                                        <option value="MS">Ms. (여성)</option>
-                                        <option value="MRS">Mrs. (기혼여성)</option>
-                                    </select>
+                            <!-- 승객 폼 내용 (접힐 수 있는 부분) -->
+                            <div class="passenger-card-content" id="passengerContent1">
+                                <div class="passenger-form-grid">
+                                    <!-- 국적 -->
+                                    <div class="form-group full-width">
+                                        <label for="nationality1" class="required">국적</label>
+                                        <select id="nationality1" name="passengers[0].nationality" required>
+                                            <option value="">대한민국</option>
+                                            <option value="KR" selected>대한민국</option>
+                                            <option value="US">미국</option>
+                                            <option value="JP">일본</option>
+                                            <option value="CN">중국</option>
+                                            <option value="OTHER">기타</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 승객 성 -->
+                                    <div class="form-group">
+                                        <label for="lastName1" class="required">승객 성</label>
+                                        <input type="text" id="lastName1" name="passengers[0].lastName" 
+                                               placeholder="예) 김 또는 KIM" required>
+                                    </div>
+
+                                    <!-- 승객 이름 -->
+                                    <div class="form-group">
+                                        <label for="firstName1" class="required">승객 이름</label>
+                                        <input type="text" id="firstName1" name="passengers[0].firstName" 
+                                               placeholder="예) 대한 또는 DAEHAN" required>
+                                    </div>
+
+                                    <!-- 성별 -->
+                                    <div class="form-group">
+                                        <label for="gender1" class="required">성별</label>
+                                        <select id="gender1" name="passengers[0].gender" required>
+                                            <option value="">선택</option>
+                                            <option value="M">남성</option>
+                                            <option value="F">여성</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 생년월일 -->
+                                    <div class="form-group">
+                                        <label for="birthDate1" class="required">생년월일(YYYY.MM.DD.)</label>
+                                        <input type="text" id="birthDate1" name="passengers[0].birthDate" 
+                                               placeholder="YYYY.MM.DD" pattern="\d{4}\.\d{2}\.\d{2}" required>
+                                    </div>
+
+                                    <!-- 직업 항공사 -->
+                                    <div class="form-group">
+                                        <label for="jobAirline1">직업 항공사</label>
+                                        <select id="jobAirline1" name="passengers[0].jobAirline">
+                                            <option value="">선택하지 않음</option>
+                                            <option value="KE">대한항공</option>
+                                            <option value="OZ">아시아나항공</option>
+                                            <option value="7C">제주항공</option>
+                                            <option value="OTHER">기타</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 회원번호 -->
+                                    <div class="form-group">
+                                        <label for="memberNumber1">회원번호 <i class="fas fa-question-circle help-icon" title="항공사 회원번호를 입력하여 주십시오"></i></label>
+                                        <input type="text" id="memberNumber1" name="passengers[0].memberNumber" 
+                                               placeholder="항공사 회원번호를 입력하여 주십시오">
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="lastName1" class="required">성 (영문)</label>
-                                    <input type="text" id="lastName1" name="passengers[0].lastName" 
-                                           placeholder="여권과 동일하게 입력" required>
-                                    <small class="form-help">여권에 기재된 영문명과 동일하게 입력해주세요</small>
+                                <!-- 가는 여정의 개인 할인 -->
+                                <div class="discount-section">
+                                    <h4>가는 여정의 개인 할인</h4>
+                                    <div class="discount-grid">
+                                        <div class="form-group">
+                                            <label for="discountType1">할인</label>
+                                            <select id="discountType1" name="passengers[0].discountType">
+                                                <option value="">선택</option>
+                                                <option value="student">학생</option>
+                                                <option value="senior">경로</option>
+                                                <option value="disabled">장애인</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="returnDiscountType1">오는 여정의 개인 할인</label>
+                                            <select id="returnDiscountType1" name="passengers[0].returnDiscountType">
+                                                <option value="">선택</option>
+                                                <option value="student">학생</option>
+                                                <option value="senior">경로</option>
+                                                <option value="disabled">장애인</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="firstName1" class="required">이름 (영문)</label>
-                                    <input type="text" id="firstName1" name="passengers[0].firstName" 
-                                           placeholder="여권과 동일하게 입력" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="koreanName1">한글명</label>
-                                    <input type="text" id="koreanName1" name="passengers[0].koreanName" 
-                                           placeholder="한글명 입력">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="birthDate1" class="required">생년월일</label>
-                                    <input type="date" id="birthDate1" name="passengers[0].birthDate" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="gender1" class="required">성별</label>
-                                    <select id="gender1" name="passengers[0].gender" required>
-                                        <option value="">선택해주세요</option>
-                                        <option value="M">남성</option>
-                                        <option value="F">여성</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="nationality1" class="required">국적</label>
-                                    <select id="nationality1" name="passengers[0].nationality" required>
-                                        <option value="">선택해주세요</option>
-                                        <option value="KR">대한민국</option>
-                                        <option value="US">미국</option>
-                                        <option value="JP">일본</option>
-                                        <option value="CN">중국</option>
-                                        <option value="OTHER">기타</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="passportNumber1">여권번호</label>
-                                    <input type="text" id="passportNumber1" name="passengers[0].passportNumber" 
-                                           placeholder="여권번호 입력">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="passportExpiry1">여권만료일</label>
-                                    <input type="date" id="passportExpiry1" name="passengers[0].passportExpiry">
-                                </div>
-                            </div>
-
-                            <!-- 특별 서비스 -->
-                            <div class="special-services">
-                                <h4>특별 서비스 (선택사항)</h4>
-                                <div class="service-options">
-                                    <label class="checkbox-option">
-                                        <input type="checkbox" name="passengers[0].wheelchairService">
-                                        <span class="checkmark"></span>
-                                        휠체어 서비스
-                                    </label>
-                                    <label class="checkbox-option">
-                                        <input type="checkbox" name="passengers[0].specialMeal">
-                                        <span class="checkmark"></span>
-                                        특별기내식
-                                    </label>
-                                    <label class="checkbox-option">
-                                        <input type="checkbox" name="passengers[0].infantService">
-                                        <span class="checkmark"></span>
-                                        유아 동반 서비스
-                                    </label>
+                                <!-- 저장 버튼 -->
+                                <div class="passenger-form-actions">
+                                    <button type="button" class="passenger-save-btn" onclick="savePassengerInfo()">
+                                        저장
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                    </form>
+                </section>
 
+                <!-- 연락처 정보 섹션 (별도 분리) -->
+                <section class="contact-info">
+                    <div class="section-header">
+                        <h2>연락처 정보</h2>
+                        <div class="required-note">
+                            <i class="fas fa-info-circle"></i>
+                            필수 입력 사항입니다
+                        </div>
+                    </div>
+
+                    <form id="contactForm" class="contact-form">
                         <!-- 연락처 정보 -->
                         <div class="contact-section">
-                            <h3>연락처 정보</h3>
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="email" class="required">이메일</label>
@@ -298,10 +325,18 @@
                                 </div>
                             </div>
                         </div>
+                    </form>
+                </section>
 
+                <!-- 약관 동의 섹션 (별도 분리) -->
+                <section class="terms-info">
+                    <div class="section-header">
+                        <h2>약관 동의</h2>
+                    </div>
+
+                    <form id="termsForm" class="terms-form">
                         <!-- 약관 동의 -->
                         <div class="terms-section">
-                            <h3>약관 동의</h3>
                             <div class="terms-list">
                                 <label class="checkbox-option">
                                     <input type="checkbox" name="agreeAll" id="agreeAll">
@@ -330,14 +365,6 @@
                                     <a href="#" class="view-terms">보기</a>
                                 </label>
                             </div>
-                        </div>
-
-                        <!-- 승객 정보 저장 버튼 -->
-                        <div class="form-actions">
-                            <button type="button" class="save-btn" onclick="savePassengerInfo()">
-                                <i class="fas fa-save"></i>
-                                저장
-                            </button>
                         </div>
                     </form>
                 </section>
@@ -403,7 +430,7 @@
                         <span>최종 결제 금액</span>
                         <span class="amount"><%=df.format(totalPrice)%> 원</span>
                     </div>
-                    <button type="submit" form="passengerForm" class="payment-btn">
+                    <button type="button" class="payment-btn" onclick="processPayment()">
                         결제하기
                     </button>
                     
