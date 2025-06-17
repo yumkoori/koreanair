@@ -827,6 +827,10 @@
 		</div>
 	</footer>
 
+	<script>
+		window.contextPath = "${pageContext.request.contextPath}";
+		console.log("contextPath:", window.contextPath);
+	</script>
 	<script src="${pageContext.request.contextPath}/js/search.js"></script>
 	<script src="${pageContext.request.contextPath}/js/seat-selection.js"></script>
 </body>

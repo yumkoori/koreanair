@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
                          const outboundFlight = JSON.parse(outboundFlightStr);
                          const totalPrice = parseInt(outboundFlight.price) + parseInt(returnFlight.price);
                          
-                         // booking.jsp로 이동하는 URL 생성
+                         // booking.do로 이동하는 URL 생성
                          const bookingParams = new URLSearchParams({
                              outboundFlightId: outboundFlight.flightId,
                              returnFlightId: returnFlight.flightId,
@@ -171,7 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
                              passengers: urlParams.get('passengers') || '성인 1명'
                          });
                          
-                         const bookingUrl = 'views/booking/booking.jsp?' + bookingParams.toString();
+                         // contextPath 가져오기 (여러 방법 시도)
+                         const contextPath = window.contextPath || 
+                                           (window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '') ||
+                                           '';
+                         const bookingUrl = contextPath + '/booking.do?' + bookingParams.toString();
+                         console.log('contextPath:', contextPath);
+                         console.log('최종 booking URL:', bookingUrl);
                          console.log('예약 페이지로 이동:', bookingUrl);
                          window.location.href = bookingUrl;
                      }
@@ -184,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      const fareType = selectedCard.getAttribute('data-fare-type');
                      const price = selectedCard.querySelector('.fare-price[data-price]').getAttribute('data-price');
                      
-                     // booking.jsp로 이동하는 URL 생성
+                     // booking.do로 이동하는 URL 생성
                      const bookingParams = new URLSearchParams({
                          flightId: flightId,
                          fareType: fareType,
@@ -196,7 +202,13 @@ document.addEventListener('DOMContentLoaded', function() {
                          passengers: urlParams.get('passengers') || '성인 1명'
                      });
                      
-                     const bookingUrl = 'views/booking/booking.jsp?' + bookingParams.toString();
+                     // contextPath 가져오기 (여러 방법 시도)
+                     const contextPath = window.contextPath || 
+                                       (window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '') ||
+                                       '';
+                     const bookingUrl = contextPath + '/booking.do?' + bookingParams.toString();
+                     console.log('contextPath:', contextPath);
+                     console.log('최종 booking URL:', bookingUrl);
                      console.log('예약 페이지로 이동:', bookingUrl);
                      window.location.href = bookingUrl;
                  } else {

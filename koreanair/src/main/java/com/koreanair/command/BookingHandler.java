@@ -12,17 +12,34 @@ public class BookingHandler implements CommandHandler{
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		BookingService bookingService = new BookingService();
 		
-		
-
-		
-		
-		BookingDTO.builder()
-			.flightId(request.getParameter("outboundFlightId"))
-		bookingService.saveBookingToPending(bookingDTO);
-		
-		
-		
-		
+		if(request.getParameter("tripType").equals("round")) {
+			BookingDTO outDTO = BookingDTO.builder()
+					.flightId(request.getParameter("outboundFlightId"))
+					.userNo("1")
+					.promotionId("PROMO10")
+					.bookingPw(null)
+					.build();
+			
+			BookingDTO returnDTO = BookingDTO.builder()
+					.flightId(request.getParameter("returnFlightId"))
+					.userNo("1")
+					.promotionId("PROMO10")
+					.bookingPw(null)
+					.build();
+			
+			bookingService.saveBookingToPending(outDTO);
+			bookingService.saveBookingToPending(returnDTO);
+			
+		} else {
+			BookingDTO dto = BookingDTO.builder()
+					.flightId(request.getParameter("flightId"))
+					.userNo("1")
+					.promotionId("PROMO10")
+					.bookingPw(null)
+					.build();
+			
+			bookingService.saveBookingToPending(dto);
+		}
 		return "/views/booking/booking.jsp";
 	}
 

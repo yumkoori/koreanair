@@ -369,18 +369,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Next button functionality
-        const nextBtn = document.querySelector('.next-btn');
-        if (nextBtn) {
-            nextBtn.addEventListener('click', function() {
-                const currentTotal = totalAmountDisplay ? totalAmountDisplay.textContent : '0원';
-                if (currentTotal === '0원') {
-                    alert('항공권을 먼저 선택해주세요.');
-                } else {
-                    alert('선택하신 ' + currentTotal + ' 항공권으로 다음 여정을 진행합니다.');
-                }
-            });
-        }
+        // Next button functionality - 이제 seat-selection.js에서 처리함
+        // const nextBtn = document.querySelector('.next-btn');
+        // if (nextBtn) {
+        //     nextBtn.addEventListener('click', function() {
+        //         const currentTotal = totalAmountDisplay ? totalAmountDisplay.textContent : '0원';
+        //         if (currentTotal === '0원') {
+        //             alert('항공권을 먼저 선택해주세요.');
+        //         } else {
+        //             alert('선택하신 ' + currentTotal + ' 항공권으로 다음 여정을 진행합니다.');
+        //         }
+        //     });
+        // }
     }
 
     // Initialize JSP-specific functionality if on search results page
