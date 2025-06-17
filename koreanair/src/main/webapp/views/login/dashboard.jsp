@@ -51,6 +51,28 @@
             <% if (user.getRegDate() != null) { %>
                 <p><strong>가입일:</strong> <%= new SimpleDateFormat("yyyy년 MM월 dd일").format(user.getRegDate()) %></p>
             <% } %>
+            
+            <!-- 카카오 연동 정보 표시 -->
+            <% if (user.getLoginType() != null) { %>
+                <p><strong>로그인 타입:</strong> 
+                    <% if ("kakao".equals(user.getLoginType())) { %>
+                        <span style="color: #FEE500; font-weight: bold;">카카오 계정</span>
+                    <% } else if ("both".equals(user.getLoginType())) { %>
+                        <span style="color: #007bff; font-weight: bold;">일반 + 카카오 연동</span>
+                    <% } else { %>
+                        일반 계정
+                    <% } %>
+                </p>
+            <% } %>
+            
+            <% if (user.getKakaoId() != null) { %>
+                <p><strong>카카오 연동:</strong> 연동됨</p>
+                <% if (user.getProfileImage() != null) { %>
+                    <p><strong>프로필 이미지:</strong></p>
+                    <img src="<%= user.getProfileImage() %>" alt="프로필 이미지" 
+                         style="width: 80px; height: 80px; border-radius: 50%; margin: 10px 0;">
+                <% } %>
+            <% } %>
         </div>
         
         <div class="actions">
@@ -60,6 +82,15 @@
         
         <div class="delete-section">
             <h3>회원탈퇴</h3>
+            <% if ("kakao".equals(user.getLoginType())) { %>
+                <p>카카오 계정으로 가입하신 경우 확인 버튼만 클릭하시면 탈퇴됩니다.</p>
+                <p><strong>주의:</strong> 탈퇴 후에는 모든 정보가 삭제되며 복구할 수 없습니다.</p>
+                
+                <form action="deleteAccount.do" method="post" onsubmit="return confirmKakaoDeleteAccount()">
+                    <input type="hidden" name="loginType" value="kakao">
+                    <button type="submit" class="btn btn-danger">회원탈퇴</button>
+                </form>
+            <% } else { %>
             <p>회원탈퇴를 원하시면 비밀번호를 입력하고 탈퇴 버튼을 클릭해주세요.</p>
             <p><strong>주의:</strong> 탈퇴 후에는 모든 정보가 삭제되며 복구할 수 없습니다.</p>
             
@@ -71,6 +102,7 @@
                 </div>
                 <button type="submit" class="btn btn-danger">회원탈퇴</button>
             </form>
+            <% } %>
         </div>
     </div>
     

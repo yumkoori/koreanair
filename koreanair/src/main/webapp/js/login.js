@@ -159,6 +159,15 @@ function confirmDeleteAccount() {
     return false;
 }
 
+// 카카오 사용자 회원탈퇴 확인
+function confirmKakaoDeleteAccount() {
+    if (confirm('정말로 회원탈퇴를 하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+        return true;
+    }
+    
+    return false;
+}
+
 // 휴대폰 번호 자동 포맷팅
 function formatPhoneNumber(input) {
     let value = input.value.replace(/[^0-9]/g, '');
