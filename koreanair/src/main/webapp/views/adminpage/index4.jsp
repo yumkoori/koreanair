@@ -423,24 +423,41 @@
                             </div>
                         </div>
                         <div id="seatSelectionPanel">
-                            <div class="panel-title-bar">
-                                <h4>선택된 좌석</h4>
-                                <button id="resetSelectedSeatsButton" class="btn btn-default btn-xs" title="선택 초기화">
-                                    <i class="fa fa-undo"></i>
-                                </button>
+                            <h4>좌석 클래스별 가격 설정</h4>
+                            
+                            <!-- 일등석 가격 설정 -->
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label style="font-weight: bold; color: #d4af37;">일등석 (7-10열)</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <input type="number" class="form-control input-sm" id="firstClassPrice" placeholder="가격 입력" style="flex: 1;">
+                                    <button id="applyFirstClassPrice" class="btn btn-warning btn-sm">적용</button>
+                                </div>
                             </div>
-                            <div id="selectedSeatInfo"> 
-                                <p>좌석을 선택하세요.</p>
+                            
+                            <!-- 프레스티지 가격 설정 -->
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label style="font-weight: bold; color: #007bff;">프레스티지 (28-43열)</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <input type="number" class="form-control input-sm" id="prestigeClassPrice" placeholder="가격 입력" style="flex: 1;">
+                                    <button id="applyPrestigeClassPrice" class="btn btn-primary btn-sm">적용</button>
+                                </div>
                             </div>
+                            
+                            <!-- 이코노미 가격 설정 -->
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label style="font-weight: bold; color: #28a745;">이코노미 (44-57열)</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <input type="number" class="form-control input-sm" id="economyClassPrice" placeholder="가격 입력" style="flex: 1;">
+                                    <button id="applyEconomyClassPrice" class="btn btn-success btn-sm">적용</button>
+                                </div>
+                            </div>
+                            
                             <hr>
-                            <h5>좌석 가격 일괄 입력</h5>
-                            <div class="form-group"> 
-                                <label for="seatPriceInput" style="font-weight: normal; font-size: 12px;">가격 (원):</label>
-                                <input type="number" class="form-control input-sm" id="seatPriceInput" placeholder="숫자만 입력">
-                            </div>
-                            <button id="applyPriceButton" class="btn btn-primary btn-sm" style="width: 100%; margin-top: 10px;">선택 좌석 가격 적용</button>
-                            <button id="saveSelectedSeatsButton" class="btn btn-success btn-sm" style="width: 100%; margin-top: 10px;">선택 내용 DB 저장 (준비)</button>
-                            <button id="loadSeatsButton" class="btn btn-info btn-sm" style="width: 100%; margin-top: 10px;">저장된 좌석 불러오기</button>
+                            
+                            <!-- 전체 적용 및 저장 버튼 -->
+                            <button id="applyAllPricesButton" class="btn btn-info btn-sm" style="width: 100%; margin-bottom: 10px;">모든 클래스 가격 한번에 적용</button>
+                            <button id="saveAllSeatsButton" class="btn btn-success btn-sm" style="width: 100%; margin-bottom: 10px;">DB에 저장</button>
+                            <button id="loadSeatsButton" class="btn btn-secondary btn-sm" style="width: 100%;">저장된 좌석 불러오기</button>
                         </div>
                     </div>
 
@@ -464,37 +481,106 @@
                             "model2": { name: "다른 기종 (준비중)" }
                         };
 
-                        let selectedSeatsMap = new Map();
                         let seatsReadyForDB = [];
 
-                        function updateSelectedSeatsDisplay() {
-                            const selectedSeatInfoDiv = document.getElementById('selectedSeatInfo');
-                            if (!selectedSeatInfoDiv) {
-                                console.error("Element with ID 'selectedSeatInfo' not found.");
+                        // 클래스별 가격 적용 함수들
+                        function applyFirstClassPrice() {
+                            const price = parseInt(document.getElementById('firstClassPrice').value);
+                            if (isNaN(price) || price < 0) {
+                                alert('유효한 가격을 입력해주세요.');
                                 return;
                             }
-                            if (selectedSeatsMap.size === 0) {
-                                selectedSeatInfoDiv.innerHTML = '<p>좌석을 선택하세요.</p>';
-                                return;
-                            }
-                            let listHtml = '<ul>'; 
-                            selectedSeatsMap.forEach((details, key) => {
-                                // FIXED
-                                listHtml += `<li>\${details.row}열 \${details.seat}석</li>`;
-                            });
-                            listHtml += '</ul>';
-                            selectedSeatInfoDiv.innerHTML = listHtml;
+                            applyPriceToClass([7, 8, 9, 10], price, 'FIR');
+                            alert('일등석 가격이 적용되었습니다.');
                         }
-                        
-                        function resetSelectedSeats() {
-                            selectedSeatsMap.clear(); 
-                            const highlightedSeats = document.querySelectorAll('#airplaneContainer .seat.seat-selected-highlight');
-                            highlightedSeats.forEach(seat => {
-                                seat.classList.remove('seat-selected-highlight');
+
+                        function applyPrestigeClassPrice() {
+                            const price = parseInt(document.getElementById('prestigeClassPrice').value);
+                            if (isNaN(price) || price < 0) {
+                                alert('유효한 가격을 입력해주세요.');
+                                return;
+                            }
+                            applyPriceToClass([28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], price, 'PRE');
+                            alert('프레스티지 가격이 적용되었습니다.');
+                        }
+
+                        function applyEconomyClassPrice() {
+                            const price = parseInt(document.getElementById('economyClassPrice').value);
+                            if (isNaN(price) || price < 0) {
+                                alert('유효한 가격을 입력해주세요.');
+                                return;
+                            }
+                            applyPriceToClass([44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57], price, 'ECONOMY');
+                            alert('이코노미 가격이 적용되었습니다.');
+                        }
+
+                        function applyPriceToClass(rows, price, classType) {
+                            const currentSearchValue = document.getElementById('aircraftSearch').value;
+                            let selectedModelKey = 'model1';
+                            const aircraftOptions = document.querySelectorAll('.aircraft-option');
+                            aircraftOptions.forEach(option => {
+                                if (option.textContent === currentSearchValue) {
+                                    selectedModelKey = option.getAttribute('data-value');
+                                }
                             });
-                            updateSelectedSeatsDisplay(); 
-                            document.getElementById('seatPriceInput').value = ''; 
-                            console.log('Current seat selections and price input have been reset.');
+                            const aircraftModelName = aircraftData[selectedModelKey].name;
+
+                            rows.forEach(rowNum => {
+                                const seatElements = document.querySelectorAll(`[data-row="\${rowNum}"]`);
+                                seatElements.forEach(seatElement => {
+                                    if (!seatElement.classList.contains('seat-removed')) {
+                                        const seatLetter = seatElement.dataset.seat;
+                                        const seatDataForDB = {
+                                            aircraft: aircraftModelName,
+                                            row: rowNum.toString(),
+                                            seat: seatLetter,
+                                            price: price,
+                                            classseat: classType
+                                        };
+
+                                        const existingSeatIndex = seatsReadyForDB.findIndex(
+                                            item => item.aircraft === seatDataForDB.aircraft && 
+                                                    item.row === seatDataForDB.row && 
+                                                    item.seat === seatDataForDB.seat
+                                        );
+
+                                        if (existingSeatIndex > -1) {
+                                            seatsReadyForDB[existingSeatIndex] = seatDataForDB;
+                                        } else {
+                                            seatsReadyForDB.push(seatDataForDB);
+                                        }
+
+                                        seatElement.innerHTML = `<span class="seat-letter">\${seatLetter}</span><span class="seat-price-display">\${price.toLocaleString()}</span>`;
+                                    }
+                                });
+                            });
+                        }
+
+                        function applyAllPrices() {
+                            const firstPrice = parseInt(document.getElementById('firstClassPrice').value);
+                            const prestigePrice = parseInt(document.getElementById('prestigeClassPrice').value);
+                            const economyPrice = parseInt(document.getElementById('economyClassPrice').value);
+
+                            let hasError = false;
+                            if (isNaN(firstPrice) || firstPrice < 0) {
+                                alert('일등석 가격을 올바르게 입력해주세요.');
+                                hasError = true;
+                            }
+                            if (isNaN(prestigePrice) || prestigePrice < 0) {
+                                alert('프레스티지 가격을 올바르게 입력해주세요.');
+                                hasError = true;
+                            }
+                            if (isNaN(economyPrice) || economyPrice < 0) {
+                                alert('이코노미 가격을 올바르게 입력해주세요.');
+                                hasError = true;
+                            }
+
+                            if (!hasError) {
+                                applyPriceToClass([7, 8, 9, 10], firstPrice, 'FIR');
+                                applyPriceToClass([28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], prestigePrice, 'PRE');
+                                applyPriceToClass([44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57], economyPrice, 'ECONOMY');
+                                alert('모든 클래스 가격이 적용되었습니다.');
+                            }
                         }
 
                         function renderAircraft(modelKey) {
@@ -509,7 +595,6 @@
 
                             if (modelNameDisplay) { modelNameDisplay.innerText = selectedOptionText; }
                             
-                            resetSelectedSeats(); 
                             seatsReadyForDB = []; 
                             console.log("Aircraft model changed, seatsReadyForDB has been reset.");
 
@@ -566,99 +651,12 @@
                             });
                         }
 
-                        function handleSeatClick(event) {
-                            const targetSeatElement = event.target.closest('.seat'); 
-
-                            if (targetSeatElement && !targetSeatElement.classList.contains('seat-removed')) {
-                                const seatLetter = targetSeatElement.dataset.seat;
-                                const rowNumber = targetSeatElement.dataset.row;
-                                const seatKey = `\${rowNumber}-\${seatLetter}`; 
-
-                                if (selectedSeatsMap.has(seatKey)) { 
-                                    selectedSeatsMap.delete(seatKey);
-                                    targetSeatElement.classList.remove('seat-selected-highlight');
-                                } else { 
-                                    selectedSeatsMap.set(seatKey, { row: rowNumber, seat: seatLetter, price: null });
-                                    targetSeatElement.classList.add('seat-selected-highlight');
-                                }
-                                updateSelectedSeatsDisplay(); 
-                            }
-                        }
-
-                        function applyPriceToSelectedSeats() {
-                            const priceInput = document.getElementById('seatPriceInput');
-                            const priceValue = parseInt(priceInput.value, 10);
-
-                            if (isNaN(priceValue) || priceValue < 0) {
-                                alert('유효한 가격을 입력해주세요 (숫자, 0 이상).');
-                                priceInput.focus();
-                                return;
-                            }
-
-                            if (selectedSeatsMap.size === 0) { 
-                                alert('가격을 적용할 좌석을 먼저 UI에서 선택해주세요.');
-                                return;
-                            }
-
-                            const currentSearchValue = document.getElementById('aircraftSearch').value;
-                            let selectedModelKey = 'model1'; // 기본값
-                            const aircraftOptions = document.querySelectorAll('.aircraft-option');
-                            aircraftOptions.forEach(option => {
-                                if (option.textContent === currentSearchValue) {
-                                    selectedModelKey = option.getAttribute('data-value');
-                                }
-                            });
-                            const aircraftModelName = aircraftData[selectedModelKey].name;
-                            let appliedCount = 0;
-
-                            selectedSeatsMap.forEach((details, seatKey) => {
-                                const seatDataForDB = {
-                                    aircraft: aircraftModelName,
-                                    row: details.row,
-                                    seat: details.seat,
-                                    price: priceValue 
-                                };
-
-                                const existingSeatIndexInDB = seatsReadyForDB.findIndex(
-                                    item => item.aircraft === seatDataForDB.aircraft && 
-                                            item.row === seatDataForDB.row && 
-                                            item.seat === seatDataForDB.seat
-                                );
-
-                                if (existingSeatIndexInDB > -1) {
-                                    seatsReadyForDB[existingSeatIndexInDB] = seatDataForDB; 
-                                } else {
-                                    seatsReadyForDB.push(seatDataForDB); 
-                                }
-                                appliedCount++;
-
-                                const seatElement = document.querySelector(`.seat[data-row="\${details.row}"][data-seat="\${details.seat}"]`);
-                                if (seatElement) {
-                                    // FIXED
-                                    seatElement.innerHTML = `<span class="seat-letter">\${details.seat}</span><span class="seat-price-display">\${priceValue.toLocaleString()}</span>`;
-                                }
-                            });
-                            
-
-                            
-
-                            if (appliedCount > 0) {
-                                // FIXED
-                                alert(`\${appliedCount}개 좌석에 \${priceValue.toLocaleString()}원이 적용(UI 표시)되었으며, 저장 대기 중입니다.`);
-                            }
-                            
-                            resetSelectedSeats(); 
-                            
-                            console.log("좌석 최종 저장 대기 목록 (seatsReadyForDB):", JSON.parse(JSON.stringify(seatsReadyForDB)));
-                        }
-
-                        function prepareSaveSelectedSeats() {
+                        function saveAllSeats() {
                             if (seatsReadyForDB.length === 0) {
-                                alert('DB에 저장할 좌석 정보가 없습니다.');
+                                alert('DB에 저장할 좌석 정보가 없습니다. 먼저 가격을 설정해주세요.');
                                 return;
                             }
 
-                            // 현재 페이지 URL에서 craftid 파라미터 값을 가져옵니다
                             const urlParams = new URLSearchParams(window.location.search);
                             const flight_id = urlParams.get('flight_id') || '';
 
@@ -678,27 +676,19 @@
                             })
                             .then(response => {
                                 if (!response.ok) {
-                                    // 서버가 4xx, 5xx 에러를 보냈을 경우
                                     throw new Error(`서버 에러 발생! 상태: \${response.status}`);
                                 }
-                                // 서버 응답을 JSON 객체로 바로 파싱하여 다음 then으로 넘깁니다.
                                 return response.json(); 
                             })
                             .then(data => {
-                                // 'data'는 서버가 보낸 JSON이 변환된 자바스크립트 객체입니다.
-                                // 예: { status: 'success', message: '8개의 좌석...', savedCount: 8 }
                                 console.log('서버로부터 받은 데이터:', data);
-
-                                // 서버가 보낸 메시지를 그대로 alert 창에 보여줍니다.
                                 alert(data.message); 
 
                                 if (data.status === 'success') {
-                                    // 성공했을 때만 페이지를 새로고침합니다.
                                     location.reload();
                                 }
                             })
                             .catch(error => {
-                                // 네트워크 통신 자체에 실패했거나, 위에서 throw된 에러를 처리합니다.
                                 console.error('Fetch 요청 최종 실패:', error);
                                 alert('요청 처리 중 문제가 발생했습니다.');
                             });
@@ -707,16 +697,11 @@
                         function loadSavedSeats() {
                             console.log("저장된 좌석 불러오기 시작");
                             
-                            // 현재 페이지 URL에서 flight_id 파라미터 값을 가져옵니다
                             const urlParams = new URLSearchParams(window.location.search);
-                            const flight_id = urlParams.get('flight_id') || 'FL001'; // 기본값 설정
+                            const flight_id = urlParams.get('flight_id') || 'FL001';
 
-                            // 기본 URL 설정
                             const contextPath = "${pageContext.request.contextPath}";
-                            const baseUrl = `\${contextPath}/seatload.wi`;
-
-                            // flight_id만 파라미터로 전달
-                            const finalUrl = `\${baseUrl}?flight_id=\${encodeURIComponent(flight_id)}`;
+                            const finalUrl = `\${contextPath}/seatload.wi?flight_id=\${encodeURIComponent(flight_id)}`;
 
                             console.log("현재 URL의 flight_id:", flight_id);
                             console.log("최종 요청 URL:", finalUrl);
@@ -736,8 +721,6 @@
                                     return;
                                 }
 
-                                // 기존 선택 상태 초기화
-                                resetSelectedSeats();
                                 seatsReadyForDB = [];
 
                                 let loadedCount = 0;
@@ -746,27 +729,13 @@
                                     const seat = seatData.seat;
                                     const price = seatData.price;
                                     
-                                    // 해당 좌석 요소 찾기
                                     const seatElement = document.querySelector('#airplaneContainer .seat[data-row="' + row + '"][data-seat="' + seat + '"]');
                                     
                                     if (seatElement) {
-                                        // 1. 노란색 하이라이트 추가
-                                        seatElement.classList.add('seat-selected-highlight');
-                                        
-                                        // 2. 가격 표시
                                         if (price && price > 0) {
                                             seatElement.innerHTML = '<span class="seat-letter">' + seat + '</span><span class="seat-price-display">' + price.toLocaleString() + '</span>';
                                         }
                                         
-                                        // 3. selectedSeatsMap에 추가 (선택된 상태로 관리)
-                                        const seatKey = row + '-' + seat;
-                                        selectedSeatsMap.set(seatKey, { 
-                                            row: row, 
-                                            seat: seat, 
-                                            price: price 
-                                        });
-                                        
-                                        // 4. seatsReadyForDB에도 추가 (저장 준비 상태)
                                         const currentSearchValue = document.getElementById('aircraftSearch').value;
                                         let selectedModelKey = 'model1';
                                         const aircraftOptions = document.querySelectorAll('.aircraft-option');
@@ -781,7 +750,8 @@
                                             aircraft: aircraftModelName,
                                             row: row,
                                             seat: seat,
-                                            price: price
+                                            price: price,
+                                            classseat: seatData.classseat
                                         });
                                         
                                         loadedCount++;
@@ -789,12 +759,8 @@
                                         console.warn(`좌석을 찾을 수 없습니다: Row \${row}, Seat \${seat}`);
                                     }
                                 });
-
-                                // 선택된 좌석 정보 업데이트
-                                updateSelectedSeatsDisplay();
                                 
                                 console.log(`\${loadedCount}개의 좌석이 성공적으로 로드되었습니다.`);
-                                console.log('현재 selectedSeatsMap:', selectedSeatsMap);
                                 console.log('현재 seatsReadyForDB:', seatsReadyForDB);
                                 
                                 alert(`\${loadedCount}개의 저장된 좌석을 성공적으로 불러왔습니다!`);
@@ -870,9 +836,11 @@
                             const searchInput = document.getElementById('aircraftSearch');
                             const dropdown = document.getElementById('aircraftDropdown');
                             const airplaneContainer = document.getElementById('airplaneContainer');
-                            const applyPriceBtn = document.getElementById('applyPriceButton');
-                            const saveButton = document.getElementById('saveSelectedSeatsButton');
-                            const resetButton = document.getElementById('resetSelectedSeatsButton'); 
+                            const applyFirstClassBtn = document.getElementById('applyFirstClassPrice');
+                            const applyPrestigeBtn = document.getElementById('applyPrestigeClassPrice');
+                            const applyEconomyBtn = document.getElementById('applyEconomyClassPrice');
+                            const applyAllBtn = document.getElementById('applyAllPricesButton');
+                            const saveAllBtn = document.getElementById('saveAllSeatsButton');
                             const loadButton = document.getElementById('loadSeatsButton');
                             let currentModelKey = 'model1';
 
@@ -927,25 +895,30 @@
                             } else {
                                 console.error("Aircraft search input or dropdown not found!");
                             }
-                            if (airplaneContainer) {
-                                airplaneContainer.addEventListener('click', handleSeatClick);
+                            if (applyFirstClassBtn) {
+                                applyFirstClassBtn.addEventListener('click', applyFirstClassPrice);
                             } else {
-                                console.error("Airplane container for click listener not found!");
+                                console.error("Apply first class price button not found!");
                             }
-                            if (applyPriceBtn) {
-                                applyPriceBtn.addEventListener('click', applyPriceToSelectedSeats);
+                            if (applyPrestigeBtn) {
+                                applyPrestigeBtn.addEventListener('click', applyPrestigeClassPrice);
                             } else {
-                                console.error("Apply price button not found!");
+                                console.error("Apply prestige class price button not found!");
                             }
-                            if (saveButton) {
-                                saveButton.addEventListener('click', prepareSaveSelectedSeats);
+                            if (applyEconomyBtn) {
+                                applyEconomyBtn.addEventListener('click', applyEconomyClassPrice);
                             } else {
-                                console.error("Save selected seats button not found!");
+                                console.error("Apply economy class price button not found!");
                             }
-                            if (resetButton) { 
-                                resetButton.addEventListener('click', resetSelectedSeats);
+                            if (applyAllBtn) {
+                                applyAllBtn.addEventListener('click', applyAllPrices);
                             } else {
-                                console.error("Reset selected seats button not found!");
+                                console.error("Apply all prices button not found!");
+                            }
+                            if (saveAllBtn) {
+                                saveAllBtn.addEventListener('click', saveAllSeats);
+                            } else {
+                                console.error("Save all seats button not found!");
                             }
                             if (loadButton) {
                                 console.log('불러오기 버튼을 성공적으로 찾았습니다.');

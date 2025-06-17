@@ -1,0 +1,179 @@
+<!-- 실시간 스케줄 새로고침 컨트롤 -->
+<div class="refresh-controls-container" style="margin-bottom: 20px;">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- 수동 새로고침 버튼 -->
+            <button id="refreshBtn" class="btn btn-primary" type="button">
+                <i id="refreshIcon" class="fas fa-sync-alt"></i>
+                <span class="btn-text">새로고침</span>
+            </button>
+            
+            <!-- 마지막 업데이트 시간 표시 -->
+            <small id="lastRefreshTime" class="text-muted ml-3">
+                마지막 업데이트: -
+            </small>
+        </div>
+        
+        <div class="col-md-6 text-right">
+            <!-- 자동 새로고침 설정 -->
+            <div class="form-inline justify-content-end">
+                <div class="form-check mr-3">
+                    <input type="checkbox" class="form-check-input" id="autoRefreshToggle">
+                    <label class="form-check-label" for="autoRefreshToggle">
+                        자동 새로고침
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="refreshInterval" class="sr-only">새로고침 간격</label>
+                    <select id="refreshInterval" class="form-control form-control-sm" style="width: auto;">
+                        <option value="1">1분</option>
+                        <option value="2">2분</option>
+                        <option value="5" selected>5분</option>
+                        <option value="10">10분</option>
+                        <option value="15">15분</option>
+                        <option value="30">30분</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 필터 옵션 (기존 FlightScheduleHandler와 연동) -->
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="dateInput">날짜 선택:</label>
+                <input type="date" id="dateInput" class="form-control" 
+                       value="" max="2099-12-31">
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="flightTypeSelect">항공편 타입:</label>
+                <select id="flightTypeSelect" class="form-control">
+                    <option value="all">전체</option>
+                    <option value="domestic">국내선</option>
+                    <option value="international">국제선</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <div class="form-control-plaintext">
+                    <small class="text-info">
+                        <i class="fas fa-info-circle"></i>
+                        Ctrl+R 또는 F5로도 새로고침 가능
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 로딩 오버레이 (선택사항) -->
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-content">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">로딩 중...</span>
+        </div>
+        <p class="mt-2">스케줄을 업데이트하고 있습니다...</p>
+    </div>
+</div>
+
+<!-- 스타일 -->
+<style>
+.refresh-controls-container {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#refreshBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.fa-spin {
+    animation: fa-spin 1s infinite linear;
+}
+
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.notification {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .refresh-controls-container .row {
+        margin-bottom: 10px;
+    }
+    
+    .refresh-controls-container .col-md-6:last-child {
+        text-align: left !important;
+        margin-top: 10px;
+    }
+    
+    .form-inline {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .form-inline .form-check {
+        margin-bottom: 10px;
+        margin-right: 0 !important;
+    }
+}
+</style>
+
+<!-- JavaScript 초기화 -->
+<script>
+$(document).ready(function() {
+    // 현재 날짜를 기본값으로 설정
+    const today = new Date().toISOString().split('T')[0];
+    $('#dateInput').val(today);
+    
+    // 페이지 로드 시 초기 데이터 로드 (선택사항)
+    // refreshSchedules(today, 'all');
+});
+</script> 

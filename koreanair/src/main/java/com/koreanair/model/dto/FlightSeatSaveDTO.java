@@ -18,10 +18,11 @@ public class FlightSeatSaveDTO {
 	String status;
 	
 	
-	
+	String classseat;
 	String aircraft;
 	int row;
 	String seat;
 	int price;
 	String planeType;
+	String seatClass;  // JavaScript에서 전송하는 class 필드를 받기 위한 필드 추가
 }

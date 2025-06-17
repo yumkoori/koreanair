@@ -14,25 +14,39 @@ import com.koreanair.model.service.FlightScheduleService;
 public class FlightScheduleHandler implements CommandHandler {
 
     private FlightScheduleService flightService = new FlightScheduleService();
-    private Gson gson = new Gson(); // Gson 객체는 재사용 가능하므로 멤버로 빼도 좋습니다.
+    private Gson gson = new Gson();
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("> FlightScheduleHandler for Initial Page Load with Data called...");
-
-        // 1. 페이지 첫 로딩 시 보여줄 기본 데이터 조회 (오늘 날짜, 전체)
-        String date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
-        String flightType = "all";
+        System.out.println("=== FlightScheduleHandler 시작 ===");
+        System.out.println("요청 URI: " + request.getRequestURI());
+        System.out.println("요청 메소드: " + request.getMethod());
         
+        // 요청 파라미터 받기
+        String date = request.getParameter("date");
+        String flightType = request.getParameter("flightType");
+        
+        // 기본값 설정
+        if (date == null || date.trim().isEmpty()) {
+            date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        }
+        if (flightType == null || flightType.trim().isEmpty()) {
+            flightType = "international";
+        }
+        
+        System.out.println("요청 파라미터 - date: " + date + ", flightType: " + flightType);
+        
+        // 스케줄 데이터 조회
         List<FlightScheduleDTO> flightList = flightService.getFlightData(date, flightType);
-
-        // 2. 조회된 DTO 리스트를 JSON 문자열로 변환
-        String initialDataJson = gson.toJson(flightList);
-
-        // 3. View(JSP)에 'JSON 문자열'을 전달
-        request.setAttribute("initialData", initialDataJson);
         
-        // 4. JSP 페이지로 포워딩
-        return "/views/adminpage/index5.jsp";
+        // 항상 JSON 응답 반환
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        String jsonResponse = gson.toJson(flightList);
+        System.out.println("JSON 응답 데이터 크기: " + flightList.size());
+        // System.out.println(flightList);
+        response.getWriter().write(jsonResponse);
+        return null; // JSP로 포워딩하지 않음
     }
 }

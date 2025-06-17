@@ -1,6 +1,8 @@
 package com.koreanair.command;
 
 import java.io.BufferedReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,22 +11,24 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.koreanair.model.dao.ProjectDao;
 import com.koreanair.model.dao.ProjectDaoimpl;
+import com.koreanair.model.dto.FlightScheduleDTO;
 import com.koreanair.model.dto.FlightSeatSaveDTO;
+import com.koreanair.model.dto.SaveSchedulesDBDTO;
 import com.koreanair.model.service.FlightSeatSaveService;
+import com.koreanair.model.service.SaveSchedulesDBService;
 
-public class FlightSeatSaveHandler implements CommandHandler{
+public class SaveSchedulesDBHandler implements CommandHandler{
 
 	@Override
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-	    String id = request.getParameter("flight_id");
-	    System.out.println("저장하려고 받아온 값> " + id);
 	    Map<String, Object> responseMap = new HashMap<>();
-	    System.out.println("> FlightSeatSaveHandler for Initial Page Load with Data called...");
+	    System.out.println("> SaveSchedulesDBHandler for Initial Page Load with Data called...");
 	    
 	    try {
 	        // 1. request의 body에서 JSON 데이터 읽기
@@ -39,33 +43,35 @@ public class FlightSeatSaveHandler implements CommandHandler{
 	        System.out.println("핸들러가 받은 JSON 데이터: " + jsonData);
 	        
 	        // 2. JSON → DTO 배열 → 리스트로 변환
-	        Gson gson = new Gson();
-	        FlightSeatSaveDTO[] seatArray = gson.fromJson(jsonData, FlightSeatSaveDTO[].class);
-	        List<FlightSeatSaveDTO> seatList = Arrays.asList(seatArray);
 	        
-	        // DTO에 flight_id 설정 (프론트엔드에서 오지 않을 수 있으므로)
+	        JsonObject root = JsonParser.parseString(jsonData).getAsJsonObject();
+	        JsonArray schedulesJsonArray = root.getAsJsonArray("schedules");
+
+	        Gson gson = new Gson();
+	        List<SaveSchedulesDBDTO> scheduleList = gson.fromJson(
+	            schedulesJsonArray,
+	            new com.google.gson.reflect.TypeToken<List<SaveSchedulesDBDTO>>(){}.getType()
+	        );
 			/*
-			 * for (FlightSeatSaveDTO seat : seatList) { if (seat.getFlight_id() == null ||
-			 * seat.getFlight_id().isEmpty()) { seat.setFlight_id("FL001"); // 기본값 설정 } }
+			 * Gson gson = new Gson(); SaveSchedulesDBDTO[] schedulesArray =
+			 * gson.fromJson(jsonData, SaveSchedulesDBDTO[].class); List<SaveSchedulesDBDTO>
+			 * scheduleList = Arrays.asList(schedulesArray);
 			 */
 	        
-	        FlightSeatSaveService saveService = new FlightSeatSaveService();
+	        
+	        SaveSchedulesDBService saveSchedules = new SaveSchedulesDBService();
+	        
+	        int checkdb = saveSchedules.saveSchdulesDB(scheduleList);
+	        if (checkdb >= 1) {
+	        	responseMap.put("status", "success");
+			}
 	        ProjectDao dao = new ProjectDaoimpl();
 
-	        boolean hasDuplicate = dao.checkDuplicateSeat(seatList);
+	        // int checkdb = dao.saveSchdulesDB(scheduleList);
 
-	        if (!hasDuplicate) { // 중복이 없으면 저장
-	            int check = saveService.seatSave(seatList , id);
-	            responseMap.put("status", "success");
-	            responseMap.put("message", check + "개의 좌석 정보가 성공적으로 저장되었습니다.");
-	            responseMap.put("savedCount", check);
-	        } else { // 중복이 있으면 저장 안함
-	            responseMap.put("status", "fail");
-	            responseMap.put("message", "이미 등록된 좌석이 있습니다. 다른 좌석을 선택해주세요.");
-	        }
 	        
 	    } catch (Exception e) {
-	        System.out.println("FlightSeatSaveHandler 오류: " + e.getMessage());
+	        System.out.println("SaveSchedulesDBHandler 오류: " + e.getMessage());
 	        e.printStackTrace();
 	        
 	        responseMap.put("status", "error");
@@ -83,6 +89,5 @@ public class FlightSeatSaveHandler implements CommandHandler{
 
 	    return null;
 	}
-
-
 }
+

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <!-- AWS RDS MariaDB 연결을 위한 JDBC 데이터소스 -->
+    <Resource name="jdbc/airloginDB"
+              auth="Container"
+              type="javax.sql.DataSource"
+              driverClassName="org.mariadb.jdbc.Driver"
+              url="jdbc:mariadb://air.chkmcmk8aoyu.ap-northeast-2.rds.amazonaws.com:3306/air_db"
+              username="admin"
+              password="Ssqwer1234!!"
+              maxTotal="20"
+              maxIdle="10"
+              minIdle="5"
+              initialSize="5"
+              maxWaitMillis="10000"
+              testOnBorrow="true"
+              testOnReturn="false"
+              testWhileIdle="true"
+              validationQuery="SELECT 1"
+              timeBetweenEvictionRunsMillis="30000"
+              removeAbandonedOnBorrow="true"
+              removeAbandonedOnMaintenance="true"
+              removeAbandonedTimeout="60"
+              logAbandoned="true" />
+</Context> 
