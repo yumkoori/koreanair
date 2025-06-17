@@ -93,7 +93,9 @@ public class AuthenticationFilter implements Filter {
             "/search/search.jsp",
             "/views/search/search.jsp",
             "/flightSearch.do",
-            "/autocomplete.do"
+            "/autocomplete.do",
+            "/views/booking/booking.jsp",
+            "/booking.do"
             
         };
         

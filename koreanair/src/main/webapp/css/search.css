@@ -2378,3 +2378,37 @@ html body section div div.flights-list div div.fare-columns {
     font-size: 12px !important;
 }
 
+/* 클릭 가능한 좌석 카드 스타일 */
+.clickable-fare {
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.clickable-fare:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 100, 222, 0.2) !important;
+    border-color: #0064de !important;
+}
+
+.clickable-fare.selected {
+    border: 2px solid #0064de !important;
+    background-color: #f0f7ff !important;
+    box-shadow: 0 4px 12px rgba(0, 100, 222, 0.3) !important;
+}
+
+.clickable-fare.selected .fare-type {
+    color: #0064de !important;
+    font-weight: 700 !important;
+}
+
+/* 매진된 카드는 클릭 불가 */
+.fare-column:has(.fare-price.no-available) {
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+.fare-column:has(.fare-price.no-available):hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+

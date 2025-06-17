@@ -437,7 +437,35 @@
 	<section class="search-results">
 		<div class="container">
 			<div class="search-summary">
-				<h2>항공권 검색 결과</h2>
+				<%
+					String leg = request.getParameter("leg");
+					String tripType = request.getParameter("tripType");
+					boolean isReturnLeg = "return".equals(leg);
+					boolean isRoundTrip = "round".equals(tripType);
+				%>
+				
+				<% if (isRoundTrip && isReturnLeg) { %>
+					<h2>복항편 선택 - 항공권 검색 결과</h2>
+					<div id="outbound-selection-info" class="outbound-info" style="background-color: #f0f8ff; padding: 10px; margin-bottom: 15px; border-radius: 5px; border-left: 4px solid #0064de;">
+						<div style="font-weight: bold; color: #0064de; margin-bottom: 5px;">선택된 가는 편</div>
+						<div id="outbound-details" style="font-size: 14px; color: #666;">
+							<!-- JavaScript로 채워질 내용 -->
+						</div>
+					</div>
+					<h3 style="color: #0064de; margin-bottom: 10px;">
+						<i class="fas fa-plane" style="transform: rotate(180deg); margin-right: 8px;"></i>
+						복항편을 선택해주세요
+					</h3>
+				<% } else { %>
+					<h2>항공권 검색 결과</h2>
+					<% if (isRoundTrip) { %>
+						<div style="color: #0064de; font-weight: 500; margin-bottom: 10px;">
+							<i class="fas fa-plane" style="margin-right: 8px;"></i>
+							가는 편을 선택해주세요
+						</div>
+					<% } %>
+				<% } %>
+				
 				<div class="route-info">
 					<span class="departure">${param.departure != null ? param.departure : '서울(ICN)'}</span>
 					<i class="fas fa-arrow-right"></i> <span class="arrival">${param.arrival != null ? param.arrival : '도쿄(NRT)'}</span>
@@ -503,7 +531,7 @@
 						<!-- 좌석 가격 정보 -->
 						<div class="fare-columns">
 							<!-- 일반석 -->
-							<div class="fare-column economy">
+							<div class="fare-column economy clickable-fare" data-fare-type="일반석" data-flight-id="${flight.flightId}">
 								<div class="fare-type">일반석</div>
 								<c:set var="economyFound" value="false" />
 								<c:forEach var="seat" items="${flightSeat[flight]}">
@@ -511,7 +539,7 @@
 										<c:set var="economyFound" value="true" />
 										<c:choose>
 											<c:when test="${seat.availableSeatCount > 0}">
-												<div class="fare-price">
+												<div class="fare-price" data-price="${seat.price}">
 													<span class="currency">₩</span> <span class="amount">${seat.price}</span>
 												</div>
 											</c:when>
@@ -531,7 +559,7 @@
 							</div>
 
 							<!-- 프레스티지석 -->
-							<div class="fare-column prestige">
+							<div class="fare-column prestige clickable-fare" data-fare-type="프레스티지석" data-flight-id="${flight.flightId}">
 								<div class="fare-type">프레스티지석</div>
 								<c:set var="prestigeFound" value="false" />
 								<c:forEach var="seat" items="${flightSeat[flight]}">
@@ -539,7 +567,7 @@
 										<c:set var="prestigeFound" value="true" />
 										<c:choose>
 											<c:when test="${seat.availableSeatCount > 0}">
-												<div class="fare-price">
+												<div class="fare-price" data-price="${seat.price}">
 													<span class="currency">₩</span><span class="amount">${seat.price}</span>
 												</div>
 											</c:when>
@@ -560,7 +588,7 @@
 
 
 							<!-- 일등석 -->
-							<div class="fare-column first">
+							<div class="fare-column first clickable-fare" data-fare-type="일등석" data-flight-id="${flight.flightId}">
 								<div class="fare-type">일등석</div>
 								<c:set var="firstFound" value="false" />
 								<c:forEach var="seat" items="${flightSeat[flight]}">
@@ -568,7 +596,7 @@
 										<c:set var="firstFound" value="true" />
 										<c:choose>
 											<c:when test="${seat.availableSeatCount > 0}">
-												<div class="fare-price">
+												<div class="fare-price" data-price="${seat.price}">
 													<span class="currency">₩</span><span class="amount">${seat.price}</span>
 												</div>
 											</c:when>
@@ -743,7 +771,11 @@
 					</div>
 				</div>
 				<div class="next-section">
-					<button class="next-btn">다음 여정</button>
+					<% if (isRoundTrip && isReturnLeg) { %>
+						<button class="next-btn">예약 완료</button>
+					<% } else { %>
+						<button class="next-btn">다음 여정</button>
+					<% } %>
 				</div>
 			</div>
 		</div>
@@ -796,5 +828,6 @@
 	</footer>
 
 	<script src="${pageContext.request.contextPath}/js/search.js"></script>
+	<script src="${pageContext.request.contextPath}/js/seat-selection.js"></script>
 </body>
 </html>

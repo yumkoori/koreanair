@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 페이지별 초기화
     if (isSearchResults) {
         initializeSearchResultsPage();
-        // JSP 페이지에서도 날짜 카드 기능 활성화
-        initializeDatePriceBar();
     } else {
         initializeHomePage();
     }
@@ -268,6 +266,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (overlay) overlay.style.display = 'none';
             });
         }
+
+        // 새로운 기능: 좌석 카드 직접 클릭으로 총액 업데이트
+        const clickableFareCards = document.querySelectorAll('.clickable-fare');
+        console.log('찾은 클릭 가능한 좌석 카드 수:', clickableFareCards.length);
+        
+        clickableFareCards.forEach((card, index) => {
+            console.log(`좌석 카드 ${index + 1} 정보:`, {
+                fareType: card.getAttribute('data-fare-type'),
+                flightId: card.getAttribute('data-flight-id'),
+                priceElement: card.querySelector('.fare-price[data-price]')
+            });
+            
+            // 매진된 카드는 클릭 불가
+            const noAvailableElement = card.querySelector('.fare-price.no-available');
+            if (noAvailableElement) {
+                console.log(`좌석 카드 ${index + 1}은 매진되어 클릭 불가`);
+                return; // 매진된 경우 이벤트 리스너 추가하지 않음
+            }
+            
+            card.addEventListener('click', function(e) {
+                console.log('좌석 카드 클릭됨:', this.getAttribute('data-fare-type'));
+                
+                // 기존 팝업 표시 방지
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // 다른 선택된 카드에서 selected 클래스 제거
+                clickableFareCards.forEach(otherCard => {
+                    otherCard.classList.remove('selected');
+                });
+                
+                // 현재 카드에 selected 클래스 추가
+                this.classList.add('selected');
+                
+                // 가격 정보 가져오기
+                const priceElement = this.querySelector('.fare-price[data-price]');
+                console.log('가격 요소:', priceElement);
+                console.log('총액 표시 요소:', totalAmountDisplay);
+                
+                if (priceElement && totalAmountDisplay) {
+                    const price = priceElement.getAttribute('data-price');
+                    const fareType = this.getAttribute('data-fare-type');
+                    const flightId = this.getAttribute('data-flight-id');
+                    
+                    console.log('가격 정보:', { price, fareType, flightId });
+                    
+                    // 총액 업데이트 (천 단위 콤마 추가)
+                    const formattedPrice = parseInt(price).toLocaleString('ko-KR');
+                    totalAmountDisplay.textContent = formattedPrice + '원';
+                    
+                    console.log(`선택된 좌석: ${fareType}, 항공편: ${flightId}, 가격: ${formattedPrice}원`);
+                    console.log('총액 업데이트 완료:', totalAmountDisplay.textContent);
+                } else {
+                    console.log('가격 요소 또는 총액 표시 요소를 찾을 수 없음');
+                }
+            });
+        });
         
         // Currency dropdown functionality
         const currencyBtn = document.querySelector('.currency-btn');
@@ -1304,6 +1359,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize JSP-specific functionality if on search results page
     if (isSearchResults || currentPath.includes('search-results.jsp')) {
-        initializeSearchResultsJSPFunctionality();
+        // JSP specific functionality can be added here if needed
+        console.log('Search results JSP page detected');
     }
 }); 
