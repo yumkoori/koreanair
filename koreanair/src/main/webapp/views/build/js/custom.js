@@ -687,7 +687,6 @@ function init_chart_doughnut() {
 
         var chart_doughnut_settings = {
             type: 'doughnut',
-            tooltipFillColor: "rgba(51, 51, 51, 0.55)",
             data: {
                 labels: [
                     "Symbian",
@@ -716,7 +715,10 @@ function init_chart_doughnut() {
             },
             options: {
                 legend: false,
-                responsive: false
+                responsive: false,
+                tooltips: {
+                    enabled: false
+                }
             }
         }
 
@@ -1968,6 +1970,10 @@ function init_charts() {
     Chart.defaults.global.legend = {
         enabled: false
     };
+    
+    Chart.defaults.global.tooltips = {
+        enabled: false
+    };
 
 
 
@@ -2240,8 +2246,12 @@ function init_charts() {
 
         var canvasDoughnut = new Chart(ctx, {
             type: 'doughnut',
-            tooltipFillColor: "rgba(51, 51, 51, 0.55)",
-            data: data
+            data: data,
+            options: {
+                tooltips: {
+                    enabled: false
+                }
+            }
         });
 
     }
