@@ -1,3 +1,9 @@
+// 승객 정보 관리 스크립트 - 업데이트: 2025-01-03 15:30:00
+// 브라우저 캐시 무효화를 위한 타임스탬프
+
+console.log('🔄 booking.js 파일 로드됨 - 최신 버전');
+console.log('Booking page loaded');
+
 // DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Booking page loaded');
@@ -496,10 +502,26 @@ function showFlightDetails() {
 
 // 승객 정보 저장 함수
 function savePassengerInfo() {
+    console.log('=== 승객 정보 저장 함수 시작 ===');
     console.log('승객 정보 저장 시작');
     
     // 승객 정보 폼 유효성 검사
     const form = document.getElementById('passengerInfoForm');
+    console.log('폼 요소:', form);
+    if (!form) {
+        alert('승객 정보 폼을 찾을 수 없습니다.');
+        return;
+    }
+    
+    console.log('폼 유효성 검사 시작');
+    
+    // 폼 내의 모든 input, select 요소 확인
+    const allInputs = form.querySelectorAll('input, select');
+    console.log('폼 내 전체 요소 개수:', allInputs.length);
+    allInputs.forEach((element, index) => {
+        console.log(`요소 ${index}: id=${element.id}, name=${element.name}, value=${element.value}`);
+    });
+    
     const requiredFields = form.querySelectorAll('input[required], select[required]');
     let isValid = true;
     let errorMessages = [];
@@ -530,58 +552,207 @@ function savePassengerInfo() {
     
     // 승객 정보만 수집 (연락처 및 약관 정보 제외)
     const passengerData = {
-        title: document.getElementById('title1').value,
-        lastName: document.getElementById('lastName1').value,
-        firstName: document.getElementById('firstName1').value,
-        koreanName: document.getElementById('koreanName1').value,
-        birthDate: document.getElementById('birthDate1').value,
-        gender: document.getElementById('gender1').value,
-        nationality: document.getElementById('nationality1').value,
-        passportNumber: document.getElementById('passportNumber1').value,
-        passportExpiry: document.getElementById('passportExpiry1').value,
-        // 특별 서비스
-        wheelchairService: document.querySelector('input[name="passengers[0].wheelchairService"]').checked,
-        specialMeal: document.querySelector('input[name="passengers[0].specialMeal"]').checked,
-        infantService: document.querySelector('input[name="passengers[0].infantService"]').checked
+        title: (function() {
+            const titleElement = document.getElementById('title1');
+            return titleElement ? titleElement.value : '';
+        })(),
+        lastName: (function() {
+            const lastNameElement = document.getElementById('lastName1');
+            return lastNameElement ? lastNameElement.value : '';
+        })(),
+        firstName: (function() {
+            const firstNameElement = document.getElementById('firstName1');
+            return firstNameElement ? firstNameElement.value : '';
+        })(),
+        koreanName: (function() {
+            const koreanNameElement = document.getElementById('koreanName1');
+            return koreanNameElement ? koreanNameElement.value : '';
+        })(),
+        birthDate: (function() {
+            const birthDateElement = document.getElementById('birthDate1');
+            return birthDateElement ? birthDateElement.value : '';
+        })(),
+        gender: (function() {
+            const genderElement = document.getElementById('gender1');
+            return genderElement ? genderElement.value : '';
+        })(),
+        nationality: (function() {
+            const nationalityElement = document.getElementById('nationality1');
+            return nationalityElement ? nationalityElement.value : '';
+        })(),
+        passportNumber: (function() {
+            const passportNumberElement = document.getElementById('passportNumber1');
+            return passportNumberElement ? passportNumberElement.value : '';
+        })(),
+        passportExpiry: (function() {
+            const passportExpiryElement = document.getElementById('passportExpiry1');
+            return passportExpiryElement ? passportExpiryElement.value : '';
+        })(),
+        // 특별 서비스 (요소가 없을 경우 false로 처리)
+        wheelchairService: (function() {
+            const wheelchairElement = document.querySelector('input[name="passengers[0].wheelchairService"]');
+            return wheelchairElement ? wheelchairElement.checked : false;
+        })(),
+        specialMeal: (function() {
+            const specialMealElement = document.querySelector('input[name="passengers[0].specialMeal"]');
+            return specialMealElement ? specialMealElement.checked : false;
+        })(),
+        infantService: (function() {
+            const infantServiceElement = document.querySelector('input[name="passengers[0].infantService"]');
+            return infantServiceElement ? infantServiceElement.checked : false;
+        })()
     };
     
     // 저장 버튼 상태 변경
     const saveBtn = document.querySelector('.passenger-save-btn');
+    if (!saveBtn) {
+        alert('저장 버튼을 찾을 수 없습니다.');
+        return;
+    }
+    
     const originalText = saveBtn.innerHTML;
     saveBtn.disabled = true;
     saveBtn.innerHTML = '저장 중...';
     saveBtn.style.background = '#ccc';
     
-    // 로컬 스토리지에 임시 저장 (실제로는 서버로 전송)
+    // AJAX를 통한 서버 전송 (페이지 이동 없음)
     try {
-        localStorage.setItem('passengerInfo', JSON.stringify(passengerData));
+        // 수동으로 FormData 생성 (서버에서 기대하는 형식으로)
+        const formData = new FormData();
         
-        // 저장 성공 시뮬레이션 (1초 후)
-        setTimeout(() => {
+        // 승객 정보 추가 (안전한 방식)
+        const nationalityEl = document.getElementById('nationality1');
+        const lastNameEl = document.getElementById('lastName1');
+        const firstNameEl = document.getElementById('firstName1');
+        const genderEl = document.getElementById('gender1');
+        const birthDateEl = document.getElementById('birthDate1');
+        const jobAirlineEl = document.getElementById('jobAirline1');
+        const memberNumberEl = document.getElementById('memberNumber1');
+        const discountTypeEl = document.getElementById('discountType1');
+        const returnDiscountTypeEl = document.getElementById('returnDiscountType1');
+        
+        const nationality = nationalityEl ? nationalityEl.value : '';
+        const lastName = lastNameEl ? lastNameEl.value : '';
+        const firstName = firstNameEl ? firstNameEl.value : '';
+        const gender = genderEl ? genderEl.value : '';
+        const birthDate = birthDateEl ? birthDateEl.value : '';
+        const jobAirline = jobAirlineEl ? jobAirlineEl.value : '';
+        const memberNumber = memberNumberEl ? memberNumberEl.value : '';
+        const discountType = discountTypeEl ? discountTypeEl.value : '';
+        const returnDiscountType = returnDiscountTypeEl ? returnDiscountTypeEl.value : '';
+        
+        // FormData에 추가
+        formData.append('passengers[0].nationality', nationality);
+        formData.append('passengers[0].lastName', lastName);
+        formData.append('passengers[0].firstName', firstName);
+        formData.append('passengers[0].gender', gender);
+        formData.append('passengers[0].birthDate', birthDate);
+        formData.append('passengers[0].jobAirline', jobAirline);
+        formData.append('passengers[0].memberNumber', memberNumber);
+        formData.append('passengers[0].discountType', discountType);
+        formData.append('passengers[0].returnDiscountType', returnDiscountType);
+        
+        console.log('=== 수동으로 추가한 승객 정보 ===');
+        console.log('nationality:', nationality);
+        console.log('lastName:', lastName);
+        console.log('firstName:', firstName);
+        console.log('gender:', gender);
+        console.log('birthDate:', birthDate);
+        
+        // bookingId 추가
+        if (window.bookingId && window.bookingId !== 'null') {
+            formData.append('bookingId', window.bookingId);
+            console.log('bookingId 추가:', window.bookingId);
+        }
+        if (window.outBookingId && window.outBookingId !== 'null') {
+            formData.append('outBookingId', window.outBookingId);
+            console.log('outBookingId 추가:', window.outBookingId);
+        }
+        if (window.returnBookingId && window.returnBookingId !== 'null') {
+            formData.append('returnBookingId', window.returnBookingId);
+            console.log('returnBookingId 추가:', window.returnBookingId);
+        }
+        
+        // 요청 URL 확인
+        console.log('window.contextPath:', window.contextPath);
+        const requestUrl = `${window.contextPath}/passenger.do`;
+        console.log('요청 URL:', requestUrl);
+        
+        // FormData 내용 확인
+        console.log('=== FormData 내용 확인 ===');
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+        
+        // URL 파라미터 방식으로 전송 (테스트용)
+        const params = new URLSearchParams();
+        
+        // FormData의 모든 내용을 URLSearchParams로 복사
+        for (let [key, value] of formData.entries()) {
+            params.append(key, value);
+            console.log(`URLParams 추가: ${key} = ${value}`);
+        }
+        
+        // GET 방식으로 테스트 (URL에 파라미터 포함)
+        const testUrl = `${requestUrl}?${params.toString()}`;
+        console.log('테스트 URL:', testUrl);
+        
+        // AJAX 요청
+        fetch(requestUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString()
+        })
+        .then(response => {
+            if (response.ok) {
+                // 저장 완료 상태로 변경
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '저장 완료';
+                saveBtn.style.background = '#28a745';
+                
+                // 성공 메시지
+                alert('승객 정보가 성공적으로 저장되었습니다.');
+                
+                // 카드 접기 및 요약 표시
+                collapsePassengerCardAfterSave();
+                
+                // 로컬 스토리지에도 백업 저장
+                localStorage.setItem('passengerInfo', JSON.stringify(passengerData));
+                
+                // 3초 후 원래 상태로 복원
+                setTimeout(() => {
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.style.background = '#0064de';
+                }, 3000);
+                
+            } else {
+                throw new Error('서버 응답 오류: ' + response.status);
+            }
+        })
+        .catch(error => {
+            console.error('승객 정보 저장 중 오류 발생:', error);
+            
+            // 오류 상태로 변경
             saveBtn.disabled = false;
-            saveBtn.innerHTML = '저장 완료';
-            saveBtn.style.background = '#28a745';
+            saveBtn.innerHTML = originalText;
+            saveBtn.style.background = '#0064de';
             
-            // 성공 메시지
-            alert('승객 정보가 성공적으로 저장되었습니다.');
-            
-            // 카드 접기 및 요약 표시
-            collapsePassengerCardAfterSave();
-            
-            // 3초 후 원래 상태로 복원
-            setTimeout(() => {
-                saveBtn.innerHTML = originalText;
-                saveBtn.style.background = '#0064de';
-            }, 3000);
-            
-        }, 1000);
+            // 오류 메시지 표시
+            alert('승객 정보 저장 중 오류가 발생했습니다. 다시 시도해주세요.\n\n오류: ' + error.message);
+        });
         
     } catch (error) {
-        console.error('저장 중 오류 발생:', error);
+        console.error('승객 정보 저장 중 오류 발생:', error);
+        
+        // 오류 상태로 변경
         saveBtn.disabled = false;
         saveBtn.innerHTML = originalText;
         saveBtn.style.background = '#0064de';
-        alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+        
+        // 오류 메시지 표시
+        alert('승객 정보 저장 중 오류가 발생했습니다. 다시 시도해주세요.\n\n오류: ' + error.message);
     }
     
     console.log('승객 정보:', passengerData);
@@ -613,13 +784,18 @@ function collapsePassengerCardAfterSave() {
     const summary = document.getElementById('passengerSummary1');
     
     // 입력된 정보로 요약 텍스트 생성
-    const lastName = document.getElementById('lastName1').value;
-    const firstName = document.getElementById('firstName1').value;
+    const lastNameElement = document.getElementById('lastName1');
+    const firstNameElement = document.getElementById('firstName1');
+    const lastName = lastNameElement ? lastNameElement.value : '';
+    const firstName = firstNameElement ? firstNameElement.value : '';
     
-    if (lastName && firstName) {
-        const summaryText = `${lastName} / ${firstName}`;
-        summary.querySelector('.summary-text').textContent = summaryText;
-        summary.style.display = 'block';
+    if (lastName && firstName && summary) {
+        const summaryTextElement = summary.querySelector('.summary-text');
+        if (summaryTextElement) {
+            const summaryText = `${lastName} / ${firstName}`;
+            summaryTextElement.textContent = summaryText;
+            summary.style.display = 'block';
+        }
     }
     
     // 카드 접기

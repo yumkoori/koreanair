@@ -27,8 +27,11 @@ public class BookingHandler implements CommandHandler{
 					.bookingPw(null)
 					.build();
 			
-			bookingService.saveBookingToPending(outDTO);
-			bookingService.saveBookingToPending(returnDTO);
+			String outBookingId = bookingService.saveBookingToPending(outDTO);
+			String returnBookingId = bookingService.saveBookingToPending(returnDTO);
+			
+			request.setAttribute("outBookingId", outBookingId);
+			request.setAttribute("returnBookingId", returnBookingId);
 			
 		} else {
 			BookingDTO dto = BookingDTO.builder()
@@ -38,7 +41,9 @@ public class BookingHandler implements CommandHandler{
 					.bookingPw(null)
 					.build();
 			
-			bookingService.saveBookingToPending(dto);
+			String bookingId = bookingService.saveBookingToPending(dto);
+			
+			request.setAttribute("bookingId", bookingId);
 		}
 		return "/views/booking/booking.jsp";
 	}

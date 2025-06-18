@@ -12,6 +12,18 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/booking.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- contextPath 및 bookingId 설정 -->
+    <script>
+        window.contextPath = '${pageContext.request.contextPath}';
+        window.bookingId = '${bookingId}';
+        window.outBookingId = '${outBookingId}';
+        window.returnBookingId = '${returnBookingId}';
+        console.log('contextPath 설정됨:', window.contextPath);
+        console.log('bookingId:', window.bookingId);
+        console.log('outBookingId:', window.outBookingId);
+        console.log('returnBookingId:', window.returnBookingId);
+    </script>
 </head>
 <body>
     <header>

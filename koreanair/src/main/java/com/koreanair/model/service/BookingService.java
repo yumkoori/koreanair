@@ -23,7 +23,7 @@ public class BookingService {
     }
     
     
-    public void saveBookingToPending(BookingDTO dto) {
-    	bookingDAO.saveBooking(dto);
+    public String saveBookingToPending(BookingDTO dto) {
+    	return bookingDAO.saveBooking(dto);
     }
 }

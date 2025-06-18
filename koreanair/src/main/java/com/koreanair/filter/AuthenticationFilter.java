@@ -95,8 +95,9 @@ public class AuthenticationFilter implements Filter {
             "/flightSearch.do",
             "/autocomplete.do",
             "/views/booking/booking.jsp",
-            "/booking.do"
-            
+            "/booking.do",
+            "/passenger.do"
+
         };
         
         for (String publicPath : publicPaths) {

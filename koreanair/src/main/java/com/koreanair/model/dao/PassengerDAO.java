@@ -6,26 +6,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import com.koreanair.model.dto.BookingDTO;
 import com.koreanair.model.dto.PassengerDTO;
-import com.koreanair.model.dto.SearchFlightResultDTO;
 import com.koreanair.util.DBConnection;
 
-public class BookingDAO {
-	
-	public String saveBooking(BookingDTO dto) {
-		String sql = "INSERT INTO booking ("
-				+ "    booking_id, "
-				+ "    flight_id, "
-				+ "    user_no, "
-				+ "    promotion_id, "
-				+ "    booking_pw"
-				+ " ) VALUES ("
-				+ "    ?,       "
-				+ "    ?,              "
-				+ "    ?,                  "
-				+ "    ?,            "
-				+ "    ?     "
+public class PassengerDAO {
+	public void savePassenger(PassengerDTO dto) {
+		String sql = "INSERT INTO passenger ("
+				+ "  passenger_id,"
+				+ "  user_no,"
+				+ "  booking_id,"
+				+ "  last_name,"
+				+ "  first_name,"
+				+ "  birth_date,"
+				+ "  gender,"
+				+ "  passenger_type"
+				+ ") VALUES ("
+				+ "  ?,         "
+				+ "  ?,           "
+				+ "  ?, "
+				+ "  ?,          "
+				+ "  ?,         "
+				+ "  ?,   "
+				+ "  ?,            "
+				+ "  ?        "
 				+ ");"
 				+ "";
 		
@@ -39,15 +42,19 @@ public class BookingDAO {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, uuid.toString());
-            pstmt.setString(2, dto.getFlightId());
-            pstmt.setString(3, dto.getUserNo());
-            pstmt.setString(4, dto.getPromotionId());
-            pstmt.setString(5, dto.getBookingPw());
+            pstmt.setString(2, dto.getUserNo());
+            pstmt.setString(3, dto.getBookingId());
+            pstmt.setString(4, dto.getLastName());
+            pstmt.setString(5, dto.getFirstName());
+            pstmt.setString(6, dto.getBirthDate());
+            pstmt.setString(7, dto.getGender());
+            pstmt.setString(8, dto.getType());
 
+            
             rs = pstmt.executeQuery();
             
             if (rs.next()) {
-                System.out.print("예약중 입니다");
+                System.out.print("탑승객 정보 저장 완");
             }
             
         } catch (SQLException e) {
@@ -56,9 +63,8 @@ public class BookingDAO {
             closeResources(conn, pstmt, rs);
         }
 		
-		return uuid.toString();
+		
 	}
-	
 	
 	
     // 리소스 정리
