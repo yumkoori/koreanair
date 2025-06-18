@@ -2,8 +2,11 @@ package com.koreanair.model.dao;
 
 import java.util.List;
 
+import com.koreanair.model.dto.ClassPriceSaveDTO;
+import com.koreanair.model.dto.DashBoardStatsDTO;
 import com.koreanair.model.dto.FlightSeatSaveDTO;
 import com.koreanair.model.dto.SaveSchedulesDBDTO;
+import com.koreanair.model.dto.SearchUserDTO;
 
 public interface ProjectDao {
 	
@@ -22,4 +25,10 @@ public interface ProjectDao {
 	public boolean refreshCheck(List<SaveSchedulesDBDTO> refresList);
 	
 	public List<SaveSchedulesDBDTO> refreshSchdules(List<SaveSchedulesDBDTO> refresList) throws Exception;
+	
+	public int priceSave(List<ClassPriceSaveDTO> priceList, String flightid) throws Exception;
+	
+	public List<SearchUserDTO> searchUsers(String username) throws Exception;
+	
+	public List<DashBoardStatsDTO> dashLoad() throws Exception;
 }

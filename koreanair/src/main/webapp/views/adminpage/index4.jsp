@@ -1,5 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%
+request.setCharacterEncoding("UTF-8");
+
+String contextPath = request.getContextPath();
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -8,11 +14,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>좌석 관리</title>
-    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-    <link href="../build/css/custom.min.css" rel="stylesheet">
+    <link href="<%=contextPath%>/views/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=contextPath%>/views/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="<%=contextPath%>/views/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <link href="<%=contextPath%>/views/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link href="<%=contextPath%>/views/build/css/custom.min.css" rel="stylesheet">
     <style>
     body {
         margin: 0;
@@ -194,193 +200,10 @@
     <div class="container body">
     <div class="main_container">
         <div class="col-md-3 left_col">
-        <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-            <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>제발좀</span></a>
-            </div>
-            <div class="clearfix"></div>
-            <div class="profile clearfix">
-            <div class="profile_pic">
-                <img src="images/img.jpg" alt="..." class="img-circle profile_img">
-            </div>
-            <div class="profile_info">
-                <span>Welcome,</span>
-                <h2>John Doe</h2>
-            </div>
-            </div>
-            <br />
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-            <div class="menu_section">
-                <h3>General</h3>
-                <ul class="nav side-menu">
-                <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                    <li><a href="index.html">Dashboard</a></li>
-                    <li><a href="index2.html">Dashboard2</a></li>
-                    <li><a href="index3.html">Dashboard3</a></li>
-                    <li><a href="index4.html">좌석관리</a></li>
-                    <li><a href="index5.html">비행스</a></li>
-                    </ul>
-                </li>
-                <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                    <li><a href="form.html">General Form</a></li>
-                    <li><a href="form_advanced.html">Advanced Components</a></li>
-                    <li><a href="form_validation.html">Form Validation</a></li>
-                    <li><a href="form_wizards.html">Form Wizard</a></li>
-                    <li><a href="form_upload.html">Form Upload</a></li>
-                    <li><a href="form_buttons.html">Form Buttons</a></li>
-                    </ul>
-                </li>
-                <li><a><i class="fa fa-desktop"></i> UI Elements <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                    <li><a href="general_elements.html">General Elements</a></li>
-                    <li><a href="media_gallery.html">Media Gallery</a></li>
-                    <li><a href="typography.html">Typography</a></li>
-                    <li><a href="icons.html">Icons</a></li>
-                    <li><a href="glyphicons.html">Glyphicons</a></li>
-                    <li><a href="widgets.html">Widgets</a></li>
-                    <li><a href="invoice.html">Invoice</a></li>
-                    <li><a href="inbox.html">Inbox</a></li>
-                    <li><a href="calendar.html">Calendar</a></li>
-                    </ul>
-                </li>
-                <li><a><i class="fa fa-table"></i> Tables <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                    <li><a href="tables.html">Tables</a></li>
-                    <li><a href="tables_dynamic.html">Table Dynamic</a></li>
-                    </ul>
-                </li>
-                <li><a><i class="fa fa-bar-chart-o"></i> Data Presentation <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                    <li><a href="chartjs.html">Chart JS</a></li>
-                    <li><a href="chartjs2.html">Chart JS2</a></li>
-                    <li><a href="morisjs.html">Moris JS</a></li>
-                    <li><a href="echarts.html">ECharts</a></li>
-                    <li><a href="other_charts.html">Other Charts</a></li>
-                    </ul>
-                </li>
-                <li><a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                    <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
-                    <li><a href="fixed_footer.html">Fixed Footer</a></li>
-                    </ul>
-                </li>
-                </ul>
-            </div>
-            <div class="menu_section">
-                <h3>Live On</h3>
-                <ul class="nav side-menu">
-                <li><a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                    <li><a href="e_commerce.html">E-commerce</a></li>
-                    <li><a href="projects.html">Projects</a></li>
-                    <li><a href="project_detail.html">Project Detail</a></li>
-                    <li><a href="contacts.html">Contacts</a></li>
-                    <li><a href="profile.html">Profile</a></li>
-                    </ul>
-                </li>
-                <li><a><i class="fa fa-windows"></i> Extras <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                    <li><a href="page_403.html">403 Error</a></li>
-                    <li><a href="page_404.html">404 Error</a></li>
-                    <li><a href="page_500.html">500 Error</a></li>
-                    <li><a href="plain_page.html">Plain Page</a></li>
-                    <li><a href="login.html">Login Page</a></li>
-                    <li><a href="pricing_tables.html">Pricing Tables</a></li>
-                    </ul>
-                </li>
-                <li><a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                        <li><a href="#level1_1">Level One</a>
-                        <li><a>Level One<span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                            <li class="sub_menu"><a href="level2.html">Level Two</a>
-                            </li>
-                            <li><a href="#level2_1">Level Two</a>
-                            </li>
-                            <li><a href="#level2_2">Level Two</a>
-                            </li>
-                        </ul>
-                        </li>
-                        <li><a href="#level1_2">Level One</a>
-                        </li>
-                    </ul>
-                </li>
-                <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li>
-                </ul>
-            </div>
-            </div>
-            <div class="sidebar-footer hidden-small">
-            <a data-toggle="tooltip" data-placement="top" title="Settings">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Lock">
-                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-            </a>
-            </div>
-        </div>
-        </div>
+        <jsp:include page="sidebar.jsp"></jsp:include>
 
-        <div class="top_nav">
-        <div class="nav_menu">
-            <div class="nav toggle">
-            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-            </div>
-            <nav class="nav navbar-nav">
-            <ul class=" navbar-right">
-            <li class="nav-item dropdown open" style="padding-left: 15px;">
-                <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                <img src="images/img.jpg" alt="">John Doe
-                </a>
-                <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item"  href="javascript:;"> Profile</a>
-                    <a class="dropdown-item"  href="javascript:;">
-                    <span class="badge bg-red pull-right">50%</span>
-                    <span>Settings</span>
-                    </a>
-                <a class="dropdown-item"  href="javascript:;">Help</a>
-                <a class="dropdown-item"  href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
-                </div>
-            </li>
-            <li role="presentation" class="nav-item dropdown open">
-                <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-envelope-o"></i>
-                <span class="badge bg-green">6</span>
-                </a>
-                <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
-                <li class="nav-item">
-                    <a class="dropdown-item">
-                    <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                    <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
-                    </span>
-                    <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                    </span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <div class="text-center">
-                    <a class="dropdown-item">
-                        <strong>See All Alerts</strong>
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                    </div>
-                </li>
-                </ul>
-            </li>
-            </ul>
-        </nav>
-        </div>
-        </div>
+        {/* --- 상단 네비게이션 전체 --- */}
+        <jsp:include page="topnav.jsp"></jsp:include>
 
         <div class="right_col" role="main">
         <div class="">
@@ -454,10 +277,21 @@
                             
                             <hr>
                             
+                            <!-- 선택된 좌석 정보 표시 -->
+                            <div id="selectedSeatInfo">
+                                <h5>선택된 좌석 (<span id="selectedSeatCount">0</span>개)</h5>
+                                <ul id="selectedSeatList">
+                                    <!-- 선택된 좌석들이 여기에 표시됩니다 -->
+                                </ul>
+                            </div>
+                            
+                            <hr>
+                            
                             <!-- 전체 적용 및 저장 버튼 -->
-                            <button id="applyAllPricesButton" class="btn btn-info btn-sm" style="width: 100%; margin-bottom: 10px;">모든 클래스 가격 한번에 적용</button>
-                            <button id="saveAllSeatsButton" class="btn btn-success btn-sm" style="width: 100%; margin-bottom: 10px;">DB에 저장</button>
-                            <button id="loadSeatsButton" class="btn btn-secondary btn-sm" style="width: 100%;">저장된 좌석 불러오기</button>
+                            <button id="applyAllPricesButton" class="btn btn-info btn-sm" style="width: 100%; margin-bottom: 10px;">좌석 클래스 가격을 DB에 저장</button>
+                            <button id="saveAllSeatsButton" class="btn btn-success btn-sm" style="width: 100%; margin-bottom: 10px;">선택된 좌석 DB 저장</button>
+                            <button id="loadSeatsButton" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: 10px;">저장된 좌석 불러오기</button>
+                            <button id="clearSelectedSeats" class="btn btn-warning btn-sm" style="width: 100%;">선택된 좌석 모두 해제</button>
                         </div>
                     </div>
 
@@ -473,15 +307,16 @@
                                     { startRow: 28, endRow: 43, info: "Economy Class (Rows 28-43)", removedSeats: { 28: ['A','B','C'], 43: ['D','E','F'] } },
                                     { startRow: 44, endRow: 57, info: "Economy Class (Rows 44-57)", removedSeats: { 44: ['C','G','D','E','F'], 45: ['D','E','F'], 57: ['A','J'] } }
                                 ],
-                                frontFacilitiesHTML: `<div class="facility-row"> <div class="facility-group"> <span class="facility-item">🍽</span> <span class="facility-item">🍽</span> </div> </div><div class="facility-row"> <div class="facility-group"> <span class="facility-item exit-facility" style="margin-left: 20px;">EXIT</span> </div> <div class="facility-group"> <span class="facility-item">🍽</span> </div> <div class="facility-group"> <span class="facility-item">🚻♿</span> <span class="facility-item exit-facility" style="margin-right: 20px;">EXIT</span> </div> </div>`,
-                                prestigeEndFacilitiesHTML: `<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻♿</span></div> <div class="facility-group"><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div>`,
-                                economy1EndFacilitiesHTML: `<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻♿</span><span class="facility-item">🚻</span></div> <div class="facility-group"><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div>`,
-                                rearFacilitiesHTML: `<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻</span></div> <div class="facility-group"><span class="facility-item">🍽</span><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div><div class="facility-row"> <div class="facility-group"> <span class="facility-item">🍽</span> <span class="facility-item">🍽</span> </div> </div>`
+                                frontFacilitiesHTML: '<div class="facility-row"> <div class="facility-group"> <span class="facility-item">🍽</span> <span class="facility-item">🍽</span> </div> </div><div class="facility-row"> <div class="facility-group"> <span class="facility-item exit-facility" style="margin-left: 20px;">EXIT</span> </div> <div class="facility-group"> <span class="facility-item">🍽</span> </div> <div class="facility-group"> <span class="facility-item">🚻♿</span> <span class="facility-item exit-facility" style="margin-right: 20px;">EXIT</span> </div> </div>',
+                                prestigeEndFacilitiesHTML: '<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻♿</span></div> <div class="facility-group"><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div>',
+                                economy1EndFacilitiesHTML: '<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻♿</span><span class="facility-item">🚻</span></div> <div class="facility-group"><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div>',
+                                rearFacilitiesHTML: '<div class="exit-row"> <span class="exit">EXIT</span> <span class="exit">EXIT</span> </div><div class="facility-row"> <div class="facility-group"><span class="facility-item">🚻</span></div> <div class="facility-group"><span class="facility-item">🍽</span><span class="facility-item">🍽</span></div> <div class="facility-group"><span class="facility-item">🚻</span></div> </div><div class="facility-row"> <div class="facility-group"> <span class="facility-item">🍽</span> <span class="facility-item">🍽</span> </div> </div>'
                             },
                             "model2": { name: "다른 기종 (준비중)" }
                         };
 
                         let seatsReadyForDB = [];
+                        let selectedSeats = []; // 클릭된 좌석들을 저장할 배열
 
                         // 클래스별 가격 적용 함수들
                         function applyFirstClassPrice() {
@@ -498,6 +333,7 @@
                             const price = parseInt(document.getElementById('prestigeClassPrice').value);
                             if (isNaN(price) || price < 0) {
                                 alert('유효한 가격을 입력해주세요.');
+                                
                                 return;
                             }
                             applyPriceToClass([28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], price, 'PRE');
@@ -508,10 +344,12 @@
                             const price = parseInt(document.getElementById('economyClassPrice').value);
                             if (isNaN(price) || price < 0) {
                                 alert('유효한 가격을 입력해주세요.');
+                                
                                 return;
                             }
                             applyPriceToClass([44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57], price, 'ECONOMY');
                             alert('이코노미 가격이 적용되었습니다.');
+                            
                         }
 
                         function applyPriceToClass(rows, price, classType) {
@@ -576,10 +414,50 @@
                             }
 
                             if (!hasError) {
-                                applyPriceToClass([7, 8, 9, 10], firstPrice, 'FIR');
-                                applyPriceToClass([28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], prestigePrice, 'PRE');
-                                applyPriceToClass([44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57], economyPrice, 'ECONOMY');
-                                alert('모든 클래스 가격이 적용되었습니다.');
+                                // 서버에 모든 클래스 가격을 한번에 패치로 전송
+                                const priceData = [
+                                	  { classId: 'FIR', price: firstPrice },
+                                	  { classId: 'PRE', price: prestigePrice },
+                                	  { classId: 'ECONOMY', price: economyPrice }
+                                	];
+                                
+                                
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const flight_id = urlParams.get('flight_id') || '';
+                                
+                                const contextPath = "${pageContext.request.contextPath}";
+                                const url = contextPath + "/classpricesave.wi?flight_id=" + encodeURIComponent(flight_id);
+                                console.log(url);
+                                fetch(url, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(priceData),
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('서버 에러 발생! 상태: ' + response.status);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    console.log('서버 응답:', data);
+                                    if (data.status === 'success') {
+                                        // 성공시 화면에도 가격 적용
+                                        applyPriceToClass([7, 8, 9, 10], firstPrice, 'FIR');
+                                        applyPriceToClass([28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], prestigePrice, 'PRE');
+                                        applyPriceToClass([44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57], economyPrice, 'ECONOMY');
+                                        alert('모든 클래스 가격이 서버에 성공적으로 적용되었습니다.');
+                                        alert(data.message);
+                                    } else {
+                                        alert(data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('패치 요청 실패:', error);
+                                    alert('서버 요청 중 오류가 발생했습니다.');
+                                });
                             }
                         }
 
@@ -599,8 +477,9 @@
                             console.log("Aircraft model changed, seatsReadyForDB has been reset.");
 
                             if (modelKey === "model2" || !model.prestigeLayout) {
-                                // FIXED
-                                htmlContent = `<p style="text-align:center; padding: 20px;">\${(modelKey === "model2") ? `\${selectedOptionText}의 좌석 배치도는 현재 준비 중입니다.` : '좌석 배치도 정보를 불러올 수 없습니다.'}</p>`;
+                                htmlContent = '<p style="text-align:center; padding: 20px;">' + 
+                                    ((modelKey === "model2") ? selectedOptionText + '의 좌석 배치도는 현재 준비 중입니다.' : '좌석 배치도 정보를 불러올 수 없습니다.') + 
+                                    '</p>';
                                 airplaneDiv.innerHTML = htmlContent;
                                 return;
                             }
@@ -608,29 +487,24 @@
                             htmlContent += model.frontFacilitiesHTML || '';
                             htmlContent += '<div class="section-divider"></div><p class="info-text">Prestige Class</p>';
                             model.prestigeRows.forEach(r => {
-                                // FIXED
-                                htmlContent += `<div class="visual-seat-row"><div class="row-number">\${r}</div><div class="row">`;
+                                htmlContent += '<div class="visual-seat-row"><div class="row-number">' + r + '</div><div class="row">';
                                 model.prestigeLayout.forEach(c => { 
-                                    let seatDisplayContent = `<span class="seat-letter">\${c}</span>`;
-                                    // FIXED
-                                    htmlContent += (c === ' ') ? '<div class="aisle"></div>' : `<div class="seat" data-row="\${r}" data-seat="\${c}">\${seatDisplayContent}</div>`; 
+                                    let seatDisplayContent = '<span class="seat-letter">' + c + '</span>';
+                                    htmlContent += (c === ' ') ? '<div class="aisle"></div>' : '<div class="seat" data-row="' + r + '" data-seat="' + c + '">' + seatDisplayContent + '</div>'; 
                                 });
                                 htmlContent += '</div></div>';
                             });
                             htmlContent += model.prestigeEndFacilitiesHTML || '';
                             model.economySections.forEach((section, index) => {
-                                // FIXED
-                                htmlContent += `<div class="section-divider"></div><p class="info-text">\${section.info}</p>`;
+                                htmlContent += '<div class="section-divider"></div><p class="info-text">' + section.info + '</p>';
                                 for (let r = section.startRow; r <= section.endRow; r++) {
-                                    // FIXED
-                                    htmlContent += `<div class="visual-seat-row"><div class="row-number">\${r}</div><div class="row">`;
+                                    htmlContent += '<div class="visual-seat-row"><div class="row-number">' + r + '</div><div class="row">';
                                     model.economyLayout.forEach(c => {
                                         if (c === ' ') { htmlContent += '<div class="aisle"></div>'; }
                                         else {
                                             let isRemoved = (section.removedSeats && section.removedSeats[r] && section.removedSeats[r].includes(c));
-                                            let seatDisplayContent = `<span class="seat-letter">\${c}</span>`;
-                                            // FIXED
-                                            htmlContent += isRemoved ? '<div class="seat-removed"></div>' : `<div class="seat" data-row="\${r}" data-seat="\${c}">\${seatDisplayContent}</div>`;
+                                            let seatDisplayContent = '<span class="seat-letter">' + c + '</span>';
+                                            htmlContent += isRemoved ? '<div class="seat-removed"></div>' : '<div class="seat" data-row="' + r + '" data-seat="' + c + '">' + seatDisplayContent + '</div>';
                                         }
                                     });
                                     htmlContent += '</div></div>';
@@ -642,18 +516,54 @@
 
                             seatsReadyForDB.forEach(dbSeat => {
                                 if (dbSeat.aircraft === aircraftData[modelKey].name) { 
-                                    const seatElement = document.querySelector(`.seat[data-row="\${dbSeat.row}"][data-seat="\${dbSeat.seat}"]`);
+                                    const seatElement = document.querySelector('.seat[data-row="' + dbSeat.row + '"][data-seat="' + dbSeat.seat + '"]');
                                     if (seatElement && typeof dbSeat.price === 'number') {
-                                        // FIXED
-                                        seatElement.innerHTML = `<span class="seat-letter">\${dbSeat.seat}</span><span class="seat-price-display">\${dbSeat.price.toLocaleString()}</span>`;
+                                        seatElement.innerHTML = '<span class="seat-letter">' + dbSeat.seat + '</span><span class="seat-price-display">' + dbSeat.price.toLocaleString() + '</span>';
                                     }
                                 }
+                            });
+
+                            // 좌석 클릭 이벤트 추가
+                            const allSeats = document.querySelectorAll('.seat');
+                            allSeats.forEach(seat => {
+                                seat.addEventListener('click', function() {
+                                    const row = this.dataset.row;
+                                    const seatLetter = this.dataset.seat;
+                                    const seatKey = row + seatLetter;
+                                    
+                                    // 이미 선택된 좌석인지 확인
+                                    const existingIndex = selectedSeats.findIndex(s => s.row === row && s.seat === seatLetter);
+                                    
+                                                                         if (existingIndex > -1) {
+                                         // 이미 선택된 좌석이면 선택 해제
+                                         selectedSeats.splice(existingIndex, 1);
+                                         this.classList.remove('seat-selected-highlight');
+                                         console.log('좌석 선택 해제:', row + seatLetter);
+                                     } else {
+                                         // 새로 선택하는 좌석
+                                         selectedSeats.push({
+                                             row: row,
+                                             seat: seatLetter,
+                                             aircraft: aircraftData[modelKey].name,
+                                             classseat :   (row >= 7 && row <= 10) ? "PRE" :
+                                                           ( row >= 28 && row <= 43 ) ? "FIR" :
+                                                            "ECONOMY"
+                                         });
+                                         this.classList.add('seat-selected-highlight');
+                                         console.log('좌석 선택:', row + seatLetter);
+                                     }
+                                     
+                                     // 선택된 좌석 UI 업데이트
+                                     updateSelectedSeatsDisplay();
+                                     console.log('현재 선택된 좌석들:', selectedSeats);
+                                });
                             });
                         }
 
                         function saveAllSeats() {
-                            if (seatsReadyForDB.length === 0) {
-                                alert('DB에 저장할 좌석 정보가 없습니다. 먼저 가격을 설정해주세요.');
+                            // 선택된 좌석들만 저장
+                            if (selectedSeats.length === 0) {
+                                alert('DB에 저장할 좌석을 선택해주세요. 좌석을 클릭하여 선택하세요.');
                                 return;
                             }
 
@@ -661,11 +571,12 @@
                             const flight_id = urlParams.get('flight_id') || '';
 
                             const contextPath = "${pageContext.request.contextPath}";
-                            const url = `\${contextPath}/seatsave.wi?flight_id=\${encodeURIComponent(flight_id)}`;
-                            const jsonData = JSON.stringify(seatsReadyForDB);
+                            const url = contextPath + "/seatsave.wi?flight_id=" + encodeURIComponent(flight_id);
+                            const jsonData = JSON.stringify(selectedSeats);
                             
                             console.log("저장 시 사용할 flight_id:", flight_id);
                             console.log("저장 요청 URL:", url);
+                            console.log("저장할 선택된 좌석들:", selectedSeats);
 
                             fetch(url, {
                                 method: 'POST',
@@ -676,7 +587,7 @@
                             })
                             .then(response => {
                                 if (!response.ok) {
-                                    throw new Error(`서버 에러 발생! 상태: \${response.status}`);
+                                    throw new Error('서버 에러 발생! 상태: ' + response.status);
                                 }
                                 return response.json(); 
                             })
@@ -685,6 +596,13 @@
                                 alert(data.message); 
 
                                 if (data.status === 'success') {
+                                    // 저장 성공 시 선택된 좌석들 초기화
+                                    selectedSeats = [];
+                                    // 선택 하이라이트 제거
+                                    const highlightedSeats = document.querySelectorAll('.seat-selected-highlight');
+                                    highlightedSeats.forEach(seat => {
+                                        seat.classList.remove('seat-selected-highlight');
+                                    });
                                     location.reload();
                                 }
                             })
@@ -698,7 +616,7 @@
                             console.log("저장된 좌석 불러오기 시작");
                             
                             const urlParams = new URLSearchParams(window.location.search);
-                            const flight_id = urlParams.get('flight_id') || 'FL001';
+                            const flight_id = urlParams.get('flight_id') || '';
 
                             const contextPath = "${pageContext.request.contextPath}";
                             const finalUrl = `\${contextPath}/seatload.wi?flight_id=\${encodeURIComponent(flight_id)}`;
@@ -828,9 +746,38 @@
                         		});
                         	} else {
                         		alert('검색어를 입력해주세요.');
+                        	                        			}
                         	}
+                        
+                        // 선택된 좌석 표시 업데이트 함수
+                        function updateSelectedSeatsDisplay() {
+                            const countElement = document.getElementById('selectedSeatCount');
+                            const listElement = document.getElementById('selectedSeatList');
+                            
+                            if (countElement) {
+                                countElement.textContent = selectedSeats.length;
+                            }
+                            
+                            if (listElement) {
+                                listElement.innerHTML = '';
+                                selectedSeats.forEach(seat => {
+                                    const li = document.createElement('li');
+                                    li.textContent = seat.row + '열 ' + seat.seat + '석';
+                                    listElement.appendChild(li);
+                                });
+                            }
                         }
                         
+                        // 선택된 좌석 모두 해제 함수
+                        function clearAllSelectedSeats() {
+                            selectedSeats = [];
+                            const highlightedSeats = document.querySelectorAll('.seat-selected-highlight');
+                            highlightedSeats.forEach(seat => {
+                                seat.classList.remove('seat-selected-highlight');
+                            });
+                            updateSelectedSeatsDisplay();
+                            console.log('모든 선택된 좌석이 해제되었습니다.');
+                        }
 
                         document.addEventListener('DOMContentLoaded', function() {
                             const searchInput = document.getElementById('aircraftSearch');
@@ -842,6 +789,7 @@
                             const applyAllBtn = document.getElementById('applyAllPricesButton');
                             const saveAllBtn = document.getElementById('saveAllSeatsButton');
                             const loadButton = document.getElementById('loadSeatsButton');
+                            const clearBtn = document.getElementById('clearSelectedSeats');
                             let currentModelKey = 'model1';
 
                             // 기본으로 model1 렌더링 (페이지 로드 시 비행기 표시)
@@ -926,6 +874,11 @@
                             } else {
                                 console.error('ID가 "loadSeatsButton"인 버튼을 찾을 수 없습니다!');
                             }
+                            if (clearBtn) {
+                                clearBtn.addEventListener('click', clearAllSelectedSeats);
+                            } else {
+                                console.error("Clear selected seats button not found!");
+                            }
                             if (searchInput){
                             	console.log("검색 입력창 정상작동합니다");
                             	searchInput.addEventListener('keydown', function(event) {
@@ -952,23 +905,23 @@
         </footer>
     </div>
     </div>
-    <script src="../vendors/jquery/dist/jquery.min.js"></script>
-    <script src="../vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../vendors/fastclick/lib/fastclick.js"></script>
-    <script src="../vendors/nprogress/nprogress.js"></script>
-    <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
-    <script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
-    <script src="../vendors/Flot/jquery.flot.js"></script>
-    <script src="../vendors/Flot/jquery.flot.pie.js"></script>
-    <script src="../vendors/Flot/jquery.flot.time.js"></script>
-    <script src="../vendors/Flot/jquery.flot.stack.js"></script>
-    <script src="../vendors/Flot/jquery.flot.resize.js"></script>
-    <script src="../vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-    <script src="../vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-    <script src="../vendors/flot.curvedlines/curvedLines.js"></script>
-    <script src="../vendors/DateJS/build/date.js"></script>
-    <script src="../vendors/moment/min/moment.min.js"></script>
-    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <script src="../build/js/custom.min.js"></script>
+    <script src="<%=contextPath%>/views/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="<%=contextPath%>/views/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<%=contextPath%>/views/vendors/fastclick/lib/fastclick.js"></script>
+    <script src="<%=contextPath%>/views/vendors/nprogress/nprogress.js"></script>
+    <script src="<%=contextPath%>/views/vendors/Chart.js/dist/Chart.min.js"></script>
+    <script src="<%=contextPath%>/views/vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <script src="<%=contextPath%>/views/vendors/Flot/jquery.flot.js"></script>
+    <script src="<%=contextPath%>/views/vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="<%=contextPath%>/views/vendors/Flot/jquery.flot.time.js"></script>
+    <script src="<%=contextPath%>/views/vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="<%=contextPath%>/views/vendors/Flot/jquery.flot.resize.js"></script>
+    <script src="<%=contextPath%>/views/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="<%=contextPath%>/views/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="<%=contextPath%>/views/vendors/flot.curvedlines/curvedLines.js"></script>
+    <script src="<%=contextPath%>/views/vendors/DateJS/build/date.js"></script>
+    <script src="<%=contextPath%>/views/vendors/moment/min/moment.min.js"></script>
+    <script src="<%=contextPath%>/views/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="<%=contextPath%>/views/build/js/custom.min.js"></script>
 </body>
 </html>
