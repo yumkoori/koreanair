@@ -6,8 +6,15 @@ import com.koreanair.model.dto.ClassPriceSaveDTO;
 import com.koreanair.model.dto.DashBoardStatsDTO;
 import com.koreanair.model.dto.FlightSeatSaveDTO;
 import com.koreanair.model.dto.SaveSchedulesDBDTO;
+<<<<<<< HEAD
 import com.koreanair.model.dto.SearchUserDTO;
 import com.koreanair.model.dto.SeatRevenueDTO;
+=======
+<<<<<<< HEAD
+import com.koreanair.model.dto.SearchUserDTO;
+=======
+>>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
 
 public interface ProjectDao {
 	
@@ -26,12 +33,21 @@ public interface ProjectDao {
 	public boolean refreshCheck(List<SaveSchedulesDBDTO> refresList);
 	
 	public List<SaveSchedulesDBDTO> refreshSchdules(List<SaveSchedulesDBDTO> refresList) throws Exception;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
 	
 	public int priceSave(List<ClassPriceSaveDTO> priceList, String flightid) throws Exception;
 	
 	public List<SearchUserDTO> searchUsers(String username) throws Exception;
 	
 	public List<DashBoardStatsDTO> dashLoad() throws Exception;
+<<<<<<< HEAD
 	
 	public List<SeatRevenueDTO> seatRevenue() throws Exception;
+=======
+=======
+>>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
 }

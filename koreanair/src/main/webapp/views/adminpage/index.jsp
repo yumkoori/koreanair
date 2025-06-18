@@ -66,7 +66,11 @@ String contextPath = request.getContextPath();
           <div class="tile_count">
             <div class="col-md-2 col-sm-4 tile_stats_count" data-stat="total-users">
               <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
+<<<<<<< HEAD
               <div class="count"></div>
+=======
+              <div class="count">190</div>
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
               <span class="count_bottom"><i class="green">4% </i> From last Week</span>
             </div>
             <div class="col-md-2 col-sm-4 tile_stats_count" data-stat="average-time">
@@ -86,12 +90,20 @@ String contextPath = request.getContextPath();
             </div>
             <div class="col-md-2 col-sm-4 tile_stats_count" data-stat="total-collections">
               <span class="count_top"><i class="fa fa-plane"></i> Total Reservations</span>
+<<<<<<< HEAD
               <div class="count"></div>
+=======
+              <div class="count">2,315</div>
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
             </div>
             <div class="col-md-2 col-sm-4 tile_stats_count" data-stat="total-connections">
               <span class="count_top"><i class="fa fa-globe"></i> Total Sessions</span>
+<<<<<<< HEAD
               <div class="count"></div>
+=======
+              <div class="count">7,325</div>
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
             </div>
           </div>
@@ -785,7 +797,11 @@ String contextPath = request.getContextPath();
     <script src="<%=contextPath%>/views/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
     <!-- Custom Theme Scripts -->
+<<<<<<< HEAD
     <script src="<%=contextPath%>/views/build/js/custom.js"></script>
+=======
+    <script src="<%=contextPath%>/views/build/js/custom.min.js"></script>
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
     
     <!-- Statistics JavaScript -->
     <script src="<%=contextPath%>/views/adminpage/js/statistics.js"></script>

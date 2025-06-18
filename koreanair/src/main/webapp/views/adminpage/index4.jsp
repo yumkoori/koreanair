@@ -922,6 +922,10 @@ String contextPath = request.getContextPath();
     <script src="<%=contextPath%>/views/vendors/DateJS/build/date.js"></script>
     <script src="<%=contextPath%>/views/vendors/moment/min/moment.min.js"></script>
     <script src="<%=contextPath%>/views/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+<<<<<<< HEAD
     <script src="<%=contextPath%>/views/build/js/custom.js"></script>
+=======
+    <script src="<%=contextPath%>/views/build/js/custom.min.js"></script>
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
 </body>
 </html>

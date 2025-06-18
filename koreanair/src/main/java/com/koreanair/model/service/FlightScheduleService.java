@@ -33,7 +33,15 @@ public class FlightScheduleService {
      */
                                                     //처음에는  오늘날짜             all     
     public List<FlightScheduleDTO> getFlightData(String requestedDate, String flightType) throws Exception {
+<<<<<<< HEAD
     	// System.out.println("서비스에 도착");
+=======
+<<<<<<< HEAD
+    	// System.out.println("서비스에 도착");
+=======
+    	System.out.println("서비스에 도착");
+>>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
     	
         if (flightType == null || flightType.trim().isEmpty()) {
             flightType = "all";
@@ -41,7 +49,15 @@ public class FlightScheduleService {
         }
         if ("realtime".equalsIgnoreCase(flightType)) {
             requestedDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+<<<<<<< HEAD
             // System.out.println("8888");
+=======
+<<<<<<< HEAD
+            // System.out.println("8888");
+=======
+            System.out.println("8888");
+>>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
         }
         if (requestedDate == null || requestedDate.trim().isEmpty()) {
             throw new IllegalArgumentException("날짜 파라미터가 필요합니다.");

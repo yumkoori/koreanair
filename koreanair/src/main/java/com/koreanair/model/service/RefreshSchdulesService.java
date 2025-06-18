@@ -10,7 +10,15 @@ import com.koreanair.model.dto.SaveSchedulesDBDTO;
 public class RefreshSchdulesService {
 	
 	public List<SaveSchedulesDBDTO> refreshschdules( List<SaveSchedulesDBDTO> refresList ){
+<<<<<<< HEAD
 		// System.out.println("서비스에서 받는 >  " + refresList);
+=======
+<<<<<<< HEAD
+		// System.out.println("서비스에서 받는 >  " + refresList);
+=======
+		System.out.println("서비스에서 받는 >  " + refresList);
+>>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
 		ProjectDao dao = new ProjectDaoimpl();
 		
         try {

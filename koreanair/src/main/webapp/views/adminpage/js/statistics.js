@@ -1,11 +1,14 @@
 /**
  * 대시보드 통계 관련 JavaScript
+<<<<<<< HEAD
  * 
  * 이 파일의 주요 기능:
  * 1. 대시보드 기본 통계 데이터 로딩 및 표시
  * 2. 좌석 클래스별 수익 비율 데이터 로딩 (FIR, BIZ, PRE, ECONOMY)
  * 3. 통계 타일 및 차트 업데이트
  * 4. 페이지 로드 시 자동 초기화 및 데이터 로딩
+=======
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
  */
 
 // 통계 데이터를 가져와서 화면에 표시하는 함수
@@ -179,6 +182,7 @@ function startRealTimeStats(intervalMinutes = 5) {
     }, intervalMinutes * 60 * 1000);
 }
 
+<<<<<<< HEAD
 // 좌석 클래스별 수익 비율 데이터를 가져와서 화면에 표시하는 함수
 function loadSeatRevenueData() {
     console.log('좌석 수익 비율 데이터 로딩 시작...');
@@ -699,3 +703,21 @@ function adjustCanvasSize(canvas) {
     canvas.style.width = canvas.width + 'px';
     canvas.style.height = canvas.height + 'px';
 }
+=======
+// 페이지 로드 시 통계 데이터 로드
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('통계 JavaScript 초기화');
+    
+    // 통계 데이터 로드
+    loadDashboardStats();
+    
+    // 실시간 업데이트 시작 (5분마다)
+    // startRealTimeStats(5);
+});
+
+// 수동 새로고침 함수 (버튼 등에서 호출 가능)
+function refreshStats() {
+    console.log('수동 통계 새로고침');
+    loadDashboardStats();
+} 
+>>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
