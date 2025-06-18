@@ -3,6 +3,8 @@ package com.koreanair.command;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,16 +27,25 @@ public class FilghtSearchHandler implements CommandHandler{
 		Map<SearchFlightResultDTO, List<SeatAvailabilityDTO>> map = new HashMap<SearchFlightResultDTO, List<SeatAvailabilityDTO>>();
 		Map<String, Map<String,Integer>> priceMap = new HashMap<String, Map<String,Integer>>();
 		
-		
+		//passensers 인원 수 파악 
 		String text = request.getParameter("passengers");
-		String passengers = text.replaceAll("[^0-9]", "");  // 숫자만 남김
+		text = java.net.URLDecoder.decode(text, "UTF-8");
+
+		Pattern pattern = java.util.regex.Pattern.compile("\\d+");
+		Matcher matcher = pattern.matcher(text);
+
+		int totalPassengers = 0;
+		while (matcher.find()) {
+		    totalPassengers += Integer.parseInt(matcher.group());
+		}
+		
 		
 		SearchFlightDTO dto = SearchFlightDTO.builder()
 			.departure(request.getParameter("departure"))
 			.arrival(request.getParameter("arrival"))
 			.departureDate(request.getParameter("departureDate"))
 			.returnDate(request.getParameter("returnDate"))
-			.passengers(Integer.parseInt(passengers))
+			.passengers(totalPassengers)
 			.seatClass(request.getParameter("seatClass"))
 			.tripType(request.getParameter("tripType"))
 			.build();

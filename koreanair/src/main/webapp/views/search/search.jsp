@@ -166,7 +166,7 @@
 							// 2025-07-15 형식을 2025.07.15 형식으로 변환
 							String formattedDepartureDate = departureDateDisplay.replace("-", ".");
 							String formattedReturnDate = returnDateDisplay.replace("-", ".");
-							dateRangeDisplay = formattedDepartureDate + " ~ " + formattedReturnDate;
+							dateRangeDisplay = formattedDepartureDate + " ! " + formattedReturnDate;
 						}
 					%>
 					<i class="far fa-calendar-alt"></i> <span><%= dateRangeDisplay %></span>
@@ -202,18 +202,7 @@
 				</div>
 				<div class="divider">|</div>
 				<div class="passengers">
-					<%
-						String passengersParam = request.getParameter("passengers");
-						String displayPassengers = "성인 2명"; // 기본값
-						if (passengersParam != null && !passengersParam.isEmpty()) {
-							// request.getParameter()는 자동으로 URL 디코딩을 수행함
-							displayPassengers = passengersParam;
-							
-							// 혹시 문자가 깨져있다면 정리
-							displayPassengers = displayPassengers.replaceAll("\\s+", " ").trim();
-						}
-					%>
-					<span><%= displayPassengers %></span>
+					<span></span>
 					<div class="passengers-dropdown">
 						<div class="passenger-type">
 							<div class="passenger-label">

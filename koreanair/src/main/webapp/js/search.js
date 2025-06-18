@@ -161,21 +161,7 @@ window.debugUrlParams = function() {
     alert(alertMsg);
 };
 
-window.forcePassengerCount = function(count = 2) {
-    console.log(`🔧 === 승객 수 강제 설정: ${count}명 ===`);
-    
-    // 전역 변수 강제 설정
-    window.passengersInfo = `성인 ${count}명`;
-    window.passengerCount = count;
-    window.adultCount = count;
-    window.childCount = 0;
-    window.infantCount = 0;
-    
-    console.log('✅ 강제 설정 완료');
-    console.log('👥 새로운 승객 수:', getPassengerCount());
-    
-    alert(`🔧 승객 수 강제 설정 완료\n승객 수: ${count}명\n이제 좌석을 선택해보세요!`);
-};
+
 
 document.addEventListener('DOMContentLoaded', function() {
     // 현재 페이지 URL 경로 확인
@@ -889,18 +875,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // 날짜 표시
             const dateRangeEl = document.querySelector('.date-range span');
             if (dateRangeEl) {
-                let dateText = departureDate.toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                }).replace(/\. /g, '.').replace('.', '');
+                // 날짜 형식 변환 함수 사용 (YYYY.MM.DD 형식)
+                function formatDateForDisplay(date) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}.${month}.${day}`;
+                }
+                
+                let dateText = formatDateForDisplay(departureDate);
                 
                 if (returnDate) {
-                    dateText += ' ~ ' + returnDate.toLocaleDateString('ko-KR', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                    }).replace(/\. /g, '.').replace('.', '');
+                    dateText += ' ~ ' + formatDateForDisplay(returnDate);
                 }
                 
                 dateRangeEl.textContent = dateText;
@@ -911,7 +897,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const seatTypeEl = document.querySelector('.seat-type span');
             
             if (passengersEl && seatTypeEl) {
-                passengersEl.textContent = `성인 ${passengers}명`;
+                passengersEl.textContent = `${passengers}`;
                 seatTypeEl.textContent = seatClass;
             }
         }
