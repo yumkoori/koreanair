@@ -6,7 +6,7 @@
 }
 
 /* 기본 스타일 */
-body {
+body.airline-main-body {
     font-family: 'Nanum Gothic', Arial, sans-serif;
     color: #333;
     line-height: 1.6;
@@ -15,21 +15,25 @@ body {
     overflow-x: auto;
 }
 
-a {
+a.airline-link {
     text-decoration: none;
     color: inherit;
 }
 
-ul {
+.airline-link {
+    text-decoration: none;
+}
+
+ul.airline-list {
     list-style: none;
 }
 
-img {
+img.airline-img {
     max-width: 100%;
     height: auto;
 }
 
-.container {
+.airline-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
@@ -37,7 +41,7 @@ img {
 }
 
 /* 헤더 스타일 */
-header {
+header.airline-header {
     background-color: #fff;
     position: sticky;
     top: 0;
@@ -48,11 +52,11 @@ header {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-header.scrolled {
+header.airline-header.scrolled {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-.header-top {
+.airline-header-top {
     background-color: #f8f9fa;
     padding: 8px 0;
     border-bottom: 1px solid #e9ecef;
@@ -63,20 +67,20 @@ header.scrolled {
     overflow: hidden;
 }
 
-.header-top .container {
+.airline-header-top .airline-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.top-nav-left,
-.top-nav-right {
+.airline-top-nav-left,
+.airline-top-nav-right {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.top-link {
+.airline-top-link {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -86,15 +90,15 @@ header.scrolled {
     transition: color 0.3s ease;
 }
 
-.top-link:hover {
+.airline-top-link:hover {
     color: #0064de;
 }
 
-.top-link i {
+.airline-top-link i {
     font-size: 12px;
 }
 
-.language-selector {
+.airline-language-selector {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -108,48 +112,48 @@ header.scrolled {
     color: #333;
 }
 
-.language-selector:hover {
+.airline-language-selector:hover {
     border-color: #0064de;
     box-shadow: 0 2px 8px rgba(0, 100, 222, 0.1);
 }
 
-.language-selector img {
+.airline-language-selector img {
     border-radius: 2px;
 }
 
-.language-selector i {
+.airline-language-selector i {
     font-size: 10px;
     color: #999;
 }
 
-.header-main {
+.airline-header-main {
     padding: 15px 0;
     transition: padding 0.3s ease;
 }
 
-.header-main .container {
+.airline-header-main .airline-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.logo {
+.airline-logo {
     height: 45px;
     display: flex;
     align-items: center;
 }
 
-.logo svg {
+.airline-logo svg {
     height: 100%;
     width: auto;
     transition: transform 0.3s ease;
 }
 
-.logo:hover svg {
+.airline-logo:hover svg {
     transform: scale(1.05);
 }
 
-.main-nav ul {
+.airline-main-nav ul {
     display: flex;
     gap: 40px;
     margin: 0;
@@ -158,13 +162,13 @@ header.scrolled {
     height: 100%;
 }
 
-.main-nav ul li {
+.airline-main-nav ul li {
     height: 100%;
     display: flex;
     align-items: center;
 }
 
-.nav-link {
+.airline-nav-link {
     font-size: 18px;
     font-weight: 500;
     color: #333;
@@ -177,11 +181,11 @@ header.scrolled {
     align-items: center;
 }
 
-.nav-link:hover {
+.airline-nav-link:hover {
     color: #0064de;
 }
 
-.nav-link::after {
+.airline-nav-link::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -192,17 +196,17 @@ header.scrolled {
     transition: width 0.3s ease;
 }
 
-.nav-link:hover::after {
+.airline-nav-link:hover::after {
     width: 100%;
 }
 
-.header-actions {
+.airline-header-actions {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.search-box {
+.airline-search-box {
     display: flex;
     align-items: center;
     background: #f8f9fa;
@@ -213,13 +217,13 @@ header.scrolled {
     min-width: 300px;
 }
 
-.search-box:focus-within {
+.airline-search-box:focus-within {
     border-color: #0064de;
     box-shadow: 0 0 0 3px rgba(0, 100, 222, 0.1);
     background: white;
 }
 
-.search-box input {
+.airline-search-box input.airline-search-input {
     flex: 1;
     border: none;
     background: transparent;
@@ -229,11 +233,11 @@ header.scrolled {
     padding: 5px 0;
 }
 
-.search-box input::placeholder {
+.airline-search-box input.airline-search-input::placeholder {
     color: #999;
 }
 
-.search-btn {
+.airline-search-btn {
     background: none;
     border: none;
     color: #666;
@@ -246,12 +250,12 @@ header.scrolled {
     justify-content: center;
 }
 
-.search-btn:hover {
+.airline-search-btn:hover {
     color: #0064de;
     background: rgba(0, 100, 222, 0.1);
 }
 
-.login-btn {
+.airline-login-btn {
     background: white;
     border: 2px solid #0064de;
     color: #0064de;
@@ -265,14 +269,14 @@ header.scrolled {
     display: inline-block;
 }
 
-.login-btn:hover {
+.airline-login-btn:hover {
     background: #0064de;
     color: white;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 100, 222, 0.3);
 }
 
-.user-info {
+.airline-user-info {
     color: #0064de;
     font-weight: 500;
     pointer-events: none;
@@ -284,6 +288,29 @@ header.scrolled {
     padding: 60px 0;
     color: white;
     font-family: 'Nanum Gothic', sans-serif;
+}
+
+/* 추가 클래스명들 */
+.airline-form {
+    /* 폼 관련 기본 스타일 */
+}
+
+.airline-input {
+    /* 입력 필드 관련 기본 스타일 */
+}
+
+.airline-btn {
+    /* 버튼 관련 기본 스타일 */
+    text-decoration: none;
+}
+
+.airline-btn-nav {
+    /* 네비게이션 버튼 관련 기본 스타일 */
+    text-decoration: none;
+}
+
+.airline-checkbox {
+    /* 체크박스 관련 기본 스타일 */
 }
 
 .booking-card {
@@ -302,7 +329,7 @@ header.scrolled {
     margin: 0;
 }
 
-.tab-btn {
+.booking-tab-btn {
     flex: 1;
     background: rgba(108, 117, 125, 0.8);
     border: none;
@@ -323,17 +350,17 @@ header.scrolled {
     justify-content: center;
 }
 
-.tab-btn:last-child {
+.booking-tab-btn:last-child {
     margin-right: 0;
 }
 
-.tab-btn.active {
+.booking-tab-btn.active {
     background: rgba(255, 255, 255, 0.95);
     color: #333;
     backdrop-filter: blur(10px);
 }
 
-.tab-btn:not(.active):hover {
+.booking-tab-btn:not(.active):hover {
     background: rgba(90, 98, 104, 0.9);
 }
 
@@ -837,7 +864,7 @@ header.scrolled {
     background-color: #fff;
 }
 
-.features .container {
+.features .airline-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
@@ -1038,61 +1065,61 @@ header.scrolled {
 }
 
 /* 푸터 스타일 */
-footer {
+footer.airline-footer {
     background-color: #222;
     color: #ccc;
     padding-top: 60px;
 }
 
-.footer-top {
+.airline-footer-top {
     display: flex;
     margin-bottom: 40px;
 }
 
-.footer-logo {
+.airline-footer-logo {
     flex: 0 0 200px;
     display: flex;
     align-items: center;
 }
 
-.footer-logo svg {
+.airline-footer-logo svg {
     max-width: 100%;
     height: auto;
 }
 
-.footer-nav {
+.airline-footer-nav {
     flex: 1;
     display: flex;
     justify-content: space-between;
 }
 
-.footer-nav-column h4 {
+.airline-footer-nav-column h4 {
     color: white;
     margin-bottom: 20px;
     font-size: 18px;
 }
 
-.footer-nav-column ul li {
+.airline-footer-nav-column ul li {
     margin-bottom: 10px;
 }
 
-.footer-nav-column ul li a {
+.airline-footer-nav-column ul li a {
     color: #aaa;
     transition: color 0.3s;
 }
 
-.footer-nav-column ul li a:hover {
+.airline-footer-nav-column ul li a:hover {
     color: white;
 }
 
-.footer-social {
+.airline-footer-social {
     display: flex;
     justify-content: center;
     gap: 20px;
     margin-bottom: 40px;
 }
 
-.footer-social a {
+.airline-footer-social a {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1104,54 +1131,54 @@ footer {
     transition: background-color 0.3s;
 }
 
-.footer-social a:hover {
+.airline-footer-social a:hover {
     background-color: #0064de;
 }
 
-.footer-bottom {
+.airline-footer-bottom {
     border-top: 1px solid #333;
     padding: 30px 0;
     text-align: center;
 }
 
-.footer-info {
+.airline-footer-info {
     margin-bottom: 20px;
 }
 
-.footer-info p {
+.airline-footer-info p {
     font-size: 14px;
     line-height: 1.8;
     color: #888;
 }
 
-.footer-links {
+.airline-footer-links {
     display: flex;
     justify-content: center;
     gap: 30px;
     margin-bottom: 20px;
 }
 
-.footer-links a {
+.airline-footer-links a {
     color: #aaa;
 }
 
-.footer-links a.important {
+.airline-footer-links a.important {
     color: white;
     font-weight: 500;
 }
 
-.copyright {
+.airline-copyright {
     font-size: 14px;
     color: #666;
 }
 
 /* 반응형 스타일 */
 @media (max-width: 1024px) {
-    .search-box {
+    .airline-search-box {
         min-width: 250px;
     }
 
-    .main-nav ul {
+    .airline-main-nav ul {
         gap: 30px;
     }
 
@@ -1187,7 +1214,7 @@ footer {
         width: 100%;
     }
 
-    .features .container {
+    .features .airline-container {
         grid-template-columns: repeat(2, 1fr);
     }
 
@@ -1201,50 +1228,50 @@ footer {
 }
 
 @media (max-width: 840px) {
-    .header-top {
+    .airline-header-top {
         padding: 6px 0;
     }
 
-    .top-nav-left,
-    .top-nav-right {
+    .airline-top-nav-left,
+    .airline-top-nav-right {
         gap: 15px;
     }
 
-    .language-selector {
+    .airline-language-selector {
         padding: 4px 8px;
     }
 
-    .header-main .container {
+    .airline-header-main .airline-container {
         flex-wrap: wrap;
         gap: 15px;
     }
 
-    .logo {
+    .airline-logo {
         order: 1;
         height: 40px;
     }
 
-    .main-nav {
+    .airline-main-nav {
         order: 3;
         width: 100%;
     }
 
-    .main-nav ul {
+    .airline-main-nav ul {
         justify-content: center;
         gap: 20px;
     }
 
-    .header-actions {
+    .airline-header-actions {
         order: 2;
         gap: 15px;
     }
 
-    .search-box {
+    .airline-search-box {
         min-width: 200px;
         padding: 6px 12px;
     }
 
-    .login-btn {
+    .airline-login-btn {
         padding: 8px 16px;
     }
 
@@ -1337,21 +1364,21 @@ footer {
         grid-template-columns: 1fr;
     }
 
-    .footer-top {
+    .airline-footer-top {
         flex-direction: column;
         gap: 40px;
     }
 
-    .footer-nav {
+    .airline-footer-nav {
         flex-wrap: wrap;
         gap: 30px;
     }
 
-    .footer-nav-column {
+    .airline-footer-nav-column {
         flex: 0 0 calc(50% - 15px);
     }
 
-    .dropdown-menu {
+    .airline-dropdown-menu {
         display: flex;
         min-width: 320px;
         max-width: 90vw;
@@ -1362,29 +1389,29 @@ footer {
         overflow-y: auto;
     }
 
-    .nav-item::after {
+    .airline-nav-item::after {
         top: 100%;
         height: 15px;
     }
 
-    .nav-item:hover .dropdown-menu {
+    .airline-nav-item:hover .airline-dropdown-menu {
         opacity: 1;
         visibility: visible;
         transform: translateX(-50%) translateY(0);
     }
 
-    .dropdown-column:last-child {
+    .airline-dropdown-column:last-child {
         grid-column: unset;
     }
 }
 
 /* 드롭다운 메뉴 스타일 */
-.nav-item {
+.airline-nav-item {
     position: relative;
 }
 
 /* 마우스 이동을 위한 보이지 않는 브릿지 영역 */
-.nav-item::after {
+.airline-nav-item::after {
     content: '';
     position: fixed;
     top: 100%;
@@ -1399,12 +1426,12 @@ footer {
     transition: all 0.1s ease;
 }
 
-.nav-item:hover::after {
+.airline-nav-item:hover::after {
     opacity: 1;
     visibility: visible;
 }
 
-.dropdown-menu {
+.airline-dropdown-menu {
     position: fixed;
     top: 70px;
     left: 50%;
@@ -1429,32 +1456,32 @@ footer {
 }
 
 /* 스크롤바 스타일 (크롬, 사파리, 엣지) */
-.dropdown-menu::-webkit-scrollbar {
+.airline-dropdown-menu::-webkit-scrollbar {
     width: 8px;
 }
 
-.dropdown-menu::-webkit-scrollbar-track {
+.airline-dropdown-menu::-webkit-scrollbar-track {
     background: #f5f5f5;
     border-radius: 8px;
 }
 
-.dropdown-menu::-webkit-scrollbar-thumb {
+.airline-dropdown-menu::-webkit-scrollbar-thumb {
     background-color: #ddd;
     border-radius: 8px;
 }
 
-.dropdown-menu::-webkit-scrollbar-thumb:hover {
+.airline-dropdown-menu::-webkit-scrollbar-thumb:hover {
     background-color: #ccc;
 }
 
-.nav-item:hover .dropdown-menu {
+.airline-nav-item:hover .airline-dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
 }
 
 /* 드롭다운 메뉴 기본 컨텐츠 스타일 */
-.dropdown-content {
+.airline-dropdown-content {
     display: flex;
     padding: 40px;
     gap: 60px;
@@ -1462,14 +1489,14 @@ footer {
 
 /* 화면이 작을 때 컬럼 배치 조정 */
 @media (max-width: 1200px) {
-    .dropdown-content {
+    .airline-dropdown-content {
         gap: 40px;
         padding: 30px;
     }
 }
 
 @media (max-width: 900px) {
-    .dropdown-content {
+    .airline-dropdown-content {
         display: flex !important;
         flex-direction: column !important;
         gap: 30px;
@@ -1477,7 +1504,7 @@ footer {
         flex-wrap: nowrap !important;
     }
 
-    .dropdown-column {
+    .airline-dropdown-column {
         min-width: 0;
         width: 100% !important;
         flex: none !important;
@@ -1486,7 +1513,7 @@ footer {
 
 /* 840px 이하에서도 확실히 1열 유지 */
 @media (max-width: 840px) {
-    .dropdown-content {
+    .airline-dropdown-content {
         display: flex !important;
         flex-direction: column !important;
         gap: 25px;
@@ -1494,7 +1521,7 @@ footer {
         flex-wrap: nowrap !important;
     }
 
-    .dropdown-column {
+    .airline-dropdown-column {
         width: 100% !important;
         min-width: 0;
         flex: none !important;
@@ -1503,13 +1530,13 @@ footer {
 
 /* 400px 이하 미디어 쿼리 제거 - 최소 너비가 576px로 설정되어 더 이상 필요하지 않음 */
 
-.dropdown-column {
+.airline-dropdown-column {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-.dropdown-column h4 {
+.airline-dropdown-column h4 {
     color: #0064de;
     font-size: 18px;
     font-weight: 700;
@@ -1524,7 +1551,7 @@ footer {
     z-index: 1;
 }
 
-.dropdown-column ul {
+.airline-dropdown-column ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -1534,11 +1561,11 @@ footer {
     flex: 1;
 }
 
-.dropdown-column ul li {
+.airline-dropdown-column ul li {
     margin-bottom: 0;
 }
 
-.dropdown-column ul li a {
+.airline-dropdown-column ul li a {
     color: #666;
     text-decoration: none;
     font-size: 15px;
@@ -1552,23 +1579,23 @@ footer {
     text-overflow: ellipsis;
 }
 
-.dropdown-column ul li a:hover {
+.airline-dropdown-column ul li a:hover {
     color: #0064de;
     background: #f8f9fa;
     transform: translateX(5px);
 }
 
 /* 드롭다운 화살표 효과 */
-.dropdown-menu::before {
+.airline-dropdown-menu::before {
     display: none;
 }
 
 /* 호버 시 메인 링크 스타일 유지 */
-.nav-item:hover .nav-link {
+.airline-nav-item:hover .airline-nav-link {
     color: #0064de;
 }
 
-.nav-item:hover .nav-link::after {
+.airline-nav-item:hover .airline-nav-link::after {
     width: 100%;
 }
 

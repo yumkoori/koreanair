@@ -181,8 +181,38 @@ function formatPhoneNumber(input) {
     input.value = value;
 }
 
+// 탭 기능
+function initTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 모든 탭 버튼에서 active 클래스 제거
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // 클릭된 탭 버튼에 active 클래스 추가
+            this.classList.add('active');
+            
+            // 탭에 따른 라벨 텍스트 변경
+            const userIdLabel = document.querySelector('label[for="userId"]');
+            if (userIdLabel) {
+                if (this.textContent.includes('스카이패스')) {
+                    userIdLabel.innerHTML = '스카이패스 번호<span style="color: red;">*</span>';
+                    document.getElementById('userId').placeholder = '';
+                } else {
+                    userIdLabel.innerHTML = '아이디<span style="color: red;">*</span>';
+                    document.getElementById('userId').placeholder = '';
+                }
+            }
+        });
+    });
+}
+
 // 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', function() {
+    // 탭 기능 초기화
+    initTabs();
+    
     // 아이디 입력 필드에 이벤트 리스너 추가
     const userIdInput = document.getElementById('userId');
     if (userIdInput) {

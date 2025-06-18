@@ -11,10 +11,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AirLogin - 대시보드</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="container dashboard-container">
+<body class="airline-main-body">
+    <jsp:include page="/views/common/header.jsp" />
+    <main class="main-content">
+        <div class="container dashboard-container">
         <h1>대시보드</h1>
         
         <%
@@ -104,8 +109,12 @@
             </form>
             <% } %>
         </div>
-    </div>
+        </div>
+    </main>
     
+    <jsp:include page="/views/common/footer.jsp" />
+    
+    <script src="${pageContext.request.contextPath}/js/index.js"></script>
     <script src="${pageContext.request.contextPath}/js/login.js"></script>
 </body>
 </html> 

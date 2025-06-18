@@ -6,10 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>카카오 회원가입 - AirLogin</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
+<body class="airline-main-body">
+    <jsp:include page="/views/common/header.jsp" />
+    <main class="main-content">
+        <div class="container">
         <h1>카카오 회원가입</h1>
         <p style="margin-bottom: 2rem; color: #666;">추가 정보를 입력해주세요</p>
         
@@ -101,8 +106,12 @@
                 © 2024 AirLogin. 모든 권리 보유.
             </p>
         </div>
-    </div>
+        </div>
+    </main>
     
+    <jsp:include page="/views/common/footer.jsp" />
+    
+    <script src="${pageContext.request.contextPath}/js/index.js"></script>
     <script>
         function validateKakaoSignupForm() {
             const koreanName = document.getElementById('koreanName').value.trim();
