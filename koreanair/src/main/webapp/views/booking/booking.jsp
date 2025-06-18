@@ -375,14 +375,27 @@
                 <%
                     // 총액 계산
                     String totalPriceParam = request.getParameter("totalPrice");
+                    String passengerCountParam = request.getParameter("passengerCount");
+                    String individualPriceParam = request.getParameter("individualPrice");
                     int totalPrice = 163200; // 기본값
+                    
+                    // 디버깅 로그
+                    System.out.println("=== booking.jsp 가격 정보 ===");
+                    System.out.println("totalPrice 파라미터: " + totalPriceParam);
+                    System.out.println("passengerCount 파라미터: " + passengerCountParam);
+                    System.out.println("individualPrice 파라미터: " + individualPriceParam);
+                    System.out.println("URL 쿼리 스트링: " + request.getQueryString());
                     
                     if (totalPriceParam != null && !totalPriceParam.isEmpty()) {
                         try {
                             totalPrice = Integer.parseInt(totalPriceParam);
+                            System.out.println("✅ totalPrice 파싱 성공: " + totalPrice);
                         } catch (NumberFormatException e) {
                             totalPrice = 163200; // 파싱 오류 시 기본값
+                            System.out.println("❌ totalPrice 파싱 오류, 기본값 사용: " + totalPrice);
                         }
+                    } else {
+                        System.out.println("⚠️ totalPrice 파라미터가 없음, 기본값 사용: " + totalPrice);
                     }
                     
                     // 운임은 총액의 80%, 유류할증료 10%, 세금 등 10%로 계산
@@ -447,6 +460,22 @@
         </div>
     </main>
 
+    <script>
+        // booking.jsp에서 받은 가격 정보를 JavaScript로 전달
+        window.bookingInfo = {
+            totalPrice: <%= totalPrice %>,
+            totalPriceParam: "<%= totalPriceParam != null ? totalPriceParam : "null" %>",
+            passengerCountParam: "<%= passengerCountParam != null ? passengerCountParam : "null" %>",
+            individualPriceParam: "<%= individualPriceParam != null ? individualPriceParam : "null" %>"
+        };
+        
+        console.log("💰 === booking.jsp 가격 정보 ===");
+        console.log("최종 총액:", window.bookingInfo.totalPrice.toLocaleString('ko-KR'), '원');
+        console.log("totalPrice 파라미터:", window.bookingInfo.totalPriceParam);
+        console.log("passengerCount 파라미터:", window.bookingInfo.passengerCountParam);
+        console.log("individualPrice 파라미터:", window.bookingInfo.individualPriceParam);
+        console.log("URL:", window.location.href);
+    </script>
     <script src="${pageContext.request.contextPath}/js/booking.js"></script>
 </body>
 </html> 

@@ -11,9 +11,9 @@ public class FlightSeatService {
 	
 	FlightDAO dao = new FlightDAOImpl();
 	
-	public List<SeatAvailabilityDTO> getAvailabilitySeatsInfo(String flightId) {
+	public List<SeatAvailabilityDTO> getAvailabilitySeatsInfo(String flightId, int passengers) {
 		
-		return dao.getReservedSeats(flightId);
+		return dao.getReservedSeats(flightId, passengers);
 	}
 	
 	public Map<String, Integer> getSeatsPriceByflightId(String flightId) {

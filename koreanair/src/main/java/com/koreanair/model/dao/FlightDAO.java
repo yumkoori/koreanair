@@ -28,7 +28,7 @@ public interface FlightDAO {
     SeatMapDTO getSeatMapByFlightId(String flightId);
     
     // 항공편별 현재 좌석 예약 현황 조회 (예약된 좌석 목록 조회)
-    List<SeatAvailabilityDTO> getReservedSeats(String flightId);
+    List<SeatAvailabilityDTO> getReservedSeats(String flightId, int passengers);
     
     Map<String, Integer> getSeatsPrice(String flightId);
     

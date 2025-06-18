@@ -25,12 +25,16 @@ public class FilghtSearchHandler implements CommandHandler{
 		Map<SearchFlightResultDTO, List<SeatAvailabilityDTO>> map = new HashMap<SearchFlightResultDTO, List<SeatAvailabilityDTO>>();
 		Map<String, Map<String,Integer>> priceMap = new HashMap<String, Map<String,Integer>>();
 		
+		
+		String text = request.getParameter("passengers");
+		String passengers = text.replaceAll("[^0-9]", "");  // 숫자만 남김
+		
 		SearchFlightDTO dto = SearchFlightDTO.builder()
 			.departure(request.getParameter("departure"))
 			.arrival(request.getParameter("arrival"))
 			.departureDate(request.getParameter("departureDate"))
 			.returnDate(request.getParameter("returnDate"))
-			.passengers(1)
+			.passengers(Integer.parseInt(passengers))
 			.seatClass(request.getParameter("seatClass"))
 			.tripType(request.getParameter("tripType"))
 			.build();
@@ -40,7 +44,7 @@ public class FilghtSearchHandler implements CommandHandler{
 		
 		for (int i = 0; i < flightList.size(); i++) {
 			String flightId = flightList.get(i).getFlightId();
-			List<SeatAvailabilityDTO> seatList = seatService.getAvailabilitySeatsInfo(flightId);
+			List<SeatAvailabilityDTO> seatList = seatService.getAvailabilitySeatsInfo(flightId, dto.getPassengers());
 			map.put(flightList.get(i), seatList);
 			
 			Map<String, Integer> seatPriceMap = seatService.getSeatsPriceByflightId(flightId);

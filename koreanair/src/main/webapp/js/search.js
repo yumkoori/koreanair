@@ -1,7 +1,191 @@
+// 승객 수 정보 추출 함수 (전역)
+function getPassengerCount() {
+    console.log('=== 승객 수 추출 시작 ===');
+    
+    // 1순위: JSP에서 계산된 승객 수 직접 사용
+    if (typeof window.passengerCount !== 'undefined' && window.passengerCount > 0) {
+        console.log('✅ JSP에서 계산된 승객 수 사용:', window.passengerCount);
+        console.log('상세 정보 - 성인:', window.adultCount, '소아:', window.childCount, '유아:', window.infantCount);
+        return window.passengerCount;
+    }
+    
+    let passengersParam = null;
+    
+    // 2순위: JSP에서 전달된 승객 정보 문자열 파싱
+    if (window.passengersInfo) {
+        passengersParam = window.passengersInfo;
+        console.log('✅ JSP에서 전달받은 승객 정보:', passengersParam);
+    } 
+    // 3순위: URL 파라미터에서 승객 수 정보 추출 (URL 디코딩 포함)
+    else {
+        const urlParams = new URLSearchParams(window.location.search);
+        const rawPassengersParam = urlParams.get('passengers');
+        if (rawPassengersParam) {
+            // URL 디코딩 적용
+            passengersParam = decodeURIComponent(rawPassengersParam.replace(/\+/g, ' '));
+            console.log('✅ URL 파라미터 (원본):', rawPassengersParam);
+            console.log('✅ URL 파라미터 (디코딩):', passengersParam);
+        }
+    }
+    
+    if (passengersParam) {
+        // 다양한 형태의 승객 정보 파싱
+        // "성인 2명", "성인2명", "성인 2명, 소아 1명" 등의 형태 지원
+        const adultMatch = passengersParam.match(/성인\s*(\d+)명/);
+        const childMatch = passengersParam.match(/소아\s*(\d+)명/);
+        const infantMatch = passengersParam.match(/유아\s*(\d+)명/);
+        
+        const adultCount = adultMatch ? parseInt(adultMatch[1]) : 0;
+        const childCount = childMatch ? parseInt(childMatch[1]) : 0;
+        const infantCount = infantMatch ? parseInt(infantMatch[1]) : 0;
+        
+        // 유아는 무료이므로 성인과 소아만 계산
+        const totalPassengers = adultCount + childCount;
+        
+        console.log('✅ 승객 수 파싱 결과:', {
+            원본: passengersParam,
+            성인: adultCount,
+            소아: childCount,
+            유아: infantCount,
+            총계: totalPassengers
+        });
+        
+        if (totalPassengers > 0) {
+            console.log('✅ 최종 승객 수:', totalPassengers);
+            return totalPassengers;
+        }
+    }
+    
+    // 4순위: 페이지의 승객 표시에서 추출 시도
+    const passengerDisplayElement = document.querySelector('.passengers span');
+    if (passengerDisplayElement) {
+        const displayText = passengerDisplayElement.textContent;
+        console.log('✅ 페이지 승객 표시:', displayText);
+        
+        const adultMatch = displayText.match(/성인\s*(\d+)명/);
+        const childMatch = displayText.match(/소아\s*(\d+)명/);
+        
+        const adultCount = adultMatch ? parseInt(adultMatch[1]) : 0;
+        const childCount = childMatch ? parseInt(childMatch[1]) : 0;
+        const totalPassengers = adultCount + childCount;
+        
+        if (totalPassengers > 0) {
+            console.log('✅ 페이지에서 추출한 승객 수:', totalPassengers);
+            return totalPassengers;
+        }
+    }
+    
+    // 기본값: 성인 1명
+    console.log('⚠️ 기본값 사용: 성인 1명');
+    return 1;
+}
+
+// 디버깅용 전역 함수들
+window.testPassengerCount = function() {
+    console.log('🧪 === 승객 수 테스트 ===');
+    console.log('🔍 현재 URL:', window.location.href);
+    console.log('📊 window.passengerCount:', window.passengerCount);
+    console.log('👨 window.adultCount:', window.adultCount);
+    console.log('👶 window.childCount:', window.childCount);
+    console.log('🍼 window.infantCount:', window.infantCount);
+    console.log('📝 window.passengersInfo:', window.passengersInfo);
+    
+    const count = getPassengerCount();
+    console.log('✅ 최종 승객 수:', count);
+    
+    const alertMsg = `🧪 승객 수 테스트 결과\n` +
+                    `👥 총 승객: ${count}명\n` +
+                    `👨 성인: ${window.adultCount || 0}명\n` +
+                    `👶 소아: ${window.childCount || 0}명\n` +
+                    `🍼 유아: ${window.infantCount || 0}명\n\n` +
+                    `📝 승객 정보: ${window.passengersInfo || 'N/A'}`;
+    alert(alertMsg);
+    return count;
+};
+
+window.testPriceCalculation = function(testPrice = 500000) {
+    console.log('💰 === 가격 계산 테스트 ===');
+    const passengerCount = getPassengerCount();
+    const totalPrice = testPrice * passengerCount;
+    
+    console.log(`🧮 테스트 계산: ${testPrice.toLocaleString('ko-KR')}원 × ${passengerCount}명 = ${totalPrice.toLocaleString('ko-KR')}원`);
+    
+    const alertMsg = `💰 가격 계산 테스트\n` +
+                    `💵 개별가격: ${testPrice.toLocaleString('ko-KR')}원\n` +
+                    `👥 승객수: ${passengerCount}명\n` +
+                    `💎 총가격: ${totalPrice.toLocaleString('ko-KR')}원`;
+    alert(alertMsg);
+    return totalPrice;
+};
+
+window.testTotalAmountUpdate = function(testPrice = 500000) {
+    console.log('🎯 === 총액 업데이트 테스트 ===');
+    const totalAmountDisplay = document.querySelector('.total-amount');
+    console.log('📍 총액 표시 요소:', totalAmountDisplay);
+    
+    if (totalAmountDisplay) {
+        const passengerCount = getPassengerCount();
+        const totalPrice = testPrice * passengerCount;
+        const formattedPrice = totalPrice.toLocaleString('ko-KR');
+        
+        const oldAmount = totalAmountDisplay.textContent;
+        totalAmountDisplay.textContent = formattedPrice + '원';
+        
+        console.log('✅ 업데이트 성공:', oldAmount, ' → ', totalAmountDisplay.textContent);
+        alert(`🎯 총액 업데이트 테스트 성공\n${oldAmount} → ${totalAmountDisplay.textContent}`);
+    } else {
+        console.error('❌ 총액 표시 요소를 찾을 수 없습니다');
+        alert('❌ 총액 표시 요소를 찾을 수 없습니다');
+    }
+};
+
+window.debugUrlParams = function() {
+    console.log('🔍 === URL 파라미터 디버깅 ===');
+    console.log('현재 URL:', window.location.href);
+    console.log('쿼리 스트링:', window.location.search);
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawPassengers = urlParams.get('passengers');
+    
+    console.log('원본 passengers 파라미터:', rawPassengers);
+    
+    if (rawPassengers) {
+        const decodedPassengers = decodeURIComponent(rawPassengers.replace(/\+/g, ' '));
+        console.log('디코딩된 passengers:', decodedPassengers);
+    }
+    
+    const alertMsg = `🔍 URL 파라미터 디버깅\n` +
+                    `원본: ${rawPassengers || 'null'}\n` +
+                    `디코딩: ${rawPassengers ? decodeURIComponent(rawPassengers.replace(/\+/g, ' ')) : 'null'}\n` +
+                    `현재 승객 수: ${getPassengerCount()}명`;
+    alert(alertMsg);
+};
+
+window.forcePassengerCount = function(count = 2) {
+    console.log(`🔧 === 승객 수 강제 설정: ${count}명 ===`);
+    
+    // 전역 변수 강제 설정
+    window.passengersInfo = `성인 ${count}명`;
+    window.passengerCount = count;
+    window.adultCount = count;
+    window.childCount = 0;
+    window.infantCount = 0;
+    
+    console.log('✅ 강제 설정 완료');
+    console.log('👥 새로운 승객 수:', getPassengerCount());
+    
+    alert(`🔧 승객 수 강제 설정 완료\n승객 수: ${count}명\n이제 좌석을 선택해보세요!`);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // 현재 페이지 URL 경로 확인
     const currentPath = window.location.pathname;
     const isSearchResults = currentPath.includes('search-results.html') || currentPath.includes('flightSearch.do');
+    
+    // 페이지 로드 시 승객 수 확인
+    console.log('🔍 페이지 로드 시 승객 수 확인');
+    const currentPassengerCount = getPassengerCount();
+    console.log('📊 현재 페이지의 승객 수:', currentPassengerCount);
     
     // 모든 페이지에서 공통적으로 사용되는 코드
     initializeCommonFunctionality();
@@ -241,7 +425,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Update the total amount in the bottom payment bar
                 if (selectedFarePrice && totalAmountDisplay) {
-                    totalAmountDisplay.textContent = selectedFarePrice + '원';
+                    // 승객 수 가져오기
+                    const passengerCount = getPassengerCount();
+                    
+                    console.log('=== 팝업에서 가격 계산 시작 ===');
+                    console.log('선택된 가격 (원시):', selectedFarePrice);
+                    console.log('선택된 가격 (숫자):', parseInt(selectedFarePrice));
+                    console.log('승객 수:', passengerCount);
+                    
+                    // 총 가격 계산 (개별 가격 × 승객 수)
+                    const individualPrice = parseInt(selectedFarePrice);
+                    const totalPrice = individualPrice * passengerCount;
+                    const formattedTotalPrice = totalPrice.toLocaleString('ko-KR');
+                    
+                    console.log('계산: ', individualPrice, ' × ', passengerCount, ' = ', totalPrice);
+                    console.log('포맷된 가격:', formattedTotalPrice);
+                    
+                    const oldAmount = totalAmountDisplay.textContent;
+                    totalAmountDisplay.textContent = formattedTotalPrice + '원';
+                    
+                    console.log('총액 업데이트:', oldAmount, ' → ', totalAmountDisplay.textContent);
+                    console.log('=== 팝업에서 가격 계산 완료 ===');
                     
                     // Visual feedback for selection
                     const selectedFare = document.getElementById('fareTitle').textContent;
@@ -267,6 +471,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+
+
         // 새로운 기능: 좌석 카드 직접 클릭으로 총액 업데이트
         const clickableFareCards = document.querySelectorAll('.clickable-fare');
         console.log('찾은 클릭 가능한 좌석 카드 수:', clickableFareCards.length);
@@ -286,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             card.addEventListener('click', function(e) {
-                console.log('좌석 카드 클릭됨:', this.getAttribute('data-fare-type'));
+                console.log('🎯 좌석 카드 클릭됨:', this.getAttribute('data-fare-type'));
                 
                 // 기존 팝업 표시 방지
                 e.preventDefault();
@@ -302,24 +508,68 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // 가격 정보 가져오기
                 const priceElement = this.querySelector('.fare-price[data-price]');
-                console.log('가격 요소:', priceElement);
-                console.log('총액 표시 요소:', totalAmountDisplay);
+                console.log('💰 가격 요소:', priceElement);
+                console.log('📍 총액 표시 요소:', totalAmountDisplay);
                 
                 if (priceElement && totalAmountDisplay) {
                     const price = priceElement.getAttribute('data-price');
                     const fareType = this.getAttribute('data-fare-type');
                     const flightId = this.getAttribute('data-flight-id');
                     
-                    console.log('가격 정보:', { price, fareType, flightId });
+                    console.log('🎫 좌석 정보:', { fareType, flightId, price });
+                    
+                    // 승객 수 가져오기
+                    const passengerCount = getPassengerCount();
+                    
+                    console.log('🧮 === 가격 계산 시작 ===');
+                    console.log('💵 개별 가격 (원시):', price);
+                    console.log('💵 개별 가격 (숫자):', parseInt(price));
+                    console.log('👥 승객 수:', passengerCount);
+                    
+                    // 총 가격 계산 (개별 가격 × 승객 수)
+                    const individualPrice = parseInt(price);
+                    
+                    if (isNaN(individualPrice)) {
+                        console.error('❌ 가격을 숫자로 변환할 수 없습니다:', price);
+                        return;
+                    }
+                    
+                    if (passengerCount <= 0) {
+                        console.error('❌ 승객 수가 유효하지 않습니다:', passengerCount);
+                        return;
+                    }
+                    
+                    const totalPrice = individualPrice * passengerCount;
+                    
+                    console.log('🧮 계산식:', individualPrice, ' × ', passengerCount, ' = ', totalPrice);
                     
                     // 총액 업데이트 (천 단위 콤마 추가)
-                    const formattedPrice = parseInt(price).toLocaleString('ko-KR');
-                    totalAmountDisplay.textContent = formattedPrice + '원';
+                    const formattedPrice = totalPrice.toLocaleString('ko-KR');
                     
-                    console.log(`선택된 좌석: ${fareType}, 항공편: ${flightId}, 가격: ${formattedPrice}원`);
-                    console.log('총액 업데이트 완료:', totalAmountDisplay.textContent);
+                    console.log('🎨 포맷된 가격:', formattedPrice);
+                    
+                    if (totalAmountDisplay) {
+                        const oldAmount = totalAmountDisplay.textContent;
+                        totalAmountDisplay.textContent = formattedPrice + '원';
+                        console.log('✅ 총액 업데이트 성공:', oldAmount, ' → ', totalAmountDisplay.textContent);
+                        
+                        // 시각적 피드백 추가
+                        totalAmountDisplay.style.backgroundColor = '#4CAF50';
+                        totalAmountDisplay.style.color = 'white';
+                        setTimeout(() => {
+                            totalAmountDisplay.style.backgroundColor = '';
+                            totalAmountDisplay.style.color = '';
+                        }, 1000);
+                        
+                    } else {
+                        console.error('❌ 총액 표시 요소를 찾을 수 없습니다!');
+                    }
+                    
+                    console.log('🎉 === 가격 계산 완료 ===');
                 } else {
-                    console.log('가격 요소 또는 총액 표시 요소를 찾을 수 없음');
+                    console.error('❌ 가격 요소 또는 총액 표시 요소를 찾을 수 없음');
+                    console.log('priceElement:', priceElement);
+                    console.log('totalAmountDisplay:', totalAmountDisplay);
                 }
             });
         });

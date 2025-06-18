@@ -61,11 +61,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 console.log('가격 정보:', { price, fareType, flightId });
                 
+                // 승객 수 가져오기 (getPassengerCount 함수 사용)
+                const passengerCount = (typeof getPassengerCount === 'function') ? getPassengerCount() : 
+                                     (typeof window.passengerCount !== 'undefined' && window.passengerCount > 0) ? window.passengerCount : 1;
+                
+                console.log('🧮 === seat-selection.js 가격 계산 ===');
+                console.log('💵 개별 가격:', price);
+                console.log('👥 승객 수:', passengerCount);
+                
+                // 총 가격 계산 (개별 가격 × 승객 수)
+                const individualPrice = parseInt(price);
+                const totalPrice = individualPrice * passengerCount;
+                
+                console.log('🧮 계산식:', individualPrice, ' × ', passengerCount, ' = ', totalPrice);
+                
                 // 총액 업데이트 (천 단위 콤마 추가)
-                const formattedPrice = parseInt(price).toLocaleString('ko-KR');
+                const formattedPrice = totalPrice.toLocaleString('ko-KR');
                 totalAmountDisplay.textContent = formattedPrice + '원';
                 
-                console.log(`선택된 좌석: ${fareType}, 항공편: ${flightId}, 가격: ${formattedPrice}원`);
+                console.log(`✅ 선택된 좌석: ${fareType}, 항공편: ${flightId}, 개별가격: ${individualPrice.toLocaleString('ko-KR')}원, 승객수: ${passengerCount}명, 총가격: ${formattedPrice}원`);
                 console.log('총액 업데이트 완료:', totalAmountDisplay.textContent);
             } else {
                 console.log('가격 요소 또는 총액 표시 요소를 찾을 수 없음');
@@ -100,10 +114,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 선택된 항공편 정보 저장 (세션 스토리지 사용)
                 const selectedCard = document.querySelector('.clickable-fare.selected');
                 if (selectedCard) {
+                    const individualPrice = selectedCard.querySelector('.fare-price[data-price]').getAttribute('data-price');
+                    
+                    // 승객 수 가져오기
+                    const passengerCount = (typeof getPassengerCount === 'function') ? getPassengerCount() : 
+                                         (typeof window.passengerCount !== 'undefined' && window.passengerCount > 0) ? window.passengerCount : 1;
+                    
+                    // 총 가격 계산 (개별 가격 × 승객 수)
+                    const totalPrice = parseInt(individualPrice) * passengerCount;
+                    
+                    console.log('🎫 가는 편 가격 계산:', {
+                        개별가격: individualPrice,
+                        승객수: passengerCount,
+                        총가격: totalPrice
+                    });
+                    
                     const selectedFlight = {
                         flightId: selectedCard.getAttribute('data-flight-id'),
                         fareType: selectedCard.getAttribute('data-fare-type'),
-                        price: selectedCard.querySelector('.fare-price[data-price]').getAttribute('data-price'),
+                        individualPrice: individualPrice,  // 개별 가격 (원본)
+                        price: totalPrice.toString(),      // 총 가격 (승객 수 × 개별 가격)
+                        passengerCount: passengerCount,
                         departure: departure,
                         arrival: arrival,
                         departureDate: urlParams.get('departureDate'),
@@ -111,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                     
                     sessionStorage.setItem('selectedOutboundFlight', JSON.stringify(selectedFlight));
-                    console.log('가는 편 항공편 저장:', selectedFlight);
+                    console.log('✅ 가는 편 항공편 저장 (승객 수 반영):', selectedFlight);
                 }
                 
                 // 반대 방향으로 검색 URL 생성 (출발지와 도착지 바뀜)
@@ -135,10 +166,27 @@ document.addEventListener('DOMContentLoaded', function() {
                  // 복항편 선택 완료 - 예약 페이지로 이동
                  const selectedCard = document.querySelector('.clickable-fare.selected');
                  if (selectedCard) {
+                     const individualPrice = selectedCard.querySelector('.fare-price[data-price]').getAttribute('data-price');
+                     
+                     // 승객 수 가져오기
+                     const passengerCount = (typeof getPassengerCount === 'function') ? getPassengerCount() : 
+                                          (typeof window.passengerCount !== 'undefined' && window.passengerCount > 0) ? window.passengerCount : 1;
+                     
+                     // 총 가격 계산 (개별 가격 × 승객 수)
+                     const totalPrice = parseInt(individualPrice) * passengerCount;
+                     
+                     console.log('🎫 복항편 가격 계산:', {
+                         개별가격: individualPrice,
+                         승객수: passengerCount,
+                         총가격: totalPrice
+                     });
+                     
                      const returnFlight = {
                          flightId: selectedCard.getAttribute('data-flight-id'),
                          fareType: selectedCard.getAttribute('data-fare-type'),
-                         price: selectedCard.querySelector('.fare-price[data-price]').getAttribute('data-price'),
+                         individualPrice: individualPrice,  // 개별 가격 (원본)
+                         price: totalPrice.toString(),      // 총 가격 (승객 수 × 개별 가격)
+                         passengerCount: passengerCount,
                          departure: urlParams.get('departure'),
                          arrival: urlParams.get('arrival'),
                          departureDate: urlParams.get('departureDate'),
@@ -146,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      };
                      
                      sessionStorage.setItem('selectedReturnFlight', JSON.stringify(returnFlight));
-                     console.log('복항편 항공편 저장:', returnFlight);
+                     console.log('✅ 복항편 항공편 저장 (승객 수 반영):', returnFlight);
                      
                      // 총 예약 정보 확인 및 booking.jsp로 이동
                      const outboundFlightStr = sessionStorage.getItem('selectedOutboundFlight');
@@ -176,9 +224,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                            (window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '') ||
                                            '';
                          const bookingUrl = contextPath + '/booking.do?' + bookingParams.toString();
+                         console.log('🎯 === 왕복 예약 페이지 이동 ===');
                          console.log('contextPath:', contextPath);
+                         console.log('가는 편 총가격:', parseInt(outboundFlight.price).toLocaleString('ko-KR'), '원');
+                         console.log('복항편 총가격:', parseInt(returnFlight.price).toLocaleString('ko-KR'), '원');
+                         console.log('전체 총가격:', totalPrice.toLocaleString('ko-KR'), '원');
                          console.log('최종 booking URL:', bookingUrl);
-                         console.log('예약 페이지로 이동:', bookingUrl);
+                         console.log('✈️ 예약 페이지로 이동합니다...');
                          window.location.href = bookingUrl;
                      }
                  }
@@ -188,13 +240,28 @@ document.addEventListener('DOMContentLoaded', function() {
                  if (selectedCard) {
                      const flightId = selectedCard.getAttribute('data-flight-id');
                      const fareType = selectedCard.getAttribute('data-fare-type');
-                     const price = selectedCard.querySelector('.fare-price[data-price]').getAttribute('data-price');
+                     const individualPrice = selectedCard.querySelector('.fare-price[data-price]').getAttribute('data-price');
+                     
+                     // 승객 수 가져오기
+                     const passengerCount = (typeof getPassengerCount === 'function') ? getPassengerCount() : 
+                                          (typeof window.passengerCount !== 'undefined' && window.passengerCount > 0) ? window.passengerCount : 1;
+                     
+                     // 총 가격 계산 (개별 가격 × 승객 수)
+                     const totalPrice = parseInt(individualPrice) * passengerCount;
+                     
+                     console.log('🎫 편도 가격 계산:', {
+                         개별가격: individualPrice,
+                         승객수: passengerCount,
+                         총가격: totalPrice
+                     });
                      
                      // booking.do로 이동하는 URL 생성
                      const bookingParams = new URLSearchParams({
                          flightId: flightId,
                          fareType: fareType,
-                         totalPrice: price,
+                         individualPrice: individualPrice,  // 개별 가격 (원본)
+                         totalPrice: totalPrice,            // 총 가격 (승객 수 반영)
+                         passengerCount: passengerCount,
                          tripType: 'oneway',
                          departure: urlParams.get('departure'),
                          arrival: urlParams.get('arrival'),
@@ -207,9 +274,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                        (window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '') ||
                                        '';
                      const bookingUrl = contextPath + '/booking.do?' + bookingParams.toString();
+                     console.log('🎯 === 편도 예약 페이지 이동 ===');
                      console.log('contextPath:', contextPath);
+                     console.log('개별 가격:', parseInt(individualPrice).toLocaleString('ko-KR'), '원');
+                     console.log('승객 수:', passengerCount, '명');
+                     console.log('총 가격:', totalPrice.toLocaleString('ko-KR'), '원');
                      console.log('최종 booking URL:', bookingUrl);
-                     console.log('예약 페이지로 이동:', bookingUrl);
+                     console.log('✈️ 예약 페이지로 이동합니다...');
                      window.location.href = bookingUrl;
                  } else {
                      alert('항공권을 먼저 선택해주세요.');
@@ -227,22 +298,27 @@ document.addEventListener('DOMContentLoaded', function() {
              
              if (outboundDetailsElement) {
                  const formattedPrice = parseInt(outboundFlight.price).toLocaleString('ko-KR');
+                 const passengerInfo = outboundFlight.passengerCount ? `(${outboundFlight.passengerCount}명)` : '';
+                 const individualPriceInfo = outboundFlight.individualPrice ? 
+                     ` - 개별: ₩${parseInt(outboundFlight.individualPrice).toLocaleString('ko-KR')}` : '';
+                 
                  outboundDetailsElement.innerHTML = `
                      <div style="display: flex; justify-content: space-between; align-items: center;">
                          <div>
                              <span style="font-weight: 500;">${outboundFlight.departure} → ${outboundFlight.arrival}</span>
                              <span style="margin-left: 10px; color: #888;">${outboundFlight.departureDate}</span>
                              <span style="margin-left: 10px; background-color: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${outboundFlight.fareType}</span>
+                             ${passengerInfo ? `<span style="margin-left: 10px; background-color: #f3e5f5; color: #7b1fa2; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${passengerInfo}</span>` : ''}
                          </div>
                          <div style="font-weight: bold; color: #0064de;">
                              ₩${formattedPrice}
                          </div>
                      </div>
                      <div style="font-size: 12px; color: #999; margin-top: 2px;">
-                         항공편: ${outboundFlight.flightId}
+                         항공편: ${outboundFlight.flightId}${individualPriceInfo}
                      </div>
                  `;
-                 console.log('가는 편 정보 표시됨:', outboundFlight);
+                 console.log('✅ 가는 편 정보 표시됨 (승객 수 반영):', outboundFlight);
              }
          } else {
              console.log('저장된 가는 편 정보가 없습니다.');

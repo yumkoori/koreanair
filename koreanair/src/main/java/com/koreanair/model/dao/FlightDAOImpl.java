@@ -123,22 +123,25 @@ public class FlightDAOImpl implements FlightDAO{
 	}
 
 	@Override
-	public List<SeatAvailabilityDTO> getReservedSeats(String flightId) {
-        String sql = "SELECT"
-        		+ "    sc.class_id,"
-        		+ "    sc.class_name,"
-        		+ "    sc.detail_class_name,"
-        		+ "    IFNULL(COUNT(fs.seat_id), 0) AS available_seat_count,"
-        		+ "    sp.price"
-        		+ " FROM seat_price sp"
-        		+ " JOIN seat_class sc ON sp.class_id = sc.class_id"
-        		+ " LEFT JOIN flight_seat fs "
-        		+ "    ON fs.flight_id = sp.flight_id "
-        		+ "    AND fs.class_id = sp.class_id "
-        		+ "    AND fs.status = 'AVAILABLE'"
-        		+ " WHERE sp.flight_id = ?"
-        		+ " GROUP BY sc.class_id, sc.class_name, sc.detail_class_name, sp.price"
-        		+ " ORDER BY sc.class_id;";
+	public List<SeatAvailabilityDTO> getReservedSeats(String flightId, int passengers) {
+
+		String sql = "SELECT"
+		        + "    sc.class_id,"
+		        + "    sc.class_name,"
+		        + "    sc.detail_class_name,"
+		        + "    IFNULL(COUNT(fs.seat_id), 0) AS available_seat_count,"
+		        + "    sp.price"
+		        + " FROM seat_price sp"
+		        + " JOIN seat_class sc ON sp.class_id = sc.class_id"
+		        + " LEFT JOIN flight_seat fs "
+		        + "    ON fs.flight_id = sp.flight_id "
+		        + "    AND fs.class_id = sp.class_id "
+		        + "    AND fs.status = 'AVAILABLE'"
+		        + " WHERE sp.flight_id = ?"
+		        + " GROUP BY sc.class_id, sc.class_name, sc.detail_class_name, sp.price"
+		        + " HAVING available_seat_count >= ?"
+		        + " ORDER BY sc.class_id;";
+
         
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -150,7 +153,8 @@ public class FlightDAOImpl implements FlightDAO{
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, flightId);
-            
+            pstmt.setInt(2, passengers);
+
             rs = pstmt.executeQuery();
             
             while (rs.next()) {

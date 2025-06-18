@@ -827,9 +827,66 @@
 		</div>
 	</footer>
 
+	<%
+		// 승객 수 정보를 JavaScript로 전달하기 위한 변수 준비
+		String passengersParamForJS = request.getParameter("passengers");
+		String displayPassengersForJS = "성인 2명"; // 기본값
+		
+		// 디버깅: 원본 파라미터 출력
+		System.out.println("=== JSP 디버깅 ===");
+		System.out.println("원본 passengers 파라미터: " + passengersParamForJS);
+		System.out.println("URL 쿼리 스트링: " + request.getQueryString());
+		
+		if (passengersParamForJS != null && !passengersParamForJS.isEmpty()) {
+			displayPassengersForJS = passengersParamForJS.replaceAll("\\s+", " ").trim();
+			System.out.println("처리된 passengers: " + displayPassengersForJS);
+		} else {
+			System.out.println("passengers 파라미터가 null이거나 비어있음, 기본값 사용: " + displayPassengersForJS);
+		}
+		
+		// 승객 수 계산
+		int adultCount = 2; // 기본값
+		int childCount = 0;
+		int infantCount = 0;
+		
+		if (passengersParamForJS != null) {
+			java.util.regex.Pattern adultPattern = java.util.regex.Pattern.compile("성인\\s*(\\d+)명");
+			java.util.regex.Pattern childPattern = java.util.regex.Pattern.compile("소아\\s*(\\d+)명");
+			java.util.regex.Pattern infantPattern = java.util.regex.Pattern.compile("유아\\s*(\\d+)명");
+			
+			java.util.regex.Matcher adultMatcher = adultPattern.matcher(passengersParamForJS);
+			java.util.regex.Matcher childMatcher = childPattern.matcher(passengersParamForJS);
+			java.util.regex.Matcher infantMatcher = infantPattern.matcher(passengersParamForJS);
+			
+			if (adultMatcher.find()) {
+				adultCount = Integer.parseInt(adultMatcher.group(1));
+			}
+			if (childMatcher.find()) {
+				childCount = Integer.parseInt(childMatcher.group(1));
+			}
+			if (infantMatcher.find()) {
+				infantCount = Integer.parseInt(infantMatcher.group(1));
+			}
+		}
+		
+		int totalPassengers = adultCount + childCount; // 유아는 무료
+	%>
 	<script>
 		window.contextPath = "${pageContext.request.contextPath}";
 		console.log("contextPath:", window.contextPath);
+		
+		// 승객 수 정보를 JavaScript로 전달
+		window.passengersInfo = "<%= displayPassengersForJS %>";
+		window.passengerCount = <%= totalPassengers %>;
+		window.adultCount = <%= adultCount %>;
+		window.childCount = <%= childCount %>;
+		window.infantCount = <%= infantCount %>;
+		
+		console.log("🚀 JSP에서 JavaScript로 승객 정보 전달 완료");
+		console.log("📝 원본 파라미터:", "<%= passengersParamForJS != null ? passengersParamForJS : "null" %>");
+		console.log("📝 표시용 문자열:", window.passengersInfo);
+		console.log("👥 총 승객 수:", window.passengerCount);
+		console.log("👨 성인:", window.adultCount, "👶 소아:", window.childCount, "🍼 유아:", window.infantCount);
 	</script>
 	<script src="${pageContext.request.contextPath}/js/search.js"></script>
 	<script src="${pageContext.request.contextPath}/js/seat-selection.js"></script>
