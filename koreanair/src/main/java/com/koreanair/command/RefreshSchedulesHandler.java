@@ -50,7 +50,11 @@ public class RefreshSchedulesHandler implements CommandHandler{
 				
 				String receivedJson = jsonData.toString();
 				System.out.println("받은 JSON 데이터 길이: " + receivedJson.length());
+<<<<<<< HEAD
 				// System.out.println("받은 JSON 데이터: " + receivedJson);
+=======
+				System.out.println("받은 JSON 데이터: " + receivedJson);
+>>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
 				
 		        // JSON 구조를 올바르게 파싱 (SaveSchedulesDBHandler와 동일한 방식)
 		        JsonObject root = JsonParser.parseString(receivedJson).getAsJsonObject();
@@ -71,7 +75,11 @@ public class RefreshSchedulesHandler implements CommandHandler{
 		        // LocalDateTime 필드가 있다면 현재 시간으로 설정 (실제 필드명에 맞게 수정 필요)
 		         dummyData.setDepartureTime("05:13");
 		         dummyData.setArrivalTime("05:13");
+<<<<<<< HEAD
 		        dummyData.setStatus("T160");
+=======
+		        dummyData.setStatus("T1");
+>>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
 		        // 추가 필드가 있다면 설정
 		         dummyData.setId("2025-06-16-all-Test001");
 		        
