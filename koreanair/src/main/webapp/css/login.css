@@ -77,7 +77,6 @@ body.login-page {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-align: left;
-    line-height: normal;
 }
 
 .left-content p {
@@ -318,10 +317,9 @@ textarea {
 }
 
 .links {
-    margin-top: 1.5rem;
     text-align: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -343,7 +341,7 @@ textarea {
 
 .remember-me input[type="checkbox"] {
     width: auto;
-    margin-right: 8px;
+    margin: 0 0.5em 0.5em 0;
 }
 
 .social-login {
@@ -536,4 +534,83 @@ textarea {
 .error-icon {
     color: #dc3545;
     font-weight: bold;
+}
+
+/* 주소 입력 스타일 */
+.address-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.address-search {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.address-search input[type="text"] {
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-address-search {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.btn-address-search:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-address-search i {
+    font-size: 12px;
+}
+
+.address-input-group input[readonly] {
+    cursor: default;
+}
+
+.address-help-text {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.address-help-text i {
+    color: #17a2b8;
+}
+
+/* 주소 입력 모바일 반응형 */
+@media (max-width: 480px) {
+    .address-search {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .address-search input[type="text"] {
+        width: 100%;
+    }
+    
+    .btn-address-search {
+        width: 100%;
+        min-width: auto;
+    }
 } 
