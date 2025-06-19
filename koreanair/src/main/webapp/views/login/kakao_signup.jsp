@@ -100,9 +100,9 @@
                         <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소를 입력하세요">
                         <input type="hidden" id="address" name="address">
                     </div>
-                    <small class="address-help-text">
-                        <i class="fas fa-info-circle"></i> 
-                        주소 검색 버튼을 클릭하여 정확한 주소를 입력하세요
+                    <small class="address-help-text" style="margin-top: 1rem;">
+                        <i class="fas fa-info-circle"></i>
+                        * 표시는 필수 입력 사항입니다
                     </small>
                 </div>
                 
@@ -129,39 +129,5 @@
     
     <script src="${pageContext.request.contextPath}/js/index.js"></script>
     <script src="${pageContext.request.contextPath}/js/login.js"></script>
-    <script>
-        function validateKakaoSignupForm() {
-            const koreanName = document.getElementById('koreanName').value.trim();
-            const englishName = document.getElementById('englishName').value.trim();
-            const birthDate = document.getElementById('birthDate').value;
-            const gender = document.getElementById('gender').value;
-            const phone = document.getElementById('phone').value.trim();
-            
-            if (!koreanName || !englishName || !birthDate || !gender || !phone) {
-                alert('모든 필수 항목을 입력해주세요.');
-                return false;
-            }
-            
-            // 전화번호 형식 검증
-            const phonePattern = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
-            if (!phonePattern.test(phone)) {
-                alert('전화번호는 010-1234-5678 형식으로 입력해주세요.');
-                return false;
-            }
-            
-            return true;
-        }
-        
-        // 전화번호 자동 하이픈 추가
-        document.getElementById('phone').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/[^0-9]/g, '');
-            if (value.length >= 3 && value.length <= 7) {
-                value = value.replace(/(\d{3})(\d{1,4})/, '$1-$2');
-            } else if (value.length >= 8) {
-                value = value.replace(/(\d{3})(\d{4})(\d{1,4})/, '$1-$2-$3');
-            }
-            e.target.value = value;
-        });
-    </script>
 </body>
 </html> 
