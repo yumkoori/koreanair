@@ -10,11 +10,13 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- 다음 우편번호 서비스 -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body class="airline-main-body">
     <jsp:include page="/views/common/header.jsp" />
     <main class="main-content">
-        <div class="container">
+    <div class="container register-container">
         <h1>카카오 회원가입</h1>
         <p style="margin-bottom: 2rem; color: #666;">추가 정보를 입력해주세요</p>
         
@@ -85,9 +87,23 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="address">주소</label>
-                    <input type="text" id="address" name="address" 
-                           placeholder="주소를 입력하세요 (선택사항)">
+                    <label for="address">자택 주소</label>
+                    <div class="address-input-group">
+                        <div class="address-search">
+                            <input type="text" id="postcode" name="postcode" placeholder="우편번호" readonly>
+                            <button type="button" class="btn-address-search" onclick="openPostcodeSearch()">
+                                <i class="fas fa-search"></i> 주소 검색
+                            </button>
+                        </div>
+                        <input type="text" id="roadAddress" name="roadAddress" placeholder="도로명주소" readonly>
+                        <input type="text" id="jibunAddress" name="jibunAddress" placeholder="지번주소" readonly style="display: none;">
+                        <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소를 입력하세요">
+                        <input type="hidden" id="address" name="address">
+                    </div>
+                    <small class="address-help-text">
+                        <i class="fas fa-info-circle"></i> 
+                        주소 검색 버튼을 클릭하여 정확한 주소를 입력하세요
+                    </small>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">회원가입 완료</button>
@@ -106,12 +122,13 @@
                 © 2024 AirLogin. 모든 권리 보유.
             </p>
         </div>
-        </div>
+    </div>
     </main>
     
     <jsp:include page="/views/common/footer.jsp" />
     
     <script src="${pageContext.request.contextPath}/js/index.js"></script>
+    <script src="${pageContext.request.contextPath}/js/login.js"></script>
     <script>
         function validateKakaoSignupForm() {
             const koreanName = document.getElementById('koreanName').value.trim();
