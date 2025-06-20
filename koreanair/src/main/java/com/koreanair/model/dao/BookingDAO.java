@@ -16,7 +16,8 @@ public class BookingDAO {
 	public String saveBooking(BookingDTO dto) {
 		String sql = "INSERT INTO booking ("
 				+ "    booking_id, "
-				+ "    flight_id, "
+				+ "    outbound_flight_id, "
+				+ "    return_flight_id,   "
 				+ "    user_no, "
 				+ "    promotion_id, "
 				+ "    booking_pw"
@@ -24,6 +25,7 @@ public class BookingDAO {
 				+ "    ?,       "
 				+ "    ?,              "
 				+ "    ?,                  "
+				+ "    ?,           "
 				+ "    ?,            "
 				+ "    ?     "
 				+ ");"
@@ -39,10 +41,11 @@ public class BookingDAO {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, uuid.toString());
-            pstmt.setString(2, dto.getFlightId());
-            pstmt.setString(3, dto.getUserNo());
-            pstmt.setString(4, dto.getPromotionId());
-            pstmt.setString(5, dto.getBookingPw());
+            pstmt.setString(2, dto.getOutboundFlightId());
+            pstmt.setString(3, dto.getReturnFlightId());
+            pstmt.setString(4, dto.getUserNo());
+            pstmt.setString(5, dto.getPromotionId());
+            pstmt.setString(6, dto.getBookingPw());
 
             rs = pstmt.executeQuery();
             

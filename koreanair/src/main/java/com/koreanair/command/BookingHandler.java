@@ -12,39 +12,35 @@ public class BookingHandler implements CommandHandler{
 	public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		BookingService bookingService = new BookingService();
 		
-		if(request.getParameter("tripType").equals("round")) {
-			BookingDTO outDTO = BookingDTO.builder()
-					.flightId(request.getParameter("outboundFlightId"))
+		String bookingId = null;
+		
+		if(request.getParameter("tripType").equals("round")) {			
+			BookingDTO bookingDTO = BookingDTO.builder()
+					.outboundFlightId(request.getParameter("outboundFlightId"))
+					.returnFlightId(request.getParameter("returnFlightId"))
 					.userNo("1")
 					.promotionId("PROMO10")
 					.bookingPw(null)
 					.build();
 			
-			BookingDTO returnDTO = BookingDTO.builder()
-					.flightId(request.getParameter("returnFlightId"))
-					.userNo("1")
-					.promotionId("PROMO10")
-					.bookingPw(null)
-					.build();
 			
-			String outBookingId = bookingService.saveBookingToPending(outDTO);
-			String returnBookingId = bookingService.saveBookingToPending(returnDTO);
+			bookingId = bookingService.saveBookingToPending(bookingDTO);
 			
-			request.setAttribute("outBookingId", outBookingId);
-			request.setAttribute("returnBookingId", returnBookingId);
 			
 		} else {
 			BookingDTO dto = BookingDTO.builder()
-					.flightId(request.getParameter("flightId"))
+					.outboundFlightId(request.getParameter("outboundFlightId"))
 					.userNo("1")
 					.promotionId("PROMO10")
 					.bookingPw(null)
 					.build();
 			
-			String bookingId = bookingService.saveBookingToPending(dto);
+			bookingId = bookingService.saveBookingToPending(dto);
 			
-			request.setAttribute("bookingId", bookingId);
 		}
+		
+		request.setAttribute("bookingId", bookingId);
+		
 		return "/views/booking/booking.jsp";
 	}
 
