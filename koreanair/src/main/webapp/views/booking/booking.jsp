@@ -175,35 +175,109 @@
                         </div>
                     </div>
 
-                    <!-- 승객 정보 입력 폼 (분리됨) -->
-                    <form id="passengerInfoForm" class="passenger-info-form">
-                        <%
-                            // 승객 정보 파싱
-                            String passengersParam = request.getParameter("passengers");
-                            String passengerDisplay = passengersParam != null ? passengersParam : "성인 1명";
-                        %>
+                    <%
+                        // 승객 정보 파싱 로직
+                        String passengersParam = request.getParameter("passengers");
+                        String passengerDisplay = passengersParam != null ? passengersParam : "성인 1명";
                         
-                        <!-- 승객 정보 카드 -->
-                        <div class="passenger-card" id="passengerCard1">
+                        System.out.println("=== 승객 정보 파싱 ===");
+                        System.out.println("원본 passengers 파라미터: " + passengersParam);
+                        System.out.println("URL 쿼리 스트링: " + request.getQueryString());
+                        
+                        // URL 디코딩 처리
+                        String decodedPassengers = passengersParam;
+                        if (passengersParam != null) {
+                            try {
+                                decodedPassengers = java.net.URLDecoder.decode(passengersParam, "UTF-8");
+                                System.out.println("디코딩 후 passengers 파라미터: " + decodedPassengers);
+                            } catch (Exception e) {
+                                System.out.println("URL 디코딩 오류: " + e.getMessage());
+                                decodedPassengers = passengersParam;
+                            }
+                        }
+                        
+                        // 승객 수 파싱
+                        int adultCount = 0;
+                        int childCount = 0;
+                        int infantCount = 0;
+                        
+                        if (decodedPassengers != null && !decodedPassengers.trim().isEmpty()) {
+                            // 더 유연한 패턴으로 변경 (공백과 특수문자 처리)
+                            // "성인 2명", "성인+2명", "성인2명" 등 다양한 형태 지원
+                            java.util.regex.Pattern adultPattern = java.util.regex.Pattern.compile("성인[\\s\\+]*(\\d+)명");
+                            java.util.regex.Matcher adultMatcher = adultPattern.matcher(decodedPassengers);
+                            if (adultMatcher.find()) {
+                                adultCount = Integer.parseInt(adultMatcher.group(1));
+                                System.out.println("성인 매칭됨: " + adultMatcher.group(0) + " -> " + adultCount);
+                            } else {
+                                System.out.println("성인 패턴 매칭 실패");
+                            }
+                            
+                            java.util.regex.Pattern childPattern = java.util.regex.Pattern.compile("소아[\\s\\+]*(\\d+)명");
+                            java.util.regex.Matcher childMatcher = childPattern.matcher(decodedPassengers);
+                            if (childMatcher.find()) {
+                                childCount = Integer.parseInt(childMatcher.group(1));
+                                System.out.println("소아 매칭됨: " + childMatcher.group(0) + " -> " + childCount);
+                            }
+                            
+                            java.util.regex.Pattern infantPattern = java.util.regex.Pattern.compile("유아[\\s\\+]*(\\d+)명");
+                            java.util.regex.Matcher infantMatcher = infantPattern.matcher(decodedPassengers);
+                            if (infantMatcher.find()) {
+                                infantCount = Integer.parseInt(infantMatcher.group(1));
+                                System.out.println("유아 매칭됨: " + infantMatcher.group(0) + " -> " + infantCount);
+                            }
+                            
+                            // 패턴 매칭이 모두 실패한 경우를 위한 fallback
+                            if (adultCount == 0 && childCount == 0 && infantCount == 0) {
+                                System.out.println("모든 패턴 매칭 실패, 기본값 설정");
+                                adultCount = 1; // 기본값
+                            }
+                        } else {
+                            System.out.println("passengers 파라미터 없음, 기본값 설정");
+                            adultCount = 1; // 기본값
+                        }
+                        
+                        System.out.println("최종 결과 - 성인: " + adultCount + "명, 소아: " + childCount + "명, 유아: " + infantCount + "명");
+                        
+                        int totalPassengers = adultCount + childCount + infantCount;
+                        int passengerIndex = 0;
+                        
+                        // 디버깅을 위한 상세 로그
+                        System.out.println("총 승객 수: " + totalPassengers);
+                        System.out.println("성인 승객 폼 생성 시작 (adultCount=" + adultCount + ")");
+                    %>
+
+                    <!-- 승객 정보 입력 폼 -->
+                    <form id="passengerInfoForm" class="passenger-info-form">
+                        
+                        <%
+                            // 성인 승객 폼 생성
+                            System.out.println("🔄 JSP: 성인 승객 폼 생성 루프 시작, adultCount=" + adultCount);
+                            for (int i = 1; i <= adultCount; i++) {
+                                passengerIndex++;
+                                System.out.println("🔄 JSP: 성인 승객 " + i + " 카드 생성 중, passengerIndex=" + passengerIndex);
+                        %>
+                        <!-- 성인 승객 <%= i %> 정보 카드 -->
+                        <div class="passenger-card" id="passengerCard<%= passengerIndex %>">
                             <!-- 승객 헤더 (클릭 시 토글) -->
-                            <div class="passenger-card-header" onclick="togglePassengerCard('passengerCard1')">
+                            <div class="passenger-card-header" onclick="togglePassengerCard('passengerCard<%= passengerIndex %>')">
                                 <div class="passenger-title">
-                                    <h3>성인 1</h3>
+                                    <h3>성인 <%= i %></h3>
                                     <span class="passenger-badge">성인</span>
                                 </div>
-                                <div class="passenger-summary" id="passengerSummary1" style="display: none;">
+                                <div class="passenger-summary" id="passengerSummary<%= passengerIndex %>" style="display: none;">
                                     <span class="summary-text">김 또는 KIM / 대한 또는 DAEHAN</span>
                                 </div>
-                                <i class="fas fa-chevron-down toggle-icon" id="toggleIcon1"></i>
+                                <i class="fas fa-chevron-down toggle-icon" id="toggleIcon<%= passengerIndex %>"></i>
                             </div>
                             
                             <!-- 승객 폼 내용 (접힐 수 있는 부분) -->
-                            <div class="passenger-card-content" id="passengerContent1">
+                            <div class="passenger-card-content" id="passengerContent<%= passengerIndex %>">
                                 <div class="passenger-form-grid">
                                     <!-- 국적 -->
                                     <div class="form-group full-width">
-                                        <label for="nationality1" class="required">국적</label>
-                                        <select id="nationality1" name="passengers[0].nationality" required>
+                                        <label for="nationality<%= passengerIndex %>" class="required">국적</label>
+                                        <select id="nationality<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].nationality" required>
                                             <option value="">대한민국</option>
                                             <option value="KR" selected>대한민국</option>
                                             <option value="US">미국</option>
@@ -215,22 +289,22 @@
 
                                     <!-- 승객 성 -->
                                     <div class="form-group">
-                                        <label for="lastName1" class="required">승객 성</label>
-                                        <input type="text" id="lastName1" name="passengers[0].lastName" 
+                                        <label for="lastName<%= passengerIndex %>" class="required">승객 성</label>
+                                        <input type="text" id="lastName<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].lastName" 
                                                placeholder="예) 김 또는 KIM" required>
                                     </div>
 
                                     <!-- 승객 이름 -->
                                     <div class="form-group">
-                                        <label for="firstName1" class="required">승객 이름</label>
-                                        <input type="text" id="firstName1" name="passengers[0].firstName" 
+                                        <label for="firstName<%= passengerIndex %>" class="required">승객 이름</label>
+                                        <input type="text" id="firstName<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].firstName" 
                                                placeholder="예) 대한 또는 DAEHAN" required>
                                     </div>
 
                                     <!-- 성별 -->
                                     <div class="form-group">
-                                        <label for="gender1" class="required">성별</label>
-                                        <select id="gender1" name="passengers[0].gender" required>
+                                        <label for="gender<%= passengerIndex %>" class="required">성별</label>
+                                        <select id="gender<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].gender" required>
                                             <option value="">선택</option>
                                             <option value="M">남성</option>
                                             <option value="F">여성</option>
@@ -239,15 +313,15 @@
 
                                     <!-- 생년월일 -->
                                     <div class="form-group">
-                                        <label for="birthDate1" class="required">생년월일(YYYY.MM.DD.)</label>
-                                        <input type="text" id="birthDate1" name="passengers[0].birthDate" 
+                                        <label for="birthDate<%= passengerIndex %>" class="required">생년월일(YYYY.MM.DD.)</label>
+                                        <input type="text" id="birthDate<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].birthDate" 
                                                placeholder="YYYY.MM.DD" pattern="\d{4}\.\d{2}\.\d{2}" required>
                                     </div>
 
                                     <!-- 직업 항공사 -->
                                     <div class="form-group">
-                                        <label for="jobAirline1">직업 항공사</label>
-                                        <select id="jobAirline1" name="passengers[0].jobAirline">
+                                        <label for="jobAirline<%= passengerIndex %>">직업 항공사</label>
+                                        <select id="jobAirline<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].jobAirline">
                                             <option value="">선택하지 않음</option>
                                             <option value="KE">대한항공</option>
                                             <option value="OZ">아시아나항공</option>
@@ -258,8 +332,8 @@
 
                                     <!-- 회원번호 -->
                                     <div class="form-group">
-                                        <label for="memberNumber1">회원번호 <i class="fas fa-question-circle help-icon" title="항공사 회원번호를 입력하여 주십시오"></i></label>
-                                        <input type="text" id="memberNumber1" name="passengers[0].memberNumber" 
+                                        <label for="memberNumber<%= passengerIndex %>">회원번호 <i class="fas fa-question-circle help-icon" title="항공사 회원번호를 입력하여 주십시오"></i></label>
+                                        <input type="text" id="memberNumber<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].memberNumber" 
                                                placeholder="항공사 회원번호를 입력하여 주십시오">
                                     </div>
                                 </div>
@@ -269,8 +343,8 @@
                                     <h4>가는 여정의 개인 할인</h4>
                                     <div class="discount-grid">
                                         <div class="form-group">
-                                            <label for="discountType1">할인</label>
-                                            <select id="discountType1" name="passengers[0].discountType">
+                                            <label for="discountType<%= passengerIndex %>">할인</label>
+                                            <select id="discountType<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].discountType">
                                                 <option value="">선택</option>
                                                 <option value="student">학생</option>
                                                 <option value="senior">경로</option>
@@ -279,8 +353,8 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="returnDiscountType1">오는 여정의 개인 할인</label>
-                                            <select id="returnDiscountType1" name="passengers[0].returnDiscountType">
+                                            <label for="returnDiscountType<%= passengerIndex %>">오는 여정의 개인 할인</label>
+                                            <select id="returnDiscountType<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].returnDiscountType">
                                                 <option value="">선택</option>
                                                 <option value="student">학생</option>
                                                 <option value="senior">경로</option>
@@ -292,12 +366,239 @@
 
                                 <!-- 저장 버튼 -->
                                 <div class="passenger-form-actions">
-                                    <button type="button" class="passenger-save-btn" onclick="savePassengerInfo()">
+                                    <button type="button" class="passenger-save-btn" onclick="savePassengerInfo(<%= passengerIndex %>)">
                                         저장
                                     </button>
                                 </div>
                             </div>
                         </div>
+                        <% 
+                            System.out.println("🔄 JSP: 성인 승객 " + i + " 카드 생성 완료");
+                        } 
+                        System.out.println("🔄 JSP: 성인 승객 폼 생성 루프 종료");
+                        %>
+
+                        <%
+                            // 소아 승객 폼 생성
+                            System.out.println("🔄 JSP: 소아 승객 폼 생성 루프 시작, childCount=" + childCount);
+                            for (int i = 1; i <= childCount; i++) {
+                                passengerIndex++;
+                                System.out.println("🔄 JSP: 소아 승객 " + i + " 카드 생성 중, passengerIndex=" + passengerIndex);
+                        %>
+                        <!-- 소아 승객 <%= i %> 정보 카드 -->
+                        <div class="passenger-card" id="passengerCard<%= passengerIndex %>">
+                            <!-- 승객 헤더 (클릭 시 토글) -->
+                            <div class="passenger-card-header" onclick="togglePassengerCard('passengerCard<%= passengerIndex %>')">
+                                <div class="passenger-title">
+                                    <h3>소아 <%= i %></h3>
+                                    <span class="passenger-badge child">소아</span>
+                                </div>
+                                <div class="passenger-summary" id="passengerSummary<%= passengerIndex %>" style="display: none;">
+                                    <span class="summary-text">김 또는 KIM / 대한 또는 DAEHAN</span>
+                                </div>
+                                <i class="fas fa-chevron-down toggle-icon" id="toggleIcon<%= passengerIndex %>"></i>
+                            </div>
+                            
+                            <!-- 승객 폼 내용 (접힐 수 있는 부분) -->
+                            <div class="passenger-card-content" id="passengerContent<%= passengerIndex %>">
+                                <div class="passenger-form-grid">
+                                    <!-- 국적 -->
+                                    <div class="form-group full-width">
+                                        <label for="nationality<%= passengerIndex %>" class="required">국적</label>
+                                        <select id="nationality<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].nationality" required>
+                                            <option value="">대한민국</option>
+                                            <option value="KR" selected>대한민국</option>
+                                            <option value="US">미국</option>
+                                            <option value="JP">일본</option>
+                                            <option value="CN">중국</option>
+                                            <option value="OTHER">기타</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 승객 성 -->
+                                    <div class="form-group">
+                                        <label for="lastName<%= passengerIndex %>" class="required">승객 성</label>
+                                        <input type="text" id="lastName<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].lastName" 
+                                               placeholder="예) 김 또는 KIM" required>
+                                    </div>
+
+                                    <!-- 승객 이름 -->
+                                    <div class="form-group">
+                                        <label for="firstName<%= passengerIndex %>" class="required">승객 이름</label>
+                                        <input type="text" id="firstName<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].firstName" 
+                                               placeholder="예) 대한 또는 DAEHAN" required>
+                                    </div>
+
+                                    <!-- 성별 -->
+                                    <div class="form-group">
+                                        <label for="gender<%= passengerIndex %>" class="required">성별</label>
+                                        <select id="gender<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].gender" required>
+                                            <option value="">선택</option>
+                                            <option value="M">남성</option>
+                                            <option value="F">여성</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 생년월일 -->
+                                    <div class="form-group">
+                                        <label for="birthDate<%= passengerIndex %>" class="required">생년월일(YYYY.MM.DD.)</label>
+                                        <input type="text" id="birthDate<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].birthDate" 
+                                               placeholder="YYYY.MM.DD" pattern="\d{4}\.\d{2}\.\d{2}" required>
+                                    </div>
+
+                                    <!-- 직업 항공사 -->
+                                    <div class="form-group">
+                                        <label for="jobAirline<%= passengerIndex %>">직업 항공사</label>
+                                        <select id="jobAirline<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].jobAirline">
+                                            <option value="">선택하지 않음</option>
+                                            <option value="KE">대한항공</option>
+                                            <option value="OZ">아시아나항공</option>
+                                            <option value="7C">제주항공</option>
+                                            <option value="OTHER">기타</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 회원번호 -->
+                                    <div class="form-group">
+                                        <label for="memberNumber<%= passengerIndex %>">회원번호 <i class="fas fa-question-circle help-icon" title="항공사 회원번호를 입력하여 주십시오"></i></label>
+                                        <input type="text" id="memberNumber<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].memberNumber" 
+                                               placeholder="항공사 회원번호를 입력하여 주십시오">
+                                    </div>
+                                </div>
+
+                                <!-- 가는 여정의 개인 할인 -->
+                                <div class="discount-section">
+                                    <h4>가는 여정의 개인 할인</h4>
+                                    <div class="discount-grid">
+                                        <div class="form-group">
+                                            <label for="discountType<%= passengerIndex %>">할인</label>
+                                            <select id="discountType<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].discountType">
+                                                <option value="">선택</option>
+                                                <option value="student">학생</option>
+                                                <option value="senior">경로</option>
+                                                <option value="disabled">장애인</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="returnDiscountType<%= passengerIndex %>">오는 여정의 개인 할인</label>
+                                            <select id="returnDiscountType<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].returnDiscountType">
+                                                <option value="">선택</option>
+                                                <option value="student">학생</option>
+                                                <option value="senior">경로</option>
+                                                <option value="disabled">장애인</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 저장 버튼 -->
+                                <div class="passenger-form-actions">
+                                    <button type="button" class="passenger-save-btn" onclick="savePassengerInfo(<%= passengerIndex %>)">
+                                        저장
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+
+                        <%
+                            // 유아 승객 폼 생성
+                            for (int i = 1; i <= infantCount; i++) {
+                                passengerIndex++;
+                        %>
+                        <!-- 유아 승객 <%= i %> 정보 카드 -->
+                        <div class="passenger-card" id="passengerCard<%= passengerIndex %>">
+                            <!-- 승객 헤더 (클릭 시 토글) -->
+                            <div class="passenger-card-header" onclick="togglePassengerCard('passengerCard<%= passengerIndex %>')">
+                                <div class="passenger-title">
+                                    <h3>유아 <%= i %></h3>
+                                    <span class="passenger-badge infant">유아</span>
+                                </div>
+                                <div class="passenger-summary" id="passengerSummary<%= passengerIndex %>" style="display: none;">
+                                    <span class="summary-text">김 또는 KIM / 대한 또는 DAEHAN</span>
+                                </div>
+                                <i class="fas fa-chevron-down toggle-icon" id="toggleIcon<%= passengerIndex %>"></i>
+                            </div>
+                            
+                            <!-- 승객 폼 내용 (접힐 수 있는 부분) -->
+                            <div class="passenger-card-content" id="passengerContent<%= passengerIndex %>">
+                                <div class="passenger-form-grid">
+                                    <!-- 국적 -->
+                                    <div class="form-group full-width">
+                                        <label for="nationality<%= passengerIndex %>" class="required">국적</label>
+                                        <select id="nationality<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].nationality" required>
+                                            <option value="">대한민국</option>
+                                            <option value="KR" selected>대한민국</option>
+                                            <option value="US">미국</option>
+                                            <option value="JP">일본</option>
+                                            <option value="CN">중국</option>
+                                            <option value="OTHER">기타</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 승객 성 -->
+                                    <div class="form-group">
+                                        <label for="lastName<%= passengerIndex %>" class="required">승객 성</label>
+                                        <input type="text" id="lastName<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].lastName" 
+                                               placeholder="예) 김 또는 KIM" required>
+                                    </div>
+
+                                    <!-- 승객 이름 -->
+                                    <div class="form-group">
+                                        <label for="firstName<%= passengerIndex %>" class="required">승객 이름</label>
+                                        <input type="text" id="firstName<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].firstName" 
+                                               placeholder="예) 대한 또는 DAEHAN" required>
+                                    </div>
+
+                                    <!-- 성별 -->
+                                    <div class="form-group">
+                                        <label for="gender<%= passengerIndex %>" class="required">성별</label>
+                                        <select id="gender<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].gender" required>
+                                            <option value="">선택</option>
+                                            <option value="M">남성</option>
+                                            <option value="F">여성</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 생년월일 -->
+                                    <div class="form-group">
+                                        <label for="birthDate<%= passengerIndex %>" class="required">생년월일(YYYY.MM.DD.)</label>
+                                        <input type="text" id="birthDate<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].birthDate" 
+                                               placeholder="YYYY.MM.DD" pattern="\d{4}\.\d{2}\.\d{2}" required>
+                                    </div>
+
+                                    <!-- 직업 항공사 (유아에게는 필요없음) -->
+                                    <div class="form-group">
+                                        <label for="jobAirline<%= passengerIndex %>">직업 항공사</label>
+                                        <select id="jobAirline<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].jobAirline" disabled>
+                                            <option value="">유아는 해당 없음</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 회원번호 (유아에게는 필요없음) -->
+                                    <div class="form-group">
+                                        <label for="memberNumber<%= passengerIndex %>">회원번호</label>
+                                        <input type="text" id="memberNumber<%= passengerIndex %>" name="passengers[<%= passengerIndex - 1 %>].memberNumber" 
+                                               placeholder="유아는 해당 없음" disabled>
+                                    </div>
+                                </div>
+
+                                <!-- 유아는 할인 섹션 없음 -->
+                                <div class="discount-section">
+                                    <h4>할인 적용 안됨</h4>
+                                    <p style="color: #666; font-size: 14px;">유아는 개인 할인이 적용되지 않습니다.</p>
+                                </div>
+
+                                <!-- 저장 버튼 -->
+                                <div class="passenger-form-actions">
+                                    <button type="button" class="passenger-save-btn" onclick="savePassengerInfo(<%= passengerIndex %>)">
+                                        저장
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
                     </form>
                 </section>
 
@@ -481,12 +782,28 @@
             individualPriceParam: "<%= individualPriceParam != null ? individualPriceParam : "null" %>"
         };
         
+        // 승객 정보를 JavaScript로 전달
+        window.passengerInfo = {
+            adultCount: <%= adultCount %>,
+            childCount: <%= childCount %>,
+            infantCount: <%= infantCount %>,
+            totalPassengers: <%= totalPassengers %>,
+            passengersParam: "<%= passengersParam != null ? passengersParam : "null" %>"
+        };
+        
         console.log("💰 === booking.jsp 가격 정보 ===");
         console.log("최종 총액:", window.bookingInfo.totalPrice.toLocaleString('ko-KR'), '원');
         console.log("totalPrice 파라미터:", window.bookingInfo.totalPriceParam);
         console.log("passengerCount 파라미터:", window.bookingInfo.passengerCountParam);
         console.log("individualPrice 파라미터:", window.bookingInfo.individualPriceParam);
         console.log("URL:", window.location.href);
+        
+        console.log("👥 === 승객 정보 ===");
+        console.log("성인:", window.passengerInfo.adultCount, "명");
+        console.log("소아:", window.passengerInfo.childCount, "명");
+        console.log("유아:", window.passengerInfo.infantCount, "명");
+        console.log("총 승객:", window.passengerInfo.totalPassengers, "명");
+        console.log("passengers 파라미터:", window.passengerInfo.passengersParam);
     </script>
     <script src="${pageContext.request.contextPath}/js/booking.js"></script>
 </body>

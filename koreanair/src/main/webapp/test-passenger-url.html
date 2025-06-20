@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>승객 수 URL 테스트</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-link {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #0064de;
+            font-weight: 500;
+        }
+        .test-link:hover {
+            background: #e9ecef;
+        }
+        .description {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>승객 수 URL 파라미터 테스트</h1>
+    <p>아래 링크를 클릭해서 booking.jsp에서 승객 수가 올바르게 파싱되는지 확인하세요.</p>
+    
+    <a href="views/booking/booking.jsp?passengers=성인 2명" class="test-link">
+        성인 2명
+        <div class="description">URL: passengers=성인 2명</div>
+    </a>
+    
+    <a href="views/booking/booking.jsp?passengers=성인+2명" class="test-link">
+        성인 2명 (+ 인코딩)
+        <div class="description">URL: passengers=성인+2명</div>
+    </a>
+    
+    <a href="views/booking/booking.jsp?passengers=%EC%84%B1%EC%9D%B8%202%EB%AA%85" class="test-link">
+        성인 2명 (URL 인코딩)
+        <div class="description">URL: passengers=%EC%84%B1%EC%9D%B8%202%EB%AA%85</div>
+    </a>
+    
+    <a href="views/booking/booking.jsp?passengers=성인 2명, 소아 1명" class="test-link">
+        성인 2명, 소아 1명
+        <div class="description">URL: passengers=성인 2명, 소아 1명</div>
+    </a>
+    
+    <a href="views/booking/booking.jsp?passengers=성인+2명,+소아+1명" class="test-link">
+        성인 2명, 소아 1명 (+ 인코딩)
+        <div class="description">URL: passengers=성인+2명,+소아+1명</div>
+    </a>
+    
+    <a href="views/booking/booking.jsp?passengers=성인 1명, 소아 1명, 유아 1명" class="test-link">
+        성인 1명, 소아 1명, 유아 1명
+        <div class="description">URL: passengers=성인 1명, 소아 1명, 유아 1명</div>
+    </a>
+
+    <h2>브라우저 개발자 도구 확인 방법</h2>
+    <ol>
+        <li>위 링크 중 하나를 클릭</li>
+        <li>booking.jsp 페이지에서 F12를 눌러 개발자 도구 열기</li>
+        <li>Console 탭에서 승객 파싱 결과 확인</li>
+        <li>페이지에 생성된 승객 정보 카드 개수 확인</li>
+    </ol>
+
+    <h2>서버 로그 확인 방법</h2>
+    <p>서버 콘솔이나 로그 파일에서 다음과 같은 메시지를 확인하세요:</p>
+    <pre>
+=== 승객 정보 파싱 ===
+원본 passengers 파라미터: 성인+2명
+URL 쿼리 스트링: passengers=성인+2명
+디코딩 후 passengers 파라미터: 성인 2명
+성인 매칭됨: 성인 2명 -> 2
+최종 결과 - 성인: 2명, 소아: 0명, 유아: 0명
+총 승객 수: 2
+성인 승객 폼 생성 시작 (adultCount=2)
+    </pre>
+</body>
+</html> 

@@ -23,16 +23,27 @@ public class PassengerHandler implements CommandHandler{
 			System.out.println(paramName + " = " + paramValue);
 		}
 		
-		// form 데이터에서 승객 정보 추출
-		String nationality = request.getParameter("passengers[0].nationality");
-		String lastName = request.getParameter("passengers[0].lastName");
-		String firstName = request.getParameter("passengers[0].firstName");
-		String gender = request.getParameter("passengers[0].gender");
-		String birthDate = request.getParameter("passengers[0].birthDate");
-		String jobAirline = request.getParameter("passengers[0].jobAirline");
-		String memberNumber = request.getParameter("passengers[0].memberNumber");
-		String discountType = request.getParameter("passengers[0].discountType");
-		String returnDiscountType = request.getParameter("passengers[0].returnDiscountType");
+		// form 데이터에서 개별 승객 정보 추출
+		String nationality = request.getParameter("nationality");
+		String lastName = request.getParameter("lastName");
+		String firstName = request.getParameter("firstName");
+		String gender = request.getParameter("gender");
+		String birthDate = request.getParameter("birthDate");
+		String jobAirline = request.getParameter("jobAirline");
+		String memberNumber = request.getParameter("memberNumber");
+		String discountType = request.getParameter("discountType");
+		String returnDiscountType = request.getParameter("returnDiscountType");
+		
+		// 승객 인덱스 정보 추출
+		String passengerIndexStr = request.getParameter("passengerIndex");
+		int passengerIndex = 1;
+		try {
+			if (passengerIndexStr != null && !passengerIndexStr.isEmpty()) {
+				passengerIndex = Integer.parseInt(passengerIndexStr);
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("승객 인덱스 파싱 오류, 기본값 1 사용: " + e.getMessage());
+		}
 		
 		// bookingId 정보 추출
 		String bookingId = request.getParameter("bookingId");
@@ -40,6 +51,7 @@ public class PassengerHandler implements CommandHandler{
 		String returnBookingId = request.getParameter("returnBookingId");
 		
 		System.out.println("=== 받은 승객 정보 ===");
+		System.out.println("승객 번호: " + passengerIndex);
 		System.out.println("국적: " + nationality);
 		System.out.println("성: " + lastName);
 		System.out.println("이름: " + firstName);
@@ -53,6 +65,23 @@ public class PassengerHandler implements CommandHandler{
 		System.out.println("가는편 예약ID: " + outBookingId);
 		System.out.println("오는편 예약ID: " + returnBookingId);
 		
+		// 필수 필드 검증
+		if (lastName == null || lastName.trim().isEmpty() || 
+			firstName == null || firstName.trim().isEmpty() ||
+			gender == null || gender.trim().isEmpty() ||
+			birthDate == null || birthDate.trim().isEmpty()) {
+			
+			System.out.println("❌ 필수 필드 누락:");
+			System.out.println("- lastName: " + (lastName != null ? "'" + lastName + "'" : "null"));
+			System.out.println("- firstName: " + (firstName != null ? "'" + firstName + "'" : "null"));
+			System.out.println("- gender: " + (gender != null ? "'" + gender + "'" : "null"));
+			System.out.println("- birthDate: " + (birthDate != null ? "'" + birthDate + "'" : "null"));
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().write("필수 승객 정보가 누락되었습니다.");
+			return null;
+		}
+		
 		// PassengerDTO 생성 - bookingId 우선, 없으면 outBookingId 사용
 		String primaryBookingId = (bookingId != null && !bookingId.isEmpty() && !bookingId.equals("null")) 
 				? bookingId : outBookingId;
@@ -61,10 +90,10 @@ public class PassengerHandler implements CommandHandler{
 				.passengerId(null) // 자동 생성
 				.userNo("1") // 세션에서 가져오거나 추후 설정
 				.bookingId(primaryBookingId) // 기본 예약ID 또는 가는편 예약ID 설정
-				.lastName(lastName)
-				.firstName(firstName)
-				.birthDate(birthDate)
-				.gender(gender)
+				.lastName(lastName.trim())
+				.firstName(firstName.trim())
+				.birthDate(birthDate.trim())
+				.gender(gender.trim())
 				.type("ADULT") // 기본값
 				.build();
 		

@@ -752,6 +752,15 @@ header {
     font-weight: 500;
 }
 
+.passenger-badge.child {
+    background: #28a745;
+}
+
+.passenger-badge.infant {
+    background: #ffc107;
+    color: #333;
+}
+
 .passenger-summary {
     flex: 1;
     margin-left: 20px;
