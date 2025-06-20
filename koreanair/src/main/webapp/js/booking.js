@@ -44,8 +44,8 @@ function checkPassengerCards() {
 // 승객 카드 초기 상태 설정
 function initializePassengerCardsState(totalCards) {
     for (let i = 1; i <= totalCards; i++) {
-        const content = document.getElementById(`passengerContent${i}`);
-        const icon = document.getElementById(`toggleIcon${i}`);
+        const content = document.getElementById('passengerContent' + i);
+        const icon = document.getElementById('toggleIcon' + i);
         
         if (content && icon) {
             if (i === 1) {
@@ -305,60 +305,191 @@ function initializePaymentButton() {
 
 // 결제 처리
 function processPayment() {
-    // 폼 유효성 검사
-    if (!validateForm()) {
-        return;
-    }
+    console.log('💳 결제 처리 시작');
     
-    // 필수 약관 동의 확인
-    if (!validateRequiredAgreements()) {
-        return;
-    }
-    
-    // 결제 확인
-    if (confirmPayment()) {
+    try {
+        // 기본 정보 수집
+        const bookingId = window.bookingId || '';
+        const totalPriceElement = document.getElementById('bookingTotalPrice');
+        const totalPrice = (totalPriceElement && totalPriceElement.value) || '';
+        
+        if (!bookingId || !totalPrice) {
+            alert('필수 결제 정보가 누락되었습니다.');
+            return;
+        }
+        
         // 로딩 표시
         showLoadingSpinner();
         
-        // 실제 결제 처리 (시뮬레이션)
-        setTimeout(() => {
-            hideLoadingSpinner();
-            showPaymentSuccess();
-        }, 2000);
+        // 폼을 생성해서 POST 방식으로 전송 (페이지 이동)
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = window.contextPath + '/testPayment.do';
+        
+        // bookingId 파라미터 추가
+        const bookingIdInput = document.createElement('input');
+        bookingIdInput.type = 'hidden';
+        bookingIdInput.name = 'bookingId';
+        bookingIdInput.value = bookingId;
+        form.appendChild(bookingIdInput);
+        
+        // totalAmount 파라미터 추가
+        const totalAmountInput = document.createElement('input');
+        totalAmountInput.type = 'hidden';
+        totalAmountInput.name = 'totalAmount';
+        totalAmountInput.value = totalPrice;
+        form.appendChild(totalAmountInput);
+        
+        // 폼을 body에 추가하고 전송
+        document.body.appendChild(form);
+        form.submit();
+        
+    } catch (error) {
+        console.error('❌ processPayment 함수 오류:', error);
+        hideLoadingSpinner();
+        alert('결제 처리 함수에서 오류가 발생했습니다: ' + error.message);
     }
+}
+
+// 결제 데이터 수집
+function collectPaymentData() {
+    console.log('📊 결제 데이터 수집 시작');
+    
+    // 예약 정보 수집
+    const tripType = document.getElementById('bookingTripType').value;
+    const totalPrice = document.getElementById('bookingTotalPrice').value;
+    const departure = document.getElementById('bookingDeparture').value;
+    const arrival = document.getElementById('bookingArrival').value;
+    
+    console.log('🔍 수집된 기본 정보:');
+    console.log('- tripType:', tripType);
+    console.log('- totalPrice:', totalPrice);
+    console.log('- departure:', departure);
+    console.log('- arrival:', arrival);
+    console.log('- window.bookingId:', window.bookingId);
+    
+    // 승객 정보 수집
+    const passengers = [];
+    const passengerCards = document.querySelectorAll('.passenger-card');
+    
+    passengerCards.forEach((card, index) => {
+        const passengerIndex = index + 1;
+        const passenger = {
+            passengerNumber: passengerIndex,
+            nationality: (card.querySelector('#nationality' + passengerIndex) && card.querySelector('#nationality' + passengerIndex).value) || '',
+            lastName: (card.querySelector('#lastName' + passengerIndex) && card.querySelector('#lastName' + passengerIndex).value) || '',
+            firstName: (card.querySelector('#firstName' + passengerIndex) && card.querySelector('#firstName' + passengerIndex).value) || '',
+            gender: (card.querySelector('#gender' + passengerIndex) && card.querySelector('#gender' + passengerIndex).value) || '',
+            birthDate: (card.querySelector('#birthDate' + passengerIndex) && card.querySelector('#birthDate' + passengerIndex).value) || '',
+            jobAirline: (card.querySelector('#jobAirline' + passengerIndex) && card.querySelector('#jobAirline' + passengerIndex).value) || '',
+            memberNumber: (card.querySelector('#memberNumber' + passengerIndex) && card.querySelector('#memberNumber' + passengerIndex).value) || '',
+            discountType: (card.querySelector('#discountType' + passengerIndex) && card.querySelector('#discountType' + passengerIndex).value) || '',
+            returnDiscountType: (card.querySelector('#returnDiscountType' + passengerIndex) && card.querySelector('#returnDiscountType' + passengerIndex).value) || ''
+        };
+        passengers.push(passenger);
+    });
+    
+    // 연락처 정보 수집
+    const contact = {
+        email: (document.getElementById('email') && document.getElementById('email').value) || '',
+        countryCode: (document.querySelector('[name="countryCode"]') && document.querySelector('[name="countryCode"]').value) || '+82',
+        phone: (document.getElementById('phone') && document.getElementById('phone').value) || ''
+    };
+    
+    // 약관 동의 정보 수집
+    const agreements = {
+        terms: (document.querySelector('[name="agreeTerms"]') && document.querySelector('[name="agreeTerms"]').checked) || false,
+        privacy: (document.querySelector('[name="agreePrivacy"]') && document.querySelector('[name="agreePrivacy"]').checked) || false,
+        marketing: (document.querySelector('[name="agreeMarketing"]') && document.querySelector('[name="agreeMarketing"]').checked) || false
+    };
+    
+    // 항공편 정보 수집
+    const flightInfo = {
+        tripType: tripType,
+        departure: departure,
+        arrival: arrival,
+        flightId: (document.getElementById('bookingFlightId') && document.getElementById('bookingFlightId').value) || '',
+        outboundFlightId: (document.getElementById('bookingOutboundFlightId') && document.getElementById('bookingOutboundFlightId').value) || '',
+        returnFlightId: (document.getElementById('bookingReturnFlightId') && document.getElementById('bookingReturnFlightId').value) || '',
+        totalPrice: parseInt(totalPrice) || 0
+    };
+    
+    // bookingId 안전하게 가져오기
+    let bookingId = '';
+    if (typeof window !== 'undefined' && window.bookingId) {
+        bookingId = window.bookingId;
+    } else {
+        console.warn('⚠️ window.bookingId가 정의되지 않음');
+        bookingId = 'FALLBACK-' + Date.now();
+    }
+    
+    const paymentData = {
+        flightInfo: flightInfo,
+        passengers: passengers,
+        contact: contact,
+        agreements: agreements,
+        paymentAmount: parseInt(totalPrice) || 0,
+        bookingId: bookingId,
+        timestamp: new Date().toISOString()
+    };
+    
+    console.log('📦 최종 결제 데이터:');
+    console.log('- paymentAmount:', paymentData.paymentAmount);
+    console.log('- bookingId:', paymentData.bookingId);
+    console.log('- 전체 데이터:', paymentData);
+    
+    return paymentData;
 }
 
 // 전체 폼 유효성 검사
 function validateForm() {
-    const form = document.getElementById('passengerForm');
-    const requiredFields = form.querySelectorAll('input[required], select[required]');
     let isValid = true;
+    let firstErrorField = null;
     
-    requiredFields.forEach(field => {
-        if (!validateField(field)) {
-            isValid = false;
-        }
-    });
+    // 승객 정보 폼 검증
+    const passengerForm = document.getElementById('passengerInfoForm');
+    if (passengerForm) {
+        const passengerRequiredFields = passengerForm.querySelectorAll('input[required], select[required]');
+        passengerRequiredFields.forEach(field => {
+            if (!validateField(field)) {
+                isValid = false;
+                if (!firstErrorField) firstErrorField = field;
+            }
+        });
+    }
+    
+    // 연락처 정보 폼 검증
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        const contactRequiredFields = contactForm.querySelectorAll('input[required], select[required]');
+        contactRequiredFields.forEach(field => {
+            if (!validateField(field)) {
+                isValid = false;
+                if (!firstErrorField) firstErrorField = field;
+            }
+        });
+    }
     
     // 이메일 특별 검사
     const emailField = document.getElementById('email');
     if (emailField && !validateEmail(emailField)) {
         isValid = false;
+        if (!firstErrorField) firstErrorField = emailField;
     }
     
     // 전화번호 특별 검사
     const phoneField = document.getElementById('phone');
     if (phoneField && !validatePhone(phoneField)) {
         isValid = false;
+        if (!firstErrorField) firstErrorField = phoneField;
     }
     
     if (!isValid) {
         alert('입력 정보를 다시 확인해주세요.');
         // 첫 번째 오류 필드로 스크롤
-        const firstError = form.querySelector('.error');
-        if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            firstError.focus();
+        if (firstErrorField) {
+            firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstErrorField.focus();
         }
     }
     
@@ -389,16 +520,16 @@ function confirmPayment() {
     const departure = document.getElementById('bookingDeparture').value;
     const arrival = document.getElementById('bookingArrival').value;
     
-    let confirmMessage = `${amount}에 대해 결제를 진행하시겠습니까?\n\n`;
+    let confirmMessage = amount + '에 대해 결제를 진행하시겠습니까?\n\n';
     
     if (tripType === 'round') {
         const outboundFlightId = document.getElementById('bookingOutboundFlightId').value;
         const returnFlightId = document.getElementById('bookingReturnFlightId').value;
-        confirmMessage += `가는 편: ${departure} → ${arrival} (${outboundFlightId})\n`;
-        confirmMessage += `오는 편: ${arrival} → ${departure} (${returnFlightId})\n\n`;
+        confirmMessage += '가는 편: ' + departure + ' → ' + arrival + ' (' + outboundFlightId + ')\n';
+        confirmMessage += '오는 편: ' + arrival + ' → ' + departure + ' (' + returnFlightId + ')\n\n';
     } else {
         const flightId = document.getElementById('bookingFlightId').value;
-        confirmMessage += `항공편: ${departure} → ${arrival} (${flightId})\n\n`;
+        confirmMessage += '항공편: ' + departure + ' → ' + arrival + ' (' + flightId + ')\n\n';
     }
     
     confirmMessage += `결제 후에는 취소 수수료가 발생할 수 있습니다.`;
@@ -423,11 +554,24 @@ function hideLoadingSpinner() {
 }
 
 // 결제 성공 표시
-function showPaymentSuccess() {
-    alert('결제가 완료되었습니다!\n\n예약 확인서가 이메일로 발송됩니다.\n감사합니다.');
+function showPaymentSuccess(data = null) {
+    let message = '결제가 완료되었습니다!\n\n';
     
-    // 결제 완료 페이지로 이동 (실제로는 서버로 데이터 전송)
-    // window.location.href = 'paymentComplete.jsp';
+    if (data && data.reservationNumber) {
+        message += '예약 번호: ' + data.reservationNumber + '\n';
+    }
+    
+    message += '예약 확인서가 이메일로 발송됩니다.\n감사합니다.';
+    
+    alert(message);
+    
+    // 결제 완료 페이지로 이동하거나 홈으로 이동
+    if (data && data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+    } else {
+        // 기본적으로 홈페이지로 이동
+        window.location.href = window.contextPath + '/';
+    }
 }
 
 // 상세 보기 버튼 기능
@@ -587,7 +731,7 @@ function savePassengerInfo(passengerIndex) {
     });
     
     if (!isValid) {
-        alert(`승객 ${passengerIndex}의 입력 정보를 확인해주세요:\n\n` + errorMessages.join('\n'));
+        alert('승객 ' + passengerIndex + '의 입력 정보를 확인해주세요:\n\n' + errorMessages.join('\n'));
         // 첫 번째 오류 필드로 스크롤
         const firstError = passengerCard.querySelector('.error');
         if (firstError) {
@@ -600,45 +744,45 @@ function savePassengerInfo(passengerIndex) {
     // 승객 정보만 수집 (연락처 및 약관 정보 제외)
     const passengerData = {
         lastName: (function() {
-            const lastNameElement = document.getElementById(`lastName${passengerIndex}`);
+            const lastNameElement = document.getElementById('lastName' + passengerIndex);
             return lastNameElement ? lastNameElement.value : '';
         })(),
         firstName: (function() {
-            const firstNameElement = document.getElementById(`firstName${passengerIndex}`);
+            const firstNameElement = document.getElementById('firstName' + passengerIndex);
             return firstNameElement ? firstNameElement.value : '';
         })(),
         birthDate: (function() {
-            const birthDateElement = document.getElementById(`birthDate${passengerIndex}`);
+            const birthDateElement = document.getElementById('birthDate' + passengerIndex);
             return birthDateElement ? birthDateElement.value : '';
         })(),
         gender: (function() {
-            const genderElement = document.getElementById(`gender${passengerIndex}`);
+            const genderElement = document.getElementById('gender' + passengerIndex);
             return genderElement ? genderElement.value : '';
         })(),
         nationality: (function() {
-            const nationalityElement = document.getElementById(`nationality${passengerIndex}`);
+            const nationalityElement = document.getElementById('nationality' + passengerIndex);
             return nationalityElement ? nationalityElement.value : '';
         })(),
         jobAirline: (function() {
-            const jobAirlineElement = document.getElementById(`jobAirline${passengerIndex}`);
+            const jobAirlineElement = document.getElementById('jobAirline' + passengerIndex);
             return jobAirlineElement ? jobAirlineElement.value : '';
         })(),
         memberNumber: (function() {
-            const memberNumberElement = document.getElementById(`memberNumber${passengerIndex}`);
+            const memberNumberElement = document.getElementById('memberNumber' + passengerIndex);
             return memberNumberElement ? memberNumberElement.value : '';
         })(),
         discountType: (function() {
-            const discountTypeElement = document.getElementById(`discountType${passengerIndex}`);
+            const discountTypeElement = document.getElementById('discountType' + passengerIndex);
             return discountTypeElement ? discountTypeElement.value : '';
         })(),
         returnDiscountType: (function() {
-            const returnDiscountTypeElement = document.getElementById(`returnDiscountType${passengerIndex}`);
+            const returnDiscountTypeElement = document.getElementById('returnDiscountType' + passengerIndex);
             return returnDiscountTypeElement ? returnDiscountTypeElement.value : '';
         })()
     };
     
     // 저장 버튼 상태 변경 (해당 승객 카드의 저장 버튼 찾기)
-    const passengerCardForBtn = document.getElementById(`passengerCard${passengerIndex}`);
+    const passengerCardForBtn = document.getElementById('passengerCard' + passengerIndex);
     const saveBtn = passengerCardForBtn ? passengerCardForBtn.querySelector('.passenger-save-btn') : null;
     if (!saveBtn) {
         alert('저장 버튼을 찾을 수 없습니다.');
@@ -656,15 +800,15 @@ function savePassengerInfo(passengerIndex) {
         const formData = new FormData();
         
         // 승객 정보 추가 (안전한 방식)
-        const nationalityEl = document.getElementById(`nationality${passengerIndex}`);
-        const lastNameEl = document.getElementById(`lastName${passengerIndex}`);
-        const firstNameEl = document.getElementById(`firstName${passengerIndex}`);
-        const genderEl = document.getElementById(`gender${passengerIndex}`);
-        const birthDateEl = document.getElementById(`birthDate${passengerIndex}`);
-        const jobAirlineEl = document.getElementById(`jobAirline${passengerIndex}`);
-        const memberNumberEl = document.getElementById(`memberNumber${passengerIndex}`);
-        const discountTypeEl = document.getElementById(`discountType${passengerIndex}`);
-        const returnDiscountTypeEl = document.getElementById(`returnDiscountType${passengerIndex}`);
+        const nationalityEl = document.getElementById('nationality' + passengerIndex);
+        const lastNameEl = document.getElementById('lastName' + passengerIndex);
+        const firstNameEl = document.getElementById('firstName' + passengerIndex);
+        const genderEl = document.getElementById('gender' + passengerIndex);
+        const birthDateEl = document.getElementById('birthDate' + passengerIndex);
+        const jobAirlineEl = document.getElementById('jobAirline' + passengerIndex);
+        const memberNumberEl = document.getElementById('memberNumber' + passengerIndex);
+        const discountTypeEl = document.getElementById('discountType' + passengerIndex);
+        const returnDiscountTypeEl = document.getElementById('returnDiscountType' + passengerIndex);
         
         const nationality = nationalityEl ? nationalityEl.value.trim() : '';
         const lastName = lastNameEl ? lastNameEl.value.trim() : '';
@@ -704,7 +848,7 @@ function savePassengerInfo(passengerIndex) {
         // 승객 인덱스 정보 추가
         formData.append('passengerIndex', passengerIndex);
         
-        console.log(`=== 승객 ${passengerIndex} 정보 전송 ===`);
+        console.log('=== 승객 ' + passengerIndex + ' 정보 전송 ===');
         console.log('nationality:', nationality);
         console.log('lastName:', lastName);
         console.log('firstName:', firstName);
@@ -728,13 +872,13 @@ function savePassengerInfo(passengerIndex) {
         
         // 요청 URL 확인
         console.log('window.contextPath:', window.contextPath);
-        const requestUrl = `${window.contextPath}/passenger.do`;
+        const requestUrl = window.contextPath + '/passenger.do';
         console.log('요청 URL:', requestUrl);
         
         // FormData 내용 확인
         console.log('=== FormData 내용 확인 ===');
         for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
+            console.log(key + ': ' + value);
         }
         
         // URL 파라미터 방식으로 전송 (테스트용)
@@ -743,11 +887,11 @@ function savePassengerInfo(passengerIndex) {
         // FormData의 모든 내용을 URLSearchParams로 복사
         for (let [key, value] of formData.entries()) {
             params.append(key, value);
-            console.log(`URLParams 추가: ${key} = ${value}`);
+            console.log('URLParams 추가: ' + key + ' = ' + value);
         }
         
         // GET 방식으로 테스트 (URL에 파라미터 포함)
-        const testUrl = `${requestUrl}?${params.toString()}`;
+        const testUrl = requestUrl + '?' + params.toString();
         console.log('테스트 URL:', testUrl);
         
         // AJAX 요청
@@ -767,7 +911,7 @@ function savePassengerInfo(passengerIndex) {
                 saveBtn.style.background = '#28a745';
                 
                 // 성공 메시지
-                console.log(`✅ 승객 ${passengerIndex} 정보 독립 저장 완료`);
+                console.log('✅ 승객 ' + passengerIndex + ' 정보 독립 저장 완료');
                 
                 // 간단한 성공 알림
                 const notification = document.createElement('div');
@@ -783,7 +927,7 @@ function savePassengerInfo(passengerIndex) {
                     font-weight: bold;
                     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
                 `;
-                notification.textContent = `승객 ${passengerIndex} 정보가 저장되었습니다.`;
+                notification.textContent = '승객 ' + passengerIndex + ' 정보가 저장되었습니다.';
                 document.body.appendChild(notification);
                 
                 // 3초 후 알림 제거
@@ -800,7 +944,7 @@ function savePassengerInfo(passengerIndex) {
                 openNextPassengerCard(passengerIndex);
                 
                 // 로컬 스토리지에도 백업 저장
-                localStorage.setItem(`passengerInfo_${passengerIndex}`, JSON.stringify(passengerData));
+                localStorage.setItem('passengerInfo_' + passengerIndex, JSON.stringify(passengerData));
                 
                 // 3초 후 원래 상태로 복원
                 setTimeout(() => {
@@ -867,21 +1011,21 @@ function collapsePassengerCardAfterSave(passengerIndex) {
         passengerIndex = 1;
     }
     
-    const cardId = `passengerCard${passengerIndex}`;
-    const content = document.getElementById(`passengerContent${passengerIndex}`);
-    const icon = document.getElementById(`toggleIcon${passengerIndex}`);
-    const summary = document.getElementById(`passengerSummary${passengerIndex}`);
+    const cardId = 'passengerCard' + passengerIndex;
+    const content = document.getElementById('passengerContent' + passengerIndex);
+    const icon = document.getElementById('toggleIcon' + passengerIndex);
+    const summary = document.getElementById('passengerSummary' + passengerIndex);
     
     // 입력된 정보로 요약 텍스트 생성
-    const lastNameElement = document.getElementById(`lastName${passengerIndex}`);
-    const firstNameElement = document.getElementById(`firstName${passengerIndex}`);
+    const lastNameElement = document.getElementById('lastName' + passengerIndex);
+    const firstNameElement = document.getElementById('firstName' + passengerIndex);
     const lastName = lastNameElement ? lastNameElement.value : '';
     const firstName = firstNameElement ? firstNameElement.value : '';
     
     if (lastName && firstName && summary) {
         const summaryTextElement = summary.querySelector('.summary-text');
         if (summaryTextElement) {
-            const summaryText = `${lastName} / ${firstName}`;
+            const summaryText = lastName + ' / ' + firstName;
             summaryTextElement.textContent = summaryText;
             summary.style.display = 'block';
         }
@@ -897,14 +1041,14 @@ function collapsePassengerCardAfterSave(passengerIndex) {
 // 다음 승객 카드 열기
 function openNextPassengerCard(currentPassengerIndex) {
     const nextPassengerIndex = currentPassengerIndex + 1;
-    const nextCard = document.getElementById(`passengerCard${nextPassengerIndex}`);
+    const nextCard = document.getElementById('passengerCard' + nextPassengerIndex);
     
     if (nextCard) {
-        console.log(`📂 다음 승객 카드 열기: 승객 ${nextPassengerIndex}`);
+        console.log('📂 다음 승객 카드 열기: 승객 ' + nextPassengerIndex);
         
         // 다음 승객 카드의 콘텐츠와 아이콘 찾기
-        const nextContent = document.getElementById(`passengerContent${nextPassengerIndex}`);
-        const nextIcon = document.getElementById(`toggleIcon${nextPassengerIndex}`);
+        const nextContent = document.getElementById('passengerContent' + nextPassengerIndex);
+        const nextIcon = document.getElementById('toggleIcon' + nextPassengerIndex);
         
         if (nextContent && nextIcon) {
             // 다음 카드가 접혀있으면 펼치기

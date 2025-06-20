@@ -16,13 +16,34 @@
     <!-- contextPath 및 bookingId 설정 -->
     <script>
         window.contextPath = '${pageContext.request.contextPath}';
+        
+        // 서버에서 전달된 bookingId 먼저 시도
         window.bookingId = '${bookingId}';
+        
+        // bookingId가 비어있으면 URL 파라미터에서 가져오기
+        if (!window.bookingId || window.bookingId === '') {
+            const urlParams = new URLSearchParams(window.location.search);
+            window.bookingId = urlParams.get('bookingId') || '';
+            console.log('⚠️ URL 파라미터에서 bookingId 추출:', window.bookingId);
+        }
+        
+        // 그래도 없으면 임시 ID 생성
+        if (!window.bookingId || window.bookingId === '') {
+            window.bookingId = 'TEMP-' + Date.now();
+            console.log('⚠️ 임시 bookingId 생성:', window.bookingId);
+        }
+        
         window.outBookingId = '${outBookingId}';
         window.returnBookingId = '${returnBookingId}';
-        console.log('contextPath 설정됨:', window.contextPath);
-        console.log('bookingId:', window.bookingId);
+        
+        console.log('✅ contextPath 설정됨:', window.contextPath);
+        console.log('✅ 최종 bookingId:', window.bookingId);
         console.log('outBookingId:', window.outBookingId);
         console.log('returnBookingId:', window.returnBookingId);
+        
+        // 디버깅을 위한 추가 정보
+        console.log('🔍 서버에서 전달된 bookingId (raw):', '${bookingId}');
+        console.log('🔍 현재 URL:', window.location.href);
     </script>
 </head>
 <body>
