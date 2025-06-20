@@ -108,9 +108,9 @@
                     <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소를 입력하세요">
                     <input type="hidden" id="address" name="address">
                 </div>
-                <small class="address-help-text">
+                <small class="address-help-text" style="margin-top: 1rem;">
                     <i class="fas fa-info-circle"></i> 
-                    주소 검색 버튼을 클릭하여 정확한 주소를 입력하세요
+                    * 표시는 필수 입력 사항입니다
                 </small>
             </div>
             
@@ -122,10 +122,6 @@
             <span style="color: #ccc;">|</span>
             <a href="./">메인 페이지로</a>
         </div>
-        
-        <p style="color: #999; font-size: 12px; margin-top: 1rem; text-align: center;">
-            * 표시된 항목은 필수 입력 사항입니다.
-        </p>
         </div>
     </main>
     

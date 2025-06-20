@@ -71,12 +71,6 @@ public class RegisterHandler implements CommandHandler {
             return "/views/login/register.jsp";
         }
         
-        // 비밀번호 강도 검증
-        if (!PasswordUtil.isValidPassword(password)) {
-            request.setAttribute("error", "비밀번호는 4자 이상이어야 합니다.");
-            return "/views/login/register.jsp";
-        }
-        
         // 생년월일 형식 검증 및 변환
         Date birthDate = null;
         try {

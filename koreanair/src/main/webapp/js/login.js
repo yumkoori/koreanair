@@ -30,33 +30,106 @@ function checkUserId() {
     xhr.send('userId=' + encodeURIComponent(userId));
 }
 
-// 회원가입 폼 검증
-function validateRegisterForm() {
-    const userId = document.getElementById('userId').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const koreanName = document.getElementById('koreanName').value;
-    const englishName = document.getElementById('englishName').value;
-    const birthDate = document.getElementById('birthDate').value;
-    const gender = document.getElementById('gender').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
-    const checkResult = document.getElementById('userIdCheckResult');
+// 개별 검증 함수들 (재사용 가능)
+function validateRequiredFields(fields) {
+    for (let field of fields) {
+        if (!field.value || field.value.trim() === '') {
+            alert('모든 필수 항목을 입력해주세요.');
+            field.focus();
+            return false;
+        }
+    }
+    return true;
+}
+
+function validateKoreanName(koreanName) {
+    const koreanNameRegex = /^[가-힣\s]+$/;
+    if (!koreanNameRegex.test(koreanName)) {
+        alert('한글 이름은 한글만 입력 가능합니다.');
+        return false;
+    }
+    return true;
+}
+
+function validateEnglishName(englishName) {
+    const englishNameRegex = /^[a-zA-Z\s]+$/;
+    if (!englishNameRegex.test(englishName)) {
+        alert('영문 이름은 영문자만 입력 가능합니다.');
+        return false;
+    }
+    return true;
+}
+
+function validateBirthDate(birthDate) {
+    const today = new Date();
+    const selectedDate = new Date(birthDate);
     
-    // 필수 필드 체크
-    if (!userId || !password || !confirmPassword || !koreanName || !englishName || 
-        !birthDate || !gender || !email || !phone) {
-        alert('모든 필수 항목을 입력해주세요.');
+    // 미래 날짜 검증
+    if (selectedDate >= today) {
+        alert('생년월일은 오늘 이전 날짜여야 합니다.');
         return false;
     }
     
-    // 아이디 길이 체크
+    // 나이 검증 (만 14세 이상)
+    let age = today.getFullYear() - selectedDate.getFullYear();
+    const monthDiff = today.getMonth() - selectedDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
+        age--;
+    }
+    if (age < 14) {
+        alert('만 14세 이상만 가입 가능합니다.');
+        return false;
+    }
+    
+    return true;
+}
+
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('올바른 이메일 형식을 입력해주세요.');
+        return false;
+    }
+    return true;
+}
+
+function validatePhoneNumber(phone) {
+    const phoneRegex = /^01[0-9]-\d{3,4}-\d{4}$/;
+    if (!phoneRegex.test(phone)) {
+        alert('휴대폰 번호는 010-1234-5678 형식으로 입력해주세요.');
+        return false;
+    }
+    return true;
+}
+
+function validatePassword(password) {
+    if (password.length < 4) {
+        alert('비밀번호는 4자 이상이어야 합니다.');
+        return false;
+    }
+    return true;
+}
+
+function validatePasswordConfirm(password, confirmPassword) {
+    if (password !== confirmPassword) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return false;
+    }
+    return true;
+}
+
+function validateUserId(userId) {
     if (userId.length < 3) {
         alert('아이디는 3자 이상이어야 합니다.');
         return false;
     }
+    return true;
+}
+
+function validateUserIdDuplication() {
+    const checkResult = document.getElementById('userIdCheckResult');
+    if (!checkResult) return true; // 아이디 중복 체크가 없는 경우 (카카오 가입 등)
     
-    // 아이디 중복 체크 결과 확인
     const checkStatus = checkResult.getAttribute('data-status');
     if (checkStatus === 'duplicate') {
         alert('이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.');
@@ -67,63 +140,140 @@ function validateRegisterForm() {
         document.getElementById('userId').focus();
         return false;
     }
+    return true;
+}
+
+// 카카오 회원가입 폼 검증 (공통 함수 활용)
+function validateKakaoSignupForm() {
+    const koreanName = document.getElementById('koreanName').value.trim();
+    const englishName = document.getElementById('englishName').value.trim();
+    const birthDate = document.getElementById('birthDate').value;
+    const gender = document.getElementById('gender').value;
+    const phone = document.getElementById('phone').value.trim();
+    
+    // 필수 필드 체크
+    const requiredFields = [
+        { value: koreanName, focus: () => document.getElementById('koreanName').focus() },
+        { value: englishName, focus: () => document.getElementById('englishName').focus() },
+        { value: birthDate, focus: () => document.getElementById('birthDate').focus() },
+        { value: gender, focus: () => document.getElementById('gender').focus() },
+        { value: phone, focus: () => document.getElementById('phone').focus() }
+    ];
+    
+    for (let field of requiredFields) {
+        if (!field.value || field.value.trim() === '') {
+            alert('모든 필수 항목을 입력해주세요.');
+            field.focus();
+            return false;
+        }
+    }
+    
+    // 한글 이름 검증
+    if (!validateKoreanName(koreanName)) {
+        document.getElementById('koreanName').focus();
+        return false;
+    }
+    
+    // 영문 이름 검증
+    if (!validateEnglishName(englishName)) {
+        document.getElementById('englishName').focus();
+        return false;
+    }
+    
+    // 생년월일 검증
+    if (!validateBirthDate(birthDate)) {
+        document.getElementById('birthDate').focus();
+        return false;
+    }
+    
+    // 휴대폰 번호 검증
+    if (!validatePhoneNumber(phone)) {
+        document.getElementById('phone').focus();
+        return false;
+    }
+    
+    return true;
+}
+
+// 회원가입 폼 검증 (기존 함수 - 공통 함수 활용하도록 수정)
+function validateRegisterForm() {
+    const userId = document.getElementById('userId').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const koreanName = document.getElementById('koreanName').value;
+    const englishName = document.getElementById('englishName').value;
+    const birthDate = document.getElementById('birthDate').value;
+    const gender = document.getElementById('gender').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    
+    // 필수 필드 체크
+    const requiredFields = [
+        document.getElementById('userId'),
+        document.getElementById('password'),
+        document.getElementById('confirmPassword'),
+        document.getElementById('koreanName'),
+        document.getElementById('englishName'),
+        document.getElementById('birthDate'),
+        document.getElementById('gender'),
+        document.getElementById('email'),
+        document.getElementById('phone')
+    ];
+    
+    if (!validateRequiredFields(requiredFields)) {
+        return false;
+    }
+    
+    // 아이디 길이 체크
+    if (!validateUserId(userId)) {
+        document.getElementById('userId').focus();
+        return false;
+    }
+    
+    // 아이디 중복 체크 결과 확인
+    if (!validateUserIdDuplication()) {
+        return false;
+    }
     
     // 비밀번호 길이 체크
-    if (password.length < 4) {
-        alert('비밀번호는 4자 이상이어야 합니다.');
+    if (!validatePassword(password)) {
+        document.getElementById('password').focus();
         return false;
     }
     
     // 비밀번호 확인
-    if (password !== confirmPassword) {
-        alert('비밀번호가 일치하지 않습니다.');
+    if (!validatePasswordConfirm(password, confirmPassword)) {
+        document.getElementById('confirmPassword').focus();
         return false;
     }
     
-    // 한글 이름 검증 (한글만 허용)
-    const koreanNameRegex = /^[가-힣\s]+$/;
-    if (!koreanNameRegex.test(koreanName)) {
-        alert('한글 이름은 한글만 입력 가능합니다.');
+    // 한글 이름 검증
+    if (!validateKoreanName(koreanName)) {
+        document.getElementById('koreanName').focus();
         return false;
     }
     
-    // 영문 이름 검증 (영문과 공백만 허용)
-    const englishNameRegex = /^[a-zA-Z\s]+$/;
-    if (!englishNameRegex.test(englishName)) {
-        alert('영문 이름은 영문자만 입력 가능합니다.');
+    // 영문 이름 검증
+    if (!validateEnglishName(englishName)) {
+        document.getElementById('englishName').focus();
         return false;
     }
     
-    // 생년월일 검증 (미래 날짜 불가)
-    const today = new Date();
-    const selectedDate = new Date(birthDate);
-    if (selectedDate >= today) {
-        alert('생년월일은 오늘 이전 날짜여야 합니다.');
-        return false;
-    }
-    
-    // 나이 검증 (만 14세 이상)
-    const age = today.getFullYear() - selectedDate.getFullYear();
-    const monthDiff = today.getMonth() - selectedDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
-        age--;
-    }
-    if (age < 14) {
-        alert('만 14세 이상만 가입 가능합니다.');
+    // 생년월일 검증
+    if (!validateBirthDate(birthDate)) {
+        document.getElementById('birthDate').focus();
         return false;
     }
     
     // 이메일 형식 체크
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('올바른 이메일 형식을 입력해주세요.');
+    if (!validateEmail(email)) {
+        document.getElementById('email').focus();
         return false;
     }
     
     // 휴대폰 번호 형식 체크
-    const phoneRegex = /^01[0-9]-\d{3,4}-\d{4}$/;
-    if (!phoneRegex.test(phone)) {
-        alert('휴대폰 번호는 010-1234-5678 형식으로 입력해주세요.');
+    if (!validatePhoneNumber(phone)) {
+        document.getElementById('phone').focus();
         return false;
     }
     
