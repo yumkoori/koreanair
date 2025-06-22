@@ -1,5 +1,8 @@
 package com.koreanair.command;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +17,19 @@ public class BookingHandler implements CommandHandler{
 		
 		String bookingId = null;
 		
+		String text = request.getParameter("passengers");
+		text = java.net.URLDecoder.decode(text, "UTF-8");
+
+		Pattern pattern = java.util.regex.Pattern.compile("\\d+");
+		Matcher matcher = pattern.matcher(text);
+
+		int totalPassengers = 0;
+		while (matcher.find()) {
+		    totalPassengers += Integer.parseInt(matcher.group());
+		}
+		
+		
+		
 		if(request.getParameter("tripType").equals("round")) {			
 			BookingDTO bookingDTO = BookingDTO.builder()
 					.outboundFlightId(request.getParameter("outboundFlightId"))
@@ -27,6 +43,17 @@ public class BookingHandler implements CommandHandler{
 			bookingId = bookingService.saveBookingToPending(bookingDTO);
 			
 			
+			String outboundSeatClass = request.getParameter("outboundSeatClass");
+			String returnSeatClass = request.getParameter("returnSeatClass");
+			
+			System.out.println("이것은 1    " + bookingDTO);
+			System.out.println("이것은 2    " + outboundSeatClass);
+			
+			bookingService.updateSeatStatusToPending(bookingDTO.getOutboundFlightId(), outboundSeatClass, totalPassengers);
+			
+			bookingService.updateSeatStatusToPending(bookingDTO.getReturnFlightId(), returnSeatClass, totalPassengers);
+
+			
 		} else {
 			BookingDTO dto = BookingDTO.builder()
 					.outboundFlightId(request.getParameter("outboundFlightId"))
@@ -35,8 +62,13 @@ public class BookingHandler implements CommandHandler{
 					.bookingPw(null)
 					.build();
 			
+			
 			bookingId = bookingService.saveBookingToPending(dto);
 			
+			String seatClass = request.getParameter("seatClass");
+			
+			bookingService.updateSeatStatusToPending(dto.getOutboundFlightId(), seatClass, totalPassengers);
+	
 		}
 		
 		request.setAttribute("bookingId", bookingId);

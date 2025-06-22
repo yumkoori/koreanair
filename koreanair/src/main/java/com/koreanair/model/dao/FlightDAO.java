@@ -38,4 +38,6 @@ public interface FlightDAO {
     List<SearchFlightResultDTO> getSearchFlight(SearchFlightDTO searchFlightDTO); 
     
     Map<String,Integer> getWeekLowPrices(SearchFlightDTO dto);
+    
+    void releaseExpiredPendingSeats();
 }

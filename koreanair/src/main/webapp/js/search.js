@@ -1245,6 +1245,18 @@ document.addEventListener('DOMContentLoaded', function() {
             updateButtonStates();
         }
         
+        // 좌석 등급 코드 매핑 함수
+        function getSeatClassCode(seatType) {
+            if (seatType === 'economy' || seatType === '일반석') {
+                return 'ECONOMY';
+            } else if (seatType === 'prestige' || seatType === '프레스티지석') {
+                return 'PRE';
+            } else if (seatType === 'first' || seatType === '일등석') {
+                return 'FIR';
+            }
+            return 'null'; // 기본값
+        }
+        
         // 좌석 등급 선택 기능
         function initializeSeatTypeSelector() {
             const seatTypeElement = document.querySelector('.seat-type');
@@ -1252,8 +1264,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const seatTypeDropdown = seatTypeElement.querySelector('.seat-type-dropdown');
             const seatOptions = seatTypeElement.querySelectorAll('.seat-option');
             
-            // 현재 선택된 좌석 등급 (기본: 일반석)
-            let selectedSeatType = 'economy';
+            // 현재 선택된 좌석 등급 (기본: 일반석) - 전역 변수로 만들기
+            window.selectedSeatType = 'economy';
             
             // 초기 선택 상태 설정
             updateSeatSelection();
@@ -1262,7 +1274,7 @@ document.addEventListener('DOMContentLoaded', function() {
             function updateSeatSelection() {
                 seatOptions.forEach(option => {
                     const type = option.getAttribute('data-type');
-                    if (type === selectedSeatType) {
+                    if (type === window.selectedSeatType) {
                         option.classList.add('selected');
                     } else {
                         option.classList.remove('selected');
@@ -1275,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.addEventListener('click', function(e) {
                     e.stopPropagation();
                     
-                    selectedSeatType = this.getAttribute('data-type');
+                    window.selectedSeatType = this.getAttribute('data-type');
                     
                     // 선택 상태 업데이트
                     updateSeatSelection();
@@ -1283,13 +1295,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 표시 텍스트 업데이트
                     let seatTypeName = '일반석';
                     
-                    if (selectedSeatType === 'prestige') {
+                    if (window.selectedSeatType === 'prestige') {
                         seatTypeName = '프레스티지석';
-                    } else if (selectedSeatType === 'first') {
+                    } else if (window.selectedSeatType === 'first') {
                         seatTypeName = '일등석';
                     }
                     
                     seatTypeSpan.textContent = seatTypeName;
+                    
+                    console.log('좌석 등급 선택:', window.selectedSeatType, '코드:', getSeatClassCode(window.selectedSeatType));
                     
                     // 드롭다운 닫기
                     seatTypeDropdown.style.display = 'none';

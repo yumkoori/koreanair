@@ -2,6 +2,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('좌석 선택 JavaScript 로드됨');
     
+    // 좌석 등급 코드 매핑 함수
+    function getSeatClassCode(fareType) {
+        if (fareType === '일반석') {
+            return 'ECONOMY';
+        } else if (fareType === '프레스티지석') {
+            return 'PRE';
+        } else if (fareType === '일등석') {
+            return 'FIR';
+        }
+        return 'null'; // 기본값
+    }
+    
     // 복항편 페이지에서 가는 편 정보 표시
     const urlParams = new URLSearchParams(window.location.search);
     const isReturnLeg = urlParams.get('leg') === 'return';
@@ -132,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const selectedFlight = {
                         flightId: selectedCard.getAttribute('data-flight-id'),
                         fareType: selectedCard.getAttribute('data-fare-type'),
+                        seatClass: getSeatClassCode(selectedCard.getAttribute('data-fare-type')),
                         individualPrice: individualPrice,  // 개별 가격 (원본)
                         price: totalPrice.toString(),      // 총 가격 (승객 수 × 개별 가격)
                         passengerCount: passengerCount,
@@ -184,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      const returnFlight = {
                          flightId: selectedCard.getAttribute('data-flight-id'),
                          fareType: selectedCard.getAttribute('data-fare-type'),
+                         seatClass: getSeatClassCode(selectedCard.getAttribute('data-fare-type')),
                          individualPrice: individualPrice,  // 개별 가격 (원본)
                          price: totalPrice.toString(),      // 총 가격 (승객 수 × 개별 가격)
                          passengerCount: passengerCount,
@@ -208,6 +222,8 @@ document.addEventListener('DOMContentLoaded', function() {
                              returnFlightId: returnFlight.flightId,
                              outboundFareType: outboundFlight.fareType,
                              returnFareType: returnFlight.fareType,
+                             outboundSeatClass: outboundFlight.seatClass || getSeatClassCode(outboundFlight.fareType),
+                             returnSeatClass: returnFlight.seatClass || getSeatClassCode(returnFlight.fareType),
                              outboundPrice: outboundFlight.price,
                              returnPrice: returnFlight.price,
                              totalPrice: totalPrice,
@@ -229,6 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
                          console.log('가는 편 총가격:', parseInt(outboundFlight.price).toLocaleString('ko-KR'), '원');
                          console.log('복항편 총가격:', parseInt(returnFlight.price).toLocaleString('ko-KR'), '원');
                          console.log('전체 총가격:', totalPrice.toLocaleString('ko-KR'), '원');
+                         console.log('🔍 좌석 클래스 디버깅:');
+                         console.log('- outboundFlight.fareType:', outboundFlight.fareType);
+                         console.log('- returnFlight.fareType:', returnFlight.fareType);
+                         console.log('- outboundFlight.seatClass:', outboundFlight.seatClass);
+                         console.log('- returnFlight.seatClass:', returnFlight.seatClass);
+                         console.log('- getSeatClassCode(outboundFlight.fareType):', getSeatClassCode(outboundFlight.fareType));
+                         console.log('- getSeatClassCode(returnFlight.fareType):', getSeatClassCode(returnFlight.fareType));
                          console.log('최종 booking URL:', bookingUrl);
                          console.log('✈️ 예약 페이지로 이동합니다...');
                          window.location.href = bookingUrl;
@@ -259,6 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      const bookingParams = new URLSearchParams({
                          flightId: flightId,
                          fareType: fareType,
+                         seatClass: getSeatClassCode(fareType),
                          individualPrice: individualPrice,  // 개별 가격 (원본)
                          totalPrice: totalPrice,            // 총 가격 (승객 수 반영)
                          passengerCount: passengerCount,
@@ -279,6 +303,9 @@ document.addEventListener('DOMContentLoaded', function() {
                      console.log('개별 가격:', parseInt(individualPrice).toLocaleString('ko-KR'), '원');
                      console.log('승객 수:', passengerCount, '명');
                      console.log('총 가격:', totalPrice.toLocaleString('ko-KR'), '원');
+                     console.log('🔍 좌석 클래스 디버깅:');
+                     console.log('- fareType:', fareType);
+                     console.log('- getSeatClassCode(fareType):', getSeatClassCode(fareType));
                      console.log('최종 booking URL:', bookingUrl);
                      console.log('✈️ 예약 페이지로 이동합니다...');
                      window.location.href = bookingUrl;

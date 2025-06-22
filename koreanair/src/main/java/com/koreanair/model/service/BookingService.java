@@ -1,5 +1,7 @@
 package com.koreanair.model.service;
 
+import java.sql.SQLException;
+
 import com.koreanair.model.dao.BookingDAO;
 import com.koreanair.model.dao.ReservationDAO;
 import com.koreanair.model.dao.ReservationDAOImpl; // 구현 클래스 import 추가
@@ -25,5 +27,15 @@ public class BookingService {
     
     public String saveBookingToPending(BookingDTO dto) {
     	return bookingDAO.saveBooking(dto);
+
+    }
+    
+    public void updateSeatStatusToPending(String flightId, String seatClass, int totalPassenger) {
+    	try {
+			bookingDAO.updateSeatToPending(flightId, seatClass, totalPassenger);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

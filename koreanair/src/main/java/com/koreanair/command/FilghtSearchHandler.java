@@ -50,6 +50,9 @@ public class FilghtSearchHandler implements CommandHandler{
 			.tripType(request.getParameter("tripType"))
 			.build();
 		
+		
+		seatService.releaseExpiredPendingSeats();
+		
 		List<SearchFlightResultDTO> flightList = searchService.searchFlight(dto);
 		
 		
@@ -66,7 +69,6 @@ public class FilghtSearchHandler implements CommandHandler{
 		request.setAttribute("flightList", flightList);
 		request.setAttribute("flightSeat", map);
 		request.setAttribute("weekLowPrices", searchService.getWeekLowPrice(dto));
-		
 		
 		System.out.print("flightList");
 		System.out.println(flightList);

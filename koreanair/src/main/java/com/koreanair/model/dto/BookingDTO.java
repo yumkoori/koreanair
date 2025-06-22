@@ -1,5 +1,7 @@
 package com.koreanair.model.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +17,5 @@ public class BookingDTO {
 	private String userNo;
 	private String promotionId;
 	private String bookingPw;
+	private LocalDateTime expireTime;
 }

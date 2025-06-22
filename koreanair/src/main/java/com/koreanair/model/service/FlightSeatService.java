@@ -21,5 +21,10 @@ public class FlightSeatService {
 		
 	}
 	
-	
+	public void releaseExpiredPendingSeats() {
+		
+		System.out.println("좌석 상태 초기화 ........");
+		
+		dao.releaseExpiredPendingSeats();
+	}
 }

@@ -289,6 +289,23 @@ public class FlightDAOImpl implements FlightDAO{
 		return weekMap;
 	}
 	
+	
+	public void releaseExpiredPendingSeats() {
+	    String sql = "UPDATE flight_seat " +
+	                 "SET status = 'AVAILABLE', pending_at = NULL " +
+	                 "WHERE status = 'PENDING' AND TIMESTAMPDIFF(MINUTE, pending_at, NOW()) >= 5";
+
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        int updatedRows = pstmt.executeUpdate();
+	        System.out.println("Expired pending seats released: " + updatedRows);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	
     // 리소스 정리
     private void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         if (rs != null) {
