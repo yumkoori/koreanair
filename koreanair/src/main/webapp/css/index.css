@@ -288,6 +288,7 @@ header.airline-header.scrolled {
     padding: 60px 0;
     color: white;
     font-family: 'Nanum Gothic', sans-serif;
+    overflow: visible;
 }
 
 /* 추가 클래스명들 */
@@ -317,7 +318,7 @@ header.airline-header.scrolled {
     background: transparent;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    overflow: visible;
     backdrop-filter: blur(10px);
     font-family: 'Nanum Gothic', sans-serif;
 }
@@ -371,6 +372,7 @@ header.airline-header.scrolled {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     font-family: 'Nanum Gothic', sans-serif;
+    overflow: visible;
 }
 
 .booking-content.active {
@@ -496,6 +498,7 @@ header.airline-header.scrolled {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
 }
 
 .airport-input:hover {
@@ -589,6 +592,148 @@ header.airline-header.scrolled {
     outline: none;
     border-color: #1e3a8a;
     box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+/* 탑승객 선택 드롭다운 스타일 */
+.passenger-selector {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Nanum Gothic', sans-serif;
+    line-height: 1.4;
+    min-height: 52px;
+}
+
+.passenger-selector:hover {
+    border-color: #1e3a8a;
+}
+
+.passenger-display {
+    font-size: 15px;
+    color: #333;
+}
+
+.passenger-selector i {
+    color: #666;
+    transition: transform 0.3s ease;
+}
+
+.passengers-dropdown {
+    display: none !important;
+    position: fixed !important;
+    background: #ffffff !important;
+    border: 2px solid #333333 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    z-index: 999999 !important;
+    padding: 16px !important;
+    min-width: 300px !important;
+    min-height: 200px !important;
+    max-height: 400px !important;
+    overflow: visible !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-family: 'Nanum Gothic', sans-serif !important;
+}
+
+.passenger-type {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+}
+
+.passenger-type:not(:last-child) {
+    border-bottom: 1px solid #eee;
+}
+
+.passenger-label {
+    display: flex;
+    flex-direction: column;
+}
+
+.passenger-label span {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+}
+
+.passenger-label small {
+    font-size: 12px;
+    color: #666;
+}
+
+.passenger-count {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.count-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.count-btn:hover {
+    border-color: #60a5fa;
+    background: #f8faff;
+}
+
+.count-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.count-btn i {
+    font-size: 12px;
+    color: #666;
+}
+
+.count {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    min-width: 20px;
+    text-align: center;
+}
+
+.passengers-footer {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+.apply-passengers {
+    width: 100%;
+    padding: 12px;
+    background: #60a5fa;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+.apply-passengers:hover {
+    background: #3b82f6;
 }
 
 .search-section {
@@ -765,6 +910,8 @@ header.airline-header.scrolled {
 /* 배너 슬라이더 스타일 */
 .banner {
     padding: 40px 0;
+    position: relative;
+    z-index: 1;
 }
 
 .banner-slider {
@@ -772,6 +919,7 @@ header.airline-header.scrolled {
     height: 500px;
     overflow: hidden;
     border-radius: 10px;
+    z-index: 1;
 }
 
 .slide {
@@ -784,6 +932,7 @@ header.airline-header.scrolled {
     transition: opacity 0.8s ease;
     background-size: cover;
     background-position: center;
+    z-index: 1;
 }
 
 .slide.active {
@@ -1420,7 +1569,7 @@ footer.airline-footer {
     width: 100vw;
     height: 15px;
     background: transparent;
-    z-index: 999;
+    z-index: 99;
     opacity: 0;
     visibility: hidden;
     transition: all 0.1s ease;
@@ -1442,7 +1591,7 @@ footer.airline-footer {
     opacity: 0;
     visibility: hidden;
     transition: all 0.1s ease;
-    z-index: 1000;
+    z-index: 100;
     min-width: 320px;
     max-width: min(1100px, 95vw);
     width: clamp(320px, 90vw, 1100px);
@@ -1599,6 +1748,404 @@ footer.airline-footer {
     width: 100%;
 }
 
+
+/* 출발지/도착지 검색 드롭다운 스타일 */
+#departure-dropdown,
+#arrival-dropdown {
+    display: none;
+    position: fixed !important;
+    top: auto;
+    left: auto;
+    background: #fff;
+    border: none;
+    width: 350px;
+    z-index: 2147483647 !important;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: visible;
+    max-height: 500px;
+    pointer-events: auto;
+}
+
+.dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dropdown-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.dropdown-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.dropdown-search-input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none;
+}
+
+.dropdown-search-input:focus {
+    border-color: #0066cc;
+}
+
+.dropdown-all-regions {
+    margin-top: 16px;
+    color: #0066cc;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-all-regions span {
+    margin-right: 8px;
+}
+
+/* 검색 결과가 없을 때도 하단이 둥글게 보이도록 */
+.dropdown-all-regions:last-child {
+    border-radius: 0 0 8px 8px;
+    margin-bottom: -12px;
+    padding-bottom: 12px;
+}
+
+.dropdown-results {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 12px;
+    border-radius: 0 0 8px 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+.dropdown-results::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dropdown-results::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+.dropdown-results::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
+
+.dropdown-result-item {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-result-item:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.dropdown-result-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-result-item:last-child:hover {
+    border-radius: 0 0 8px 8px;
+}
+
+/* 모든 화면 크기에서 검색창이 최상단에 오도록 보장 */
+@media (min-width: 841px) {
+    #departure-dropdown,
+    #arrival-dropdown {
+        z-index: 2147483647 !important;
+        position: fixed !important;
+    }
+}
+
+@media (max-width: 840px) {
+    #departure-dropdown,
+    #arrival-dropdown {
+        z-index: 2147483647 !important;
+        position: fixed !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    #departure-dropdown,
+    #arrival-dropdown {
+        z-index: 2147483647 !important;
+        position: fixed !important;
+    }
+}
+
+/* 날짜 선택기 스타일 */
+.date-picker-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 52px;
+    height: 52px;
+    box-sizing: border-box;
+}
+
+.date-picker-container:hover {
+    border-color: #1e3a8a;
+}
+
+.date-picker-container input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    font-family: 'Nanum Gothic', sans-serif;
+    flex: 1;
+    cursor: pointer;
+    color: #333;
+    height: 20px;
+    line-height: 1.4;
+    padding: 0;
+}
+
+.date-picker-container i {
+    color: #666;
+    margin-left: 10px;
+}
+
+/* 달력 팝업 */
+.calendar-popup {
+    position: fixed !important;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white !important;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    z-index: 999999999 !important;
+    margin-top: 5px;
+    display: none;
+    min-width: 320px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+.calendar-popup.show {
+    display: block;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.calendar-nav-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.calendar-nav-btn:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.calendar-month-year {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.calendar-body {
+    padding: 15px 20px;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.calendar-weekdays div {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    padding: 8px 0;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background: #f0f8ff;
+}
+
+.calendar-day.other-month {
+    color: #ccc;
+}
+
+.calendar-day.selected {
+    background: #1e3a8a;
+    color: white;
+}
+
+.calendar-day.start-date {
+    background: #1e3a8a;
+    color: white;
+}
+
+.calendar-day.end-date {
+    background: #1e3a8a;
+    color: white;
+}
+
+.calendar-day.in-range {
+    background: #e6f3ff;
+    color: #1e3a8a;
+}
+
+.calendar-day.today {
+    border: 2px solid #60a5fa;
+}
+
+.calendar-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+}
+
+.calendar-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.calendar-btn:hover {
+    background: #f5f5f5;
+}
+
+.calendar-apply {
+    background: #1e3a8a;
+    color: white;
+    border-color: #1e3a8a;
+}
+
+.calendar-apply:hover {
+    background: #1e40af;
+}
+
+/* 배너 관련 요소들의 z-index 강제 조정 */
+.banner,
+.banner-slider,
+.slide,
+.slide.active,
+.slide-content {
+    z-index: 0 !important;
+}
+
+/* 달력이 모든 요소 위에 표시되도록 강제 설정 */
+.calendar-popup.show {
+    z-index: 2147483647 !important;
+    position: fixed !important;
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+    isolation: isolate !important;
+}
+
+/* 달력 팝업을 새로운 스택 컨텍스트로 만들기 */
+.calendar-popup {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* 달력 오버레이 배경 */
+.calendar-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    z-index: 999999998 !important;
+    display: none;
+    pointer-events: auto !important;
+}
+
+.calendar-overlay.show {
+    display: block !important;
+}
+
+/* 모든 배경 이미지와 슬라이드보다 위에 표시 */
+body > .calendar-popup {
+    z-index: 999999999 !important;
+    position: fixed !important;
+    transform: translateZ(999px) !important;
+}
+
+/* 배경 이미지들을 뒤로 보내기 */
+.slide,
+.slide.active,
+.banner-slider,
+.banner {
+    transform: translateZ(-1px) !important;
+    
+}
+
+
 .lookup-actions {
     display: flex;
     align-items: center;
@@ -1750,4 +2297,5 @@ footer.airline-footer {
 }
 .btn-lookup-another:hover {
     background: #e2e8f0;
+
 }

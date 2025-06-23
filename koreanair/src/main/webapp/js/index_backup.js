@@ -1,338 +1,120 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 탭 기능 구현 (메인 페이지에만 존재)
-
-    console.log('=== INDEX.JS 로드됨 ===');
-    console.log('DOMContentLoaded 이벤트 발생');
-    
-
-    
-    // ===== 탑승객 선택 기능을 최우선으로 실행 =====
-    console.log('=== 탑승객 선택 기능 초기화 시작 ===');
-    
-    // 즉시 실행되는 탑승객 기능
-    function initPassengerSelector() {
-        console.log('initPassengerSelector 함수 실행');
-        
-        const passengerSelector = document.querySelector('.passenger-selector');
-        const passengerDisplay = document.querySelector('.passenger-display');
-        const passengersDropdown = document.querySelector('.passengers-dropdown');
-        
-        console.log('찾은 요소들:');
-        console.log('- passengerSelector:', passengerSelector);
-        console.log('- passengerDisplay:', passengerDisplay);
-        console.log('- passengersDropdown:', passengersDropdown);
-        
-        if (passengerSelector) {
-            console.log('탑승객 선택기 HTML:', passengerSelector.outerHTML.substring(0, 100) + '...');
-            
-
-             
-             // 직접 클릭 이벤트 추가
-             passengerSelector.onclick = function(e) {
-                 console.log('=== 탑승객 선택기 클릭됨! ===');
-                 e.preventDefault();
-                 e.stopPropagation();
-                 
-
-                 
-                 // 기존 커스텀 드롭다운이 있으면 제거
-                 const existingCustomDropdown = document.getElementById('custom-passenger-dropdown');
-                 if (existingCustomDropdown) {
-                     existingCustomDropdown.remove();
-                     console.log('기존 커스텀 드롭다운 제거됨');
-                     return;
-                 }
-                 
-                 // 새로운 드롭다운 생성
-                 const customDropdown = document.createElement('div');
-                 customDropdown.id = 'custom-passenger-dropdown';
-                 customDropdown.innerHTML = `
-                     <div style="padding: 20px; background: #fff;">
-                         <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px;">탑승객 선택</div>
-                         
-                         <div style="margin-bottom: 20px;">
-                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
-                                 <div>
-                                     <div style="font-weight: 600; color: #333; font-size: 14px; margin-bottom: 4px;">성인</div>
-                                     <div style="font-size: 12px; color: #666;">만 12세 이상</div>
-                                 </div>
-                                 <div style="display: flex; align-items: center; gap: 16px;">
-                                     <button class="custom-count-btn decrease" data-type="adult" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">−</button>
-                                     <span class="custom-count adult-count" style="min-width: 24px; text-align: center; font-weight: 600; font-size: 16px; color: #333;">1</span>
-                                     <button class="custom-count-btn increase" data-type="adult" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">+</button>
-                                 </div>
-                             </div>
-                             
-                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid #f5f5f5;">
-                                 <div>
-                                     <div style="font-weight: 600; color: #333; font-size: 14px; margin-bottom: 4px;">소아</div>
-                                     <div style="font-size: 12px; color: #666;">만 2-11세</div>
-                                 </div>
-                                 <div style="display: flex; align-items: center; gap: 16px;">
-                                     <button class="custom-count-btn decrease" data-type="child" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">−</button>
-                                     <span class="custom-count child-count" style="min-width: 24px; text-align: center; font-weight: 600; font-size: 16px; color: #333;">0</span>
-                                     <button class="custom-count-btn increase" data-type="child" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">+</button>
-                                 </div>
-                             </div>
-                             
-                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid #f5f5f5;">
-                                 <div>
-                                     <div style="font-weight: 600; color: #333; font-size: 14px; margin-bottom: 4px;">유아</div>
-                                     <div style="font-size: 12px; color: #666;">만 2세 미만</div>
-                                 </div>
-                                 <div style="display: flex; align-items: center; gap: 16px;">
-                                     <button class="custom-count-btn decrease" data-type="infant" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">−</button>
-                                     <span class="custom-count infant-count" style="min-width: 24px; text-align: center; font-weight: 600; font-size: 16px; color: #333;">0</span>
-                                     <button class="custom-count-btn increase" data-type="infant" style="width: 36px; height: 36px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">+</button>
-                                 </div>
-                             </div>
-                         </div>
-                         
-                         <div style="display: flex; gap: 12px; margin-top: 24px;">
-                             <button id="custom-cancel-btn" style="flex: 1; padding: 12px 16px; border: 1px solid #e1e5e9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; color: #333; transition: all 0.2s;">취소</button>
-                             <button id="custom-apply-btn" style="flex: 1; padding: 12px 16px; border: none; background: #0066cc; color: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s;">확인</button>
-                         </div>
-                     </div>
-                 `;
-                 
-                 // 위치와 스타일 설정 (search.jsp 스타일과 동일하게)
-                 const rect = passengerSelector.getBoundingClientRect();
-                 const viewportWidth = window.innerWidth;
-                 const viewportHeight = window.innerHeight;
-                 
-                 // 드롭다운이 화면을 벗어나지 않도록 위치 조정
-                 let dropdownTop = rect.bottom + 4;
-                 let dropdownLeft = rect.left;
-                 let dropdownWidth = Math.min(rect.width, 350); // 최대 350px로 제한
-                 
-                 // 오른쪽으로 벗어나는 경우 조정
-                 if (dropdownLeft + dropdownWidth > viewportWidth - 20) {
-                     dropdownLeft = viewportWidth - dropdownWidth - 20;
-                 }
-                 
-                 // 아래로 벗어나는 경우 위쪽에 표시
-                 if (dropdownTop + 300 > viewportHeight) {
-                     dropdownTop = rect.top - 304; // 드롭다운 높이만큼 위로
-                 }
-                 
-                 customDropdown.style.cssText = `
-                     position: fixed !important;
-                     top: ${dropdownTop}px !important;
-                     left: ${dropdownLeft}px !important;
-                     width: ${dropdownWidth}px !important;
-                     max-width: 350px !important;
-                     z-index: 999999 !important;
-                     background: #ffffff !important;
-                     border: 1px solid #ddd !important;
-                     border-radius: 8px !important;
-                     box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-                     font-family: 'Nanum Gothic', sans-serif !important;
-                     display: block !important;
-                     visibility: visible !important;
-                     opacity: 1 !important;
-                     max-height: 300px !important;
-                     overflow: visible !important;
-                 `;
-                 
-                 // body에 추가
-                 document.body.appendChild(customDropdown);
-                 console.log('커스텀 드롭다운 생성됨');
-                 
-                 // 버튼 이벤트 추가
-                 const countBtns = customDropdown.querySelectorAll('.custom-count-btn');
-                 countBtns.forEach(btn => {
-                     btn.onclick = function(e) {
-                         e.stopPropagation();
-                         const type = this.dataset.type;
-                         const isIncrease = this.classList.contains('increase');
-                         const countSpan = customDropdown.querySelector(`.${type}-count`);
-                         let currentCount = parseInt(countSpan.textContent);
-                         
-                         if (isIncrease) {
-                             if (currentCount < 9) {
-                                 currentCount++;
-                             }
-                         } else {
-                             if (currentCount > 0) {
-                                 currentCount--;
-                             }
-                         }
-                         
-                         countSpan.textContent = currentCount;
-                         
-                         // 전역 변수 업데이트
-                         if (type === 'adult') adultCount = currentCount;
-                         else if (type === 'child') childCount = currentCount;
-                         else if (type === 'infant') infantCount = currentCount;
-                     };
-                 });
-                 
-                 // 취소 버튼 이벤트
-                 const cancelBtn = customDropdown.querySelector('#custom-cancel-btn');
-                 cancelBtn.onclick = function() {
-                     customDropdown.remove();
-                     console.log('드롭다운 취소 및 닫힘');
-                 };
-                 
-                 // 적용 버튼 이벤트
-                 const applyBtn = customDropdown.querySelector('#custom-apply-btn');
-                 applyBtn.onclick = function() {
-                     updatePassengerDisplay();
-                     customDropdown.remove();
-                     console.log('드롭다운 적용 및 닫힘');
-                 };
-                 
-                 // 외부 클릭 시 닫기
-                 document.addEventListener('click', function closeDropdown(e) {
-                     if (!customDropdown.contains(e.target) && !passengerSelector.contains(e.target)) {
-                         customDropdown.remove();
-                         document.removeEventListener('click', closeDropdown);
-                         console.log('외부 클릭으로 드롭다운 닫힘');
-                     }
-                 });
-             };
-            
-            console.log('탑승객 선택기에 onclick 이벤트 추가됨');
-        } else {
-            console.log('탑승객 선택기를 찾을 수 없음');
-        }
-    }
-    
-    // 즉시 실행
-    initPassengerSelector();
-    
-    // 1초 후 재시도
-    setTimeout(initPassengerSelector, 1000);
-    
     // 탭 기능 구현
-
-    const tabBtns = document.querySelectorAll('.booking-tab-btn');
+    const tabBtns = document.querySelectorAll('.tab-btn');
     const bookingContents = document.querySelectorAll('.booking-content');
 
-    if (tabBtns.length > 0) {
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetTab = btn.getAttribute('data-tab');
-                
-                // 모든 탭 버튼에서 active 클래스 제거
-                tabBtns.forEach(b => b.classList.remove('active'));
-                // 클릭된 탭 버튼에 active 클래스 추가
-                btn.classList.add('active');
-                
-                // 모든 콘텐츠에서 active 클래스 제거
-                bookingContents.forEach(content => content.classList.remove('active'));
-                // 해당 콘텐츠에 active 클래스 추가
-                const targetElement = document.getElementById(targetTab);
-                if (targetElement) {
-                    targetElement.classList.add('active');
-                }
-            });
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.getAttribute('data-tab');
+            
+            // 모든 탭 버튼에서 active 클래스 제거
+            tabBtns.forEach(b => b.classList.remove('active'));
+            // 클릭된 탭 버튼에 active 클래스 추가
+            btn.classList.add('active');
+            
+            // 모든 콘텐츠에서 active 클래스 제거
+            bookingContents.forEach(content => content.classList.remove('active'));
+            // 해당 콘텐츠에 active 클래스 추가
+            document.getElementById(targetTab).classList.add('active');
         });
-    }
+    });
 
-    // 슬라이더 기능 구현 (메인 페이지에만 존재)
+    // 슬라이더 기능 구현
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
     const prevBtn = document.querySelector('.prev');
     const nextBtn = document.querySelector('.next');
     
-    if (slides.length > 0 && dots.length > 0 && prevBtn && nextBtn) {
-        let currentSlide = 0;
-        const slideCount = slides.length;
+    let currentSlide = 0;
+    const slideCount = slides.length;
+    
+    // 슬라이드 이동 함수
+    function moveToSlide(index) {
+        // 현재 활성화된 슬라이드와 닷 비활성화
+        slides[currentSlide].classList.remove('active');
+        dots[currentSlide].classList.remove('active');
         
-        // 슬라이드 이동 함수
-        function moveToSlide(index) {
-            // 현재 활성화된 슬라이드와 닷 비활성화
-            slides[currentSlide].classList.remove('active');
-            dots[currentSlide].classList.remove('active');
-            
-            // 새로운 슬라이드와 닷 활성화
-            currentSlide = index;
-            
-            // 슬라이드 인덱스 조정 (순환)
-            if (currentSlide < 0) {
-                currentSlide = slideCount - 1;
-            } else if (currentSlide >= slideCount) {
-                currentSlide = 0;
-            }
-            
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide].classList.add('active');
+        // 새로운 슬라이드와 닷 활성화
+        currentSlide = index;
+        
+        // 슬라이드 인덱스 조정 (순환)
+        if (currentSlide < 0) {
+            currentSlide = slideCount - 1;
+        } else if (currentSlide >= slideCount) {
+            currentSlide = 0;
         }
         
-        // 다음 슬라이드로 이동
-        function nextSlide() {
-            moveToSlide(currentSlide + 1);
-        }
-        
-        // 이전 슬라이드로 이동
-        function prevSlide() {
-            moveToSlide(currentSlide - 1);
-        }
-        
-        // 이벤트 리스너 추가
-        prevBtn.addEventListener('click', prevSlide);
-        nextBtn.addEventListener('click', nextSlide);
-        
-        // 닷 클릭 이벤트
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                moveToSlide(index);
-            });
-        });
-        
-        // 자동 슬라이드 기능
-        let slideInterval = setInterval(nextSlide, 5000);
-        
-        // 슬라이드에 마우스를 올리면 자동 슬라이드 멈춤
-        const bannerSlider = document.querySelector('.banner-slider');
-        
-        if (bannerSlider) {
-            bannerSlider.addEventListener('mouseenter', () => {
-                clearInterval(slideInterval);
-            });
-            
-            // 슬라이드에서 마우스가 나가면 자동 슬라이드 재시작
-            bannerSlider.addEventListener('mouseleave', () => {
-                slideInterval = setInterval(nextSlide, 5000);
-            });
-        }
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
     }
+    
+    // 다음 슬라이드로 이동
+    function nextSlide() {
+        moveToSlide(currentSlide + 1);
+    }
+    
+    // 이전 슬라이드로 이동
+    function prevSlide() {
+        moveToSlide(currentSlide - 1);
+    }
+    
+    // 이벤트 리스너 추가
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+    
+    // 닷 클릭 이벤트
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            moveToSlide(index);
+        });
+    });
+    
+    // 자동 슬라이드 기능
+    let slideInterval = setInterval(nextSlide, 5000);
+    
+    // 슬라이드에 마우스를 올리면 자동 슬라이드 멈춤
+    const bannerSlider = document.querySelector('.banner-slider');
+    
+    bannerSlider.addEventListener('mouseenter', () => {
+        clearInterval(slideInterval);
+    });
+    
+    // 슬라이드에서 마우스가 나가면 자동 슬라이드 재시작
+    bannerSlider.addEventListener('mouseleave', () => {
+        slideInterval = setInterval(nextSlide, 5000);
+    });
 
-    // 출발지/도착지 교환 버튼 기능 (메인 페이지에만 존재)
+    // 출발지/도착지 교환 버튼 기능
     const swapBtns = document.querySelectorAll('.swap-route-btn');
-    if (swapBtns.length > 0) {
-        swapBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const routeInputs = btn.parentElement.querySelectorAll('.airport-input');
-                if (routeInputs.length === 2) {
-                    const departure = routeInputs[0];
-                    const arrival = routeInputs[1];
-                    
-                    // 코드와 이름 교환
-                    const tempCode = departure.querySelector('.airport-code').textContent;
-                    const tempName = departure.querySelector('.airport-name').textContent;
-                    
-                    departure.querySelector('.airport-code').textContent = arrival.querySelector('.airport-code').textContent;
-                    departure.querySelector('.airport-name').textContent = arrival.querySelector('.airport-name').textContent;
-                    
-                    arrival.querySelector('.airport-code').textContent = tempCode;
-                    arrival.querySelector('.airport-name').textContent = tempName;
-                }
-            });
+    swapBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const routeInputs = btn.parentElement.querySelectorAll('.airport-input');
+            if (routeInputs.length === 2) {
+                const departure = routeInputs[0];
+                const arrival = routeInputs[1];
+                
+                // 코드와 이름 교환
+                const tempCode = departure.querySelector('.airport-code').textContent;
+                const tempName = departure.querySelector('.airport-name').textContent;
+                
+                departure.querySelector('.airport-code').textContent = arrival.querySelector('.airport-code').textContent;
+                departure.querySelector('.airport-name').textContent = arrival.querySelector('.airport-name').textContent;
+                
+                arrival.querySelector('.airport-code').textContent = tempCode;
+                arrival.querySelector('.airport-name').textContent = tempName;
+            }
         });
-    }
+    });
 
-    // 스크롤 이벤트 - 헤더 애니메이션 (모든 페이지에서 실행)
-    const header = document.querySelector('header.airline-header');
-    const headerTop = document.querySelector('.airline-header-top');
-    const dropdownMenus = document.querySelectorAll('.airline-dropdown-menu');
+    // 스크롤 이벤트 - 헤더 애니메이션
+    const header = document.querySelector('header');
+    const headerTop = document.querySelector('.header-top');
+    const dropdownMenus = document.querySelectorAll('.dropdown-menu');
     let lastScrollTop = 0;
     let scrollDirection = 'none';
     
     // 드롭다운 메뉴의 위치를 헤더 높이에 맞게 조정하는 함수
     function adjustDropdownPositions() {
-        if (!header) return;
         const headerHeight = header.offsetHeight;
         const viewportWidth = window.innerWidth;
         
@@ -392,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const style = document.createElement('style');
         style.textContent = `
-            .airline-nav-item::after {
+            .nav-item::after {
                 top: ${bridgeTop}px !important;
                 width: 100vw;
             }
@@ -458,108 +240,98 @@ document.addEventListener('DOMContentLoaded', function() {
         checkDropdownBounds();
     });
     
-    // 스크롤 이벤트 (헤더가 있는 모든 페이지에서 실행)
-    if (header && headerTop) {
-        window.addEventListener('scroll', function() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // 스크롤 방향 감지
+        if (scrollTop > lastScrollTop) {
+            scrollDirection = 'down';
+        } else {
+            scrollDirection = 'up';
+        }
+        
+        // 스크롤 위치에 따른 헤더 스타일 변경
+        if (scrollTop > 100) {
+            header.classList.add('scrolled');
             
-            // 스크롤 방향 감지
-            if (scrollTop > lastScrollTop) {
-                scrollDirection = 'down';
-            } else {
-                scrollDirection = 'up';
-            }
-            
-            // 스크롤 위치에 따른 헤더 스타일 변경
-            if (scrollTop > 100) {
-                header.classList.add('scrolled');
-                
-                // 스크롤 다운 시 상단 메뉴 숨기기
-                if (scrollDirection === 'down' && scrollTop > 200) {
-                    headerTop.style.transform = 'translateY(-100%)';
-                    headerTop.style.opacity = '0';
-                    header.style.transform = 'translateY(-' + headerTop.offsetHeight + 'px)';
-                } 
-                // 스크롤 업 시 상단 메뉴 다시 보이기
-                else if (scrollDirection === 'up') {
-                    headerTop.style.transform = 'translateY(0)';
-                    headerTop.style.opacity = '1';
-                    header.style.transform = 'translateY(0)';
-                }
-            } else {
-                header.classList.remove('scrolled');
+            // 스크롤 다운 시 상단 메뉴 숨기기
+            if (scrollDirection === 'down' && scrollTop > 200) {
+                headerTop.style.transform = 'translateY(-100%)';
+                headerTop.style.opacity = '0';
+                header.style.transform = 'translateY(-' + headerTop.offsetHeight + 'px)';
+            } 
+            // 스크롤 업 시 상단 메뉴 다시 보이기
+            else if (scrollDirection === 'up') {
                 headerTop.style.transform = 'translateY(0)';
                 headerTop.style.opacity = '1';
                 header.style.transform = 'translateY(0)';
             }
-            
-            // 헤더 상태 변화에 따라 드롭다운 메뉴 위치 조정
-            adjustDropdownPositions();
-            
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // iOS 바운스 효과 방지
-        });
-    }
+        } else {
+            header.classList.remove('scrolled');
+            headerTop.style.transform = 'translateY(0)';
+            headerTop.style.opacity = '1';
+            header.style.transform = 'translateY(0)';
+        }
+        
+        // 헤더 상태 변화에 따라 드롭다운 메뉴 위치 조정
+        adjustDropdownPositions();
+        
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // iOS 바운스 효과 방지
+    });
 
-    // 폼 유효성 검사 (메인 페이지에만 존재)
+    // 폼 유효성 검사
     const bookingForms = document.querySelectorAll('.booking-form');
     
-    if (bookingForms.length > 0) {
-        bookingForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                let isValid = true;
-                const inputs = this.querySelectorAll('input[type="text"], input[type="date"]');
-                
-                inputs.forEach(input => {
-                    if (input.value.trim() === '') {
-                        isValid = false;
-                        input.classList.add('error');
-                    } else {
-                        input.classList.remove('error');
-                    }
-                });
-                
-                if (isValid) {
-                    // 실제 제출 코드 (실제 구현 시 서버로 전송)
-                    alert('항공권 검색을 시작합니다.');
-                    // form.submit();
+    bookingForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            const inputs = this.querySelectorAll('input[type="text"], input[type="date"]');
+            
+            inputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    isValid = false;
+                    input.classList.add('error');
                 } else {
-                    alert('모든 필수 항목을 입력해주세요.');
+                    input.classList.remove('error');
                 }
             });
+            
+            if (isValid) {
+                // 실제 제출 코드 (실제 구현 시 서버로 전송)
+                alert('항공권 검색을 시작합니다.');
+                // form.submit();
+            } else {
+                alert('모든 필수 항목을 입력해주세요.');
+            }
         });
-    }
+    });
 
-    // 여행 타입 버튼 기능 (메인 페이지에만 존재)
+    // 여행 타입 버튼 기능
     const tripTypeBtns = document.querySelectorAll('.trip-type-btn');
-    if (tripTypeBtns.length > 0) {
-        tripTypeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                tripTypeBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
+    tripTypeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tripTypeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         });
-    }
+    });
     
-    // 상태 버튼 기능 (메인 페이지에만 존재)
+    // 상태 버튼 기능
     const statusBtns = document.querySelectorAll('.status-btn');
-    if (statusBtns.length > 0) {
-        statusBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                statusBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
+    statusBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            statusBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         });
-    }
+    });
 
-    // 드롭다운 메뉴 기능 (모든 페이지에서 실행)
-    const navItems = document.querySelectorAll('.airline-nav-item.dropdown');
+    // 드롭다운 메뉴 기능
+    const navItems = document.querySelectorAll('.nav-item.dropdown');
     
-    if (navItems.length > 0) {
-        navItems.forEach(navItem => {
-        const navLink = navItem.querySelector('.airline-nav-link');
-        const dropdownMenu = navItem.querySelector('.airline-dropdown-menu');
+    navItems.forEach(navItem => {
+        const navLink = navItem.querySelector('.nav-link');
+        const dropdownMenu = navItem.querySelector('.dropdown-menu');
         let hoverTimeout;
         let isMouseOverDropdown = false;
         let isMouseOverNavItem = false;
@@ -641,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 다른 드롭다운 메뉴 닫기
                     navItems.forEach(item => {
                         if (item !== navItem) {
-                            const otherMenu = item.querySelector('.airline-dropdown-menu');
+                            const otherMenu = item.querySelector('.dropdown-menu');
                             otherMenu.style.opacity = '0';
                             otherMenu.style.visibility = 'hidden';
                         }
@@ -681,8 +453,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 모바일에서 터치 이벤트 처리
     if ('ontouchstart' in window) {
         navItems.forEach(navItem => {
-            const navLink = navItem.querySelector('.airline-nav-link');
-            const dropdownMenu = navItem.querySelector('.airline-dropdown-menu');
+            const navLink = navItem.querySelector('.nav-link');
+            const dropdownMenu = navItem.querySelector('.dropdown-menu');
             
             navLink.addEventListener('touchstart', (e) => {
                 e.preventDefault();
@@ -690,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 다른 드롭다운 메뉴 닫기
                 navItems.forEach(item => {
                     if (item !== navItem) {
-                        const otherMenu = item.querySelector('.airline-dropdown-menu');
+                        const otherMenu = item.querySelector('.dropdown-menu');
                         otherMenu.style.opacity = '0';
                         otherMenu.style.visibility = 'hidden';
                     }
@@ -709,40 +481,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    }
-    
-    // 페이지 캐시 관련 이벤트 (메인 페이지에만 존재)
-    const checkinTab = document.querySelector('#checkin');
-    if (checkinTab) {
-        window.addEventListener('pageshow', function(event) {
-            // event.persisted 속성은 페이지가 bfcache에서 로드되었을 때 true가 됩니다.
-            if (event.persisted) {
-                // '예약 조회' 탭의 비회원 조회 폼을 찾습니다.
-                const lookupForm = document.querySelector('#checkin .checkin-form');
-                if (lookupForm) {
-                    // reset() 대신 각 필드를 직접 찾아 값을 비웁니다.
-                    const bookingIdInput = lookupForm.querySelector('input[name="bookingId"]');
-                    const departureDateInput = lookupForm.querySelector('input[name="departureDate"]');
-                    const lastNameInput = lookupForm.querySelector('input[name="lastName"]');
-                    const firstNameInput = lookupForm.querySelector('input[name="firstName"]');
-                    const checkbox = lookupForm.querySelector('input[type="checkbox"]');
-
-                    if (bookingIdInput) bookingIdInput.value = '';
-                    if (departureDateInput) departureDateInput.value = '';
-                    if (lastNameInput) lastNameInput.value = '';
-                    if (firstNameInput) firstNameInput.value = '';
-                    if (checkbox) checkbox.checked = false; // 체크박스도 해제
-                }
-                
-                // bfcache에 남아있을 수 있는 조회 실패 오류 메시지를 찾아 제거합니다.
-                const lookupError = document.querySelector('#checkin .booking-error');
-                if (lookupError) {
-                    lookupError.remove();
-                }
-            }
-        });
-    }
-
 
     // 출발지/도착지 검색 기능
     const departureDiv = document.querySelector('.airport-input.departure');
@@ -1269,54 +1007,33 @@ document.addEventListener('DOMContentLoaded', function() {
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // 입력값 가져오기
-            const departureCode = document.querySelector('.departure .airport-code').textContent || 'CJU';
-            const arrivalCode = document.querySelector('.arrival .airport-code').textContent || 'GMP';
-            
-            // 날짜 값 가져오기 (기본값: 2025-07-15 ~ 2025-07-16)
-            let departureDate = '2025-07-15';
-            let returnDate = '2025-07-16';
-            
-            if (selectedStartDate) {
-                const year = selectedStartDate.getFullYear();
-                const month = String(selectedStartDate.getMonth() + 1).padStart(2, '0');
-                const day = String(selectedStartDate.getDate()).padStart(2, '0');
-                departureDate = `${year}-${month}-${day}`;
+                        try {
+                // 기본값 설정
+                const departure = 'CJU';
+                const arrival = 'GMP'; 
+                const departureDate = '2025-07-15';
+                const returnDate = '2025-07-16';
+                const passengers = '성인 1명';
+                const seatClass = '일반석';
+                const tripType = 'round';
+                
+                // URL 직접 생성하여 이동
+                const params = new URLSearchParams({
+                    departure: departure,
+                    arrival: arrival,
+                    departureDate: departureDate,
+                    returnDate: returnDate,
+                    passengers: passengers,
+                    seatClass: seatClass,
+                    tripType: tripType
+                });
+                
+                const url = 'flightSearch.do?' + params.toString();
+                window.location.href = url;
+            } catch (error) {
+                console.error('폼 제출 중 오류 발생:', error);
+                alert('검색 중 오류가 발생했습니다. 페이지를 새로고침 후 다시 시도해주세요.');
             }
-            
-            if (selectedEndDate && currentTripType !== 'oneway') {
-                const year = selectedEndDate.getFullYear();
-                const month = String(selectedEndDate.getMonth() + 1).padStart(2, '0');
-                const day = String(selectedEndDate.getDate()).padStart(2, '0');
-                returnDate = `${year}-${month}-${day}`;
-            }
-            
-            // 탑승객 정보 가져오기 (기본값: 성인 1명)
-            let passengers = '성인 1명';
-            const passengerDisplayElement = document.querySelector('.passenger-display');
-            if (passengerDisplayElement && passengerDisplayElement.textContent.trim()) {
-                passengers = passengerDisplayElement.textContent.trim();
-            }
-            
-            // 좌석 등급 (기본값: 일반석)
-            const seatClass = '일반석';
-            
-            // 여행 타입 가져오기 (기본값: round)
-            const tripType = currentTripType || 'round';
-            
-            // URL 생성
-            const params = new URLSearchParams({
-                departure: departureCode,
-                arrival: arrivalCode,
-                departureDate: departureDate,
-                returnDate: returnDate,
-                passengers: passengers,
-                seatClass: seatClass,
-                tripType: tripType
-            });
-            
-            const url = `flightSearch.do?${params.toString()}`;
-            window.location.href = url;
         });
     }
 
@@ -1339,36 +1056,6 @@ document.addEventListener('DOMContentLoaded', function() {
             positionDropdown(arrivalDiv, arrivalDropdown);
         }
     });
-
-    // 기존 탑승객 선택 코드 (단순화됨)
-    let adultCount = 1;
-    let childCount = 0;
-    let infantCount = 0;
-
-    // 탑승객 수 업데이트 함수 (단순화됨)
-    function updatePassengerDisplay() {
-        const passengerDisplay = document.querySelector('.passenger-display');
-        if (passengerDisplay) {
-            let displayText = '';
-            const parts = [];
-            
-            if (adultCount > 0) {
-                parts.push(`성인 ${adultCount}명`);
-            }
-            if (childCount > 0) {
-                parts.push(`소아 ${childCount}명`);
-            }
-            if (infantCount > 0) {
-                parts.push(`유아 ${infantCount}명`);
-            }
-            
-            displayText = parts.join(', ');
-            passengerDisplay.textContent = displayText;
-        }
-    }
-
-    // 초기 상태 설정
-    updatePassengerDisplay();
 }); 
 
 
@@ -1419,5 +1106,4 @@ document.querySelector('#arrival-search').addEventListener('input', function () 
             });
         })
         .catch(console.error);
-
-}); 
+});
