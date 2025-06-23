@@ -14,25 +14,17 @@
         <res-auth>Container</res-auth>
     </resource-ref>
     
-<<<<<<< HEAD
-    <servlet>
-   		<servlet-name>DispatcherServlet</servlet-name>
-   		<servlet-class>com.koreanair.controller.DispatcherServlet</servlet-class>
-   		<init-param>
-   			<param-name>configFile</param-name>
-   			<param-value>/WEB-INF/commandHandler.properties</param-value>
-   		</init-param>
-   		<load-on-startup>1</load-on-startup>
-   </servlet>
+
+
    
    <servlet-mapping>
    		<servlet-name>DispatcherServlet</servlet-name>
    		<url-pattern>*.air</url-pattern>
    </servlet-mapping>
     
-=======
+
     <!-- 메인 디스패처 서블릿 설정 -->
->>>>>>> main
+
     <servlet>
         <servlet-name>DispatcherServlet</servlet-name>
         <servlet-class>com.koreanair.controller.DispatcherServlet</servlet-class>

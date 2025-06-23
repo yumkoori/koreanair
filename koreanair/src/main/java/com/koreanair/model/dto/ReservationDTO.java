@@ -29,4 +29,5 @@ public class ReservationDTO {
     private String email;           // 이메일
     private String memberId;        // 회원번호
     private String ticketNumber;    // 항공권 번호 (DB에 없어 조회 불가)
+    private String assignedSeat;
 }

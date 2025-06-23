@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+:root {
+    --primary-blue: #0064de;
+    --dark-blue: #0d2c5a;
+    --light-gray: #f4f7fb;
+    --border-gray: #e1e8f0;
+    --text-dark: #333;
+    --text-light: #666;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background-color: var(--light-gray); font-family: 'Noto Sans KR', sans-serif; }
+
+/* 페이지 레이아웃 */
+.checkin-page-container { width: 100%; max-width: 1200px; margin: 40px auto; background-color: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0, 37, 108, 0.1); overflow: hidden; }
+.page-header { padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-gray); }
+.page-header h2 { font-size: 20px; }
+.close-btn { background: none; border: none; font-size: 16px; color: var(--text-light); cursor: pointer; }
+.flight-info-bar { display: flex; align-items: center; background-color: var(--dark-blue); color: #fff; padding: 14px 30px; font-size: 15px; gap: 24px; }
+.flight-info-bar .route { font-weight: 700; }
+.flight-info-bar .flight-details { margin-left: auto; }
+.flight-info-bar i { margin-right: 6px; }
+.page-content-area { display: flex; padding: 30px; gap: 30px; background-color: #f8f9fc; }
+.page-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; border-top: 1px solid var(--border-gray); }
+.additional-charge strong { font-size: 20px; color: var(--primary-blue); }
+.btn-submit { background-color: var(--primary-blue); color: #fff; border: none; padding: 12px 40px; border-radius: 6px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.btn-submit:hover { background-color: #0056c0; }
+
+/* 좌석 배치도 */
+.seat-map-view { flex: 3; display: flex; justify-content: center; padding: 20px; background-color: #fff; border: 1px solid var(--border-gray); border-radius: 8px; }
+.airplane { width: 100%; max-width: 580px; background: white; border-radius: 50px; padding: 20px; }
+.visual-seat-row { display: flex; align-items: center; margin: 3px 0; }
+.row-number { width: 25px; flex-shrink: 0; text-align: right; font-size: 10px; font-weight: bold; color: #555; margin-right: 5px; }
+.row-content { display: flex; justify-content: center; flex-grow: 1; align-items: center; }
+.seat { width: 28px; height: 28px; background-color: #338fff; color: white; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 2px; cursor: pointer; font-size: 11px; font-weight: bold; }
+.seat:hover { background-color: #2079e0; }
+.seat-selected-highlight { background-color: #ffc107 !important; color: #333 !important; border: 2px solid #e0a800; }
+.aisle { width: 20px; }
+.seat-removed { width: 32px; height: 32px; margin: 2px; visibility: hidden; }
+
+/* 시설 */
+.exit-row { display: flex; justify-content: space-between; margin: 10px 0; padding: 0 3%; }
+.exit { text-align: center; color: white; background: red; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+.facility-row { display: flex; justify-content: space-around; align-items: center; margin: 8px 0; padding: 4px 0; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; }
+.facility-group { display: flex; gap: 4px; }
+.facility-item { background: #e9e9e9; border-radius: 3px; padding: 3px 6px; font-size: 12px; }
+.facility-item.exit-facility { background: red; color: white; font-weight: bold; }
+.section-divider { margin: 15px 0; border-top: 1px dashed #ccc; }
+.info-text { font-size: 11px; text-align: center; color: #555; margin-bottom: 5px; font-weight: bold; }
+
+/* 정보 사이드바 */
+.info-sidebar { flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 20px; }
+.info-box { background-color: #fff; padding: 20px; border-radius: 8px; border: 1px solid var(--border-gray); }
+.info-box h4 { font-size: 16px; margin-bottom: 15px; font-weight: 700; }
+.passenger-name { padding: 12px 15px; border-radius: 6px; border: 1px solid #d1d5db; font-weight: 500; font-size: 14px; }
+.passenger-name.active { border-color: var(--primary-blue); background-color: #eff6ff; color: var(--dark-blue); font-weight: 700; }
+.passenger-name i { margin-right: 8px; color: var(--primary-blue); }
+#selectedSeatDisplay .placeholder { color: var(--text-light); text-align: center; padding: 10px 0; font-size: 14px; }
+#selectedSeatDisplay .seat-number { font-size: 28px; font-weight: 700; color: var(--primary-blue); text-align: center; }
+#selectedSeatDisplay .seat-type { font-size: 14px; color: var(--text-light); text-align: center; margin-top: 4px; }
+.legend-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0; }
+.legend-list li { display: flex; align-items: center; font-size: 13px; }
+.legend-icon { width: 16px; height: 16px; border-radius: 3px; margin-right: 8px; border: 1px solid; }
+.legend-icon.available { background-color: #338fff; border-color: #2079e0; }
+.legend-icon.my-seat { background-color: #ffc107; border-color: #e0a800; }
+.legend-icon.prestige { background-color: #a5b4fc; border-color: #6366f1; }
+.legend-icon.unavailable { background-color: #e5e7eb; border-color: #d1d5db; }
+
+/* 반응형 */
+@media (max-width: 991px) {
+    .page-content-area { flex-direction: column; }
+    .info-sidebar { order: -1; flex-direction: row; flex-wrap: wrap; }
+    .info-sidebar .info-box { flex: 1; min-width: 220px; }
+}
+@media (max-width: 768px) {
+    .checkin-page-container { margin: 0; border-radius: 0; }
+    .page-content-area { padding: 15px; }
+    .info-sidebar { flex-direction: column; }
+}

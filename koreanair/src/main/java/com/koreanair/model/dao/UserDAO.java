@@ -185,9 +185,11 @@ public class UserDAO {
                      "JOIN users u ON p.user_no = u.user_no " +
                      "JOIN airport da ON f.departure_airport_id = da.airport_id " +
                      "JOIN airport aa ON f.arrival_airport_id = aa.airport_id " +
-                     "WHERE u.user_id = ? " +
+                     "WHERE u.user_id = ? AND f.departure_time > NOW() " + // 1. 미래의 예약만 필터링
                      "GROUP BY b.booking_id, f.departure_time, f.arrival_time, departure_airport_id, departure_airport_name, arrival_airport_id, arrival_airport_name " +
-                     "ORDER BY f.departure_time DESC";
+                     "ORDER BY f.departure_time ASC " + // 2. 가장 가까운 순서로 정렬
+                     "LIMIT 1"; // 3. 1개의 결과만 가져옴
+
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -198,7 +200,8 @@ public class UserDAO {
             pstmt.setString(1, userId);
             rs = pstmt.executeQuery();
 
-            while (rs.next()) {
+            // 결과가 1개 또는 0개이므로 while 대신 if를 사용해도 됩니다.
+            if (rs.next()) {
                 ReservationDTO reservation = new ReservationDTO();
                 reservation.setBookingId(rs.getString("booking_id"));
                 reservation.setDepartureTime(rs.getTimestamp("departure_time"));

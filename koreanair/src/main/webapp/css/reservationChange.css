@@ -1,0 +1,65 @@
+/* /src/main/webapp/css/reservationChange.css */
+
+.change-form-container {
+    border: 1px solid #e9eff5;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,37,108,0.05);
+}
+
+.route-info-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+.route-info-box .airport-details {
+    text-align: center;
+    flex: 1;
+}
+
+.route-info-box .airport-code {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #333;
+}
+
+.route-info-box .airport-name {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 4px;
+}
+
+.route-info-box .fa-arrow-right-long {
+    font-size: 1.5rem;
+    color: #5d6d85;
+    flex-shrink: 0;
+    margin: 0 2rem;
+}
+
+.date-picker-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.date-picker-group .fa-calendar-days {
+    font-size: 1.5rem;
+    color: #5d6d85;
+}
+
+.date-picker-group input[type="date"],
+.date-picker-group select {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    font-family: inherit;
+}
