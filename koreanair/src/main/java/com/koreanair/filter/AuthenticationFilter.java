@@ -78,6 +78,12 @@ public class AuthenticationFilter implements Filter {
             return true;
         }
         
+        // views/search 디렉토리는 공개 접근 허용
+        if (path.startsWith("/views/search/")) {
+            return true;
+        }
+
+        
         // 공개 페이지들
         String[] publicPaths = {
             "/",
@@ -94,6 +100,22 @@ public class AuthenticationFilter implements Filter {
             "/lookup",
             "/checkinDetail.do", 
             "/checkinApply.do",
+            "/airportSearch.do",
+            "/search/search.jsp",
+            "/views/search/search.jsp",
+            "/flightSearch.do",
+            "/autocomplete.do",
+            "/views/booking/booking.jsp",
+            "/booking.do",
+            "/passenger.do",
+            "/testPayment.do",
+            "/payment.jsp",
+            "/lookup", // [기존] 비회원 예약 조회를 위해 /lookup 경로 추가
+            "/reservationDetail", // [수정] 비회원 예약 상세 조회를 위해 경로 추가
+            "/kakao/login.do",
+            "/kakao/callback.do",
+            "/kakao/signup.do"
+
         };
         
         for (String publicPath : publicPaths) {

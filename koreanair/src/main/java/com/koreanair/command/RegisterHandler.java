@@ -71,12 +71,6 @@ public class RegisterHandler implements CommandHandler {
             return "/views/login/register.jsp";
         }
         
-        // 비밀번호 강도 검증
-        if (!PasswordUtil.isValidPassword(password)) {
-            request.setAttribute("error", "비밀번호는 4자 이상이어야 합니다.");
-            return "/views/login/register.jsp";
-        }
-        
         // 생년월일 형식 검증 및 변환
         Date birthDate = null;
         try {
@@ -92,6 +86,37 @@ public class RegisterHandler implements CommandHandler {
         if (userDAO.isUserIdExists(userId)) {
             request.setAttribute("error", "이미 사용중인 아이디입니다.");
             return "/views/login/register.jsp";
+        }
+        
+        // 이메일 중복 체크 (카카오 계정 포함)
+        User existingUser = userDAO.getUserByEmail(email);
+        if (existingUser != null) {
+            if ("kakao".equals(existingUser.getLoginType())) {
+                // 카카오 계정이 있는 경우 일반 계정 정보를 추가하여 연동
+                existingUser.setUserId(userId);
+                existingUser.setPassword(PasswordUtil.hashPassword(password));
+                existingUser.setKoreanName(koreanName);
+                existingUser.setEnglishName(englishName);
+                existingUser.setBirthDate(birthDate);
+                existingUser.setGender(gender);
+                existingUser.setPhone(phone);
+                existingUser.setAddress(address);
+                
+                boolean success = userDAO.linkNormalToKakaoUser(existingUser);
+                if (success) {
+                    request.setAttribute("message", "기존 카카오 계정과 연동되어 회원가입이 완료되었습니다. 로그인해주세요.");
+                    return "/views/login/login.jsp";
+                } else {
+                    request.setAttribute("error", "계정 연동 중 오류가 발생했습니다.");
+                    return "/views/login/register.jsp";
+                }
+            } else if ("both".equals(existingUser.getLoginType())) {
+                request.setAttribute("error", "해당 이메일로 계정이 이미 존재합니다.");
+                return "/views/login/register.jsp";
+            } else {
+                request.setAttribute("error", "해당 이메일로 계정이 이미 존재합니다.");
+                return "/views/login/register.jsp";
+            }
         }
         
         // 사용자 등록

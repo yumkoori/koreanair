@@ -5,10 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AirLogin - 회원가입</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- 다음 우편번호 서비스 -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
-<body>
-    <div class="container register-container">
+<body class="airline-main-body">
+    <jsp:include page="/views/common/header.jsp" />
+    <main class="main-content">
+        <div class="container register-container">
         <h1>회원가입</h1>
         
         <%
@@ -89,8 +96,22 @@
             
             <div class="form-group">
                 <label for="address">자택 주소</label>
-                <textarea id="address" name="address" rows="3" 
-                          placeholder="자택 주소를 입력하세요 (선택사항)"></textarea>
+                <div class="address-input-group">
+                    <div class="address-search">
+                        <input type="text" id="postcode" name="postcode" placeholder="우편번호" readonly>
+                        <button type="button" class="btn-address-search" onclick="openPostcodeSearch()">
+                            <i class="fas fa-search"></i> 주소 검색
+                        </button>
+                    </div>
+                    <input type="text" id="roadAddress" name="roadAddress" placeholder="도로명주소" readonly>
+                    <input type="text" id="jibunAddress" name="jibunAddress" placeholder="지번주소" readonly style="display: none;">
+                    <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소를 입력하세요">
+                    <input type="hidden" id="address" name="address">
+                </div>
+                <small class="address-help-text" style="margin-top: 1rem;">
+                    <i class="fas fa-info-circle"></i> 
+                    * 표시는 필수 입력 사항입니다
+                </small>
             </div>
             
             <button type="submit" class="btn btn-primary">회원가입</button>
@@ -101,12 +122,12 @@
             <span style="color: #ccc;">|</span>
             <a href="./">메인 페이지로</a>
         </div>
-        
-        <p style="color: #999; font-size: 12px; margin-top: 1rem; text-align: center;">
-            * 표시된 항목은 필수 입력 사항입니다.
-        </p>
-    </div>
+        </div>
+    </main>
     
+    <jsp:include page="/views/common/footer.jsp" />
+    
+    <script src="${pageContext.request.contextPath}/js/index.js"></script>
     <script src="${pageContext.request.contextPath}/js/login.js"></script>
 </body>
 </html> 

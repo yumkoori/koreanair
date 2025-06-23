@@ -88,7 +88,7 @@ public class ReservationDAOImpl implements ReservationDAO {
                 + "    aa.airport_id AS arrival_airport_id, aa.airport_name AS arrival_airport_name, "
                 + "    bs.flight_seat_id " // <-- 조회할 컬럼 추가
                 + "FROM booking b "
-                + "JOIN flight f ON b.flight_id = f.flight_id "
+                + "JOIN flight f ON b.outbound_flight_id = f.flight_id " // 수정된 부분: outbound_flight_id 사용
                 + "JOIN passenger p ON b.booking_id = p.booking_id "
                 + "JOIN users u ON p.user_no = u.user_no "
                 + "JOIN airport da ON f.departure_airport_id = da.airport_id "
@@ -96,7 +96,7 @@ public class ReservationDAOImpl implements ReservationDAO {
                 + "LEFT JOIN booking_seat bs ON b.booking_id = bs.booking_id " // <-- 이 부분 추가
                 + "LEFT JOIN flight_seat fs ON bs.flight_seat_id = fs.seat_id "
                 + "LEFT JOIN seat_class sc ON fs.class_id = sc.class_id";
-       }
+    }
 
     // 최종 DTO 매핑 로직
     private ReservationDTO mapResultSetToReservationDTO(ResultSet rs) throws Exception {

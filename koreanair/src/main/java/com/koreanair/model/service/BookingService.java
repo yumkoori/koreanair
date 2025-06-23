@@ -1,20 +1,28 @@
 package com.koreanair.model.service;
 
+import java.sql.SQLException;
+import com.koreanair.model.dao.BookingDAO;
 import com.koreanair.model.dao.ReservationDAO;
-import com.koreanair.model.dao.ReservationDAOImpl;
 import com.koreanair.model.dao.RefundDAO;         // [추가] 신규 DAO import
 import com.koreanair.model.dao.RefundDAOImpl;   // [추가] 신규 DAO import
+import com.koreanair.model.dao.ReservationDAOImpl; // 구현 클래스 import 추가
+import com.koreanair.model.dto.BookingDTO;
 import com.koreanair.model.dto.ReservationDTO;
 import com.koreanair.model.dto.RefundDetailDTO;
 
 public class BookingService {
 
     private final ReservationDAO reservationDAO = new ReservationDAOImpl();
+
     private final RefundDAO refundDAO = new RefundDAOImpl(); // [추가] 신규 RefundDAO 필드
 
     /**
      * 비회원 예약 조회를 위한 서비스 메소드
      */
+
+    private final BookingDAO bookingDAO = new BookingDAO();
+    
+
     public ReservationDTO searchBooking(String bookingId, String departureDate, String lastName, String firstName) {
         return reservationDAO.findReservation(bookingId, departureDate, lastName, firstName);
     }
@@ -26,6 +34,7 @@ public class BookingService {
         return reservationDAO.findReservationById(bookingId, userId);
     }
     
+
     /**
      * [기존 메소드 - 하드코딩된 값 사용]
      * 예약 정보와 '환불 예정 금액'을 '계산'하여 함께 조회하는 서비스 메소드
@@ -95,5 +104,19 @@ public class BookingService {
             e.printStackTrace();
             return false;
         }
+
+    }
+    public String saveBookingToPending(BookingDTO dto) {
+    	return bookingDAO.saveBooking(dto);
+
+    }
+    
+    public void updateSeatStatusToPending(String flightId, String seatClass, int totalPassenger) {
+    	try {
+			bookingDAO.updateSeatToPending(flightId, seatClass, totalPassenger);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

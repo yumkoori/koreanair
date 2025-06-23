@@ -44,21 +44,4 @@ public class PasswordUtil {
             return false;
         }
     }
-    
-    /**
-     * 비밀번호 강도를 검증합니다.
-     * 
-     * @param password 검증할 비밀번호
-     * @return 비밀번호가 유효한지 여부
-     */
-    public static boolean isValidPassword(String password) {
-        if (password == null || password.length() < 4) {
-            return false;
-        }
-        
-        // 추가적인 비밀번호 정책을 여기에 구현할 수 있습니다.
-        // 예: 특수문자 포함, 대소문자 혼합 등
-        
-        return true;
-    }
 } 

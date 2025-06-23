@@ -17,7 +17,7 @@ public class CheckinService {
 
     public List<FlightSeatDTO> getSeatMapForCheckin(String flightId) {
         // 이 메소드는 수정할 필요 없이 완벽하게 동작합니다.
-        List<FlightSeatDTO> allSeats = flightDAO.getSeatMapByFlightId(flightId);
+        List<FlightSeatDTO> allSeats = flightDAO.getSeatMapByFlightIds(flightId);
         List<String> reservedSeatIds = flightDAO.getReservedSeats(flightId);
         Map<String, FlightSeatDTO> seatMap = allSeats.stream()
                 .collect(Collectors.toMap(FlightSeatDTO::getSeatId, seat -> seat));

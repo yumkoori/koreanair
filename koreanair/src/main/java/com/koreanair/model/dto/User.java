@@ -14,6 +14,9 @@ public class User {
     private String phone;
     private String address;
     private Timestamp regDate;
+    private String kakaoId;
+    private String loginType;
+    private String profileImage;
     
     // 기본 생성자
     public User() {}
@@ -113,6 +116,30 @@ public class User {
         this.regDate = regDate;
     }
     
+    public String getKakaoId() {
+        return kakaoId;
+    }
+    
+    public void setKakaoId(String kakaoId) {
+        this.kakaoId = kakaoId;
+    }
+    
+    public String getLoginType() {
+        return loginType;
+    }
+    
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
+    
+    public String getProfileImage() {
+        return profileImage;
+    }
+    
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+    
     @Override
     public String toString() {
         return "User{" +
@@ -125,6 +152,9 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
                 ", regDate=" + regDate +
+                ", kakaoId='" + kakaoId + '\'' +
+                ", loginType='" + loginType + '\'' +
+                ", profileImage='" + profileImage + '\'' +
                 '}';
     }
 } 
