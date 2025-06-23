@@ -19,9 +19,9 @@ public class BookingService {
         return reservationDAO.findReservation(bookingId, departureDate, lastName, firstName);
     }
     
-    // [추가] 예약 ID로 상세 정보를 조회하는 서비스 메소드
-    public ReservationDTO getBookingDetailsById(String bookingId) {
-        return reservationDAO.findReservationById(bookingId);
+    // [수정] 예약 ID와 사용자 ID로 상세 정보를 조회하는 서비스 메소드
+    public ReservationDTO getBookingDetailsById(String bookingId, String userId) {
+        return reservationDAO.findReservationById(bookingId, userId);
     }
     
     

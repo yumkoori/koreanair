@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 탭 기능 구현 (메인 페이지에만 존재)
+
     console.log('=== INDEX.JS 로드됨 ===');
     console.log('DOMContentLoaded 이벤트 발생');
     
@@ -204,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(initPassengerSelector, 1000);
     
     // 탭 기능 구현
+
     const tabBtns = document.querySelectorAll('.booking-tab-btn');
     const bookingContents = document.querySelectorAll('.booking-content');
 
@@ -740,6 +742,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
 
     // 출발지/도착지 검색 기능
     const departureDiv = document.querySelector('.airport-input.departure');
@@ -1416,4 +1419,5 @@ document.querySelector('#arrival-search').addEventListener('input', function () 
             });
         })
         .catch(console.error);
+
 }); 

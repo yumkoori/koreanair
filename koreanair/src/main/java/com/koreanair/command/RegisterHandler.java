@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.koreanair.model.dao.UserDAO;
 import com.koreanair.model.dto.User;
+import com.koreanair.util.PasswordUtil;
 
 public class RegisterHandler implements CommandHandler {
     private UserDAO userDAO;
@@ -87,10 +88,42 @@ public class RegisterHandler implements CommandHandler {
             return "/views/login/register.jsp";
         }
         
+        // 이메일 중복 체크 (카카오 계정 포함)
+        User existingUser = userDAO.getUserByEmail(email);
+        if (existingUser != null) {
+            if ("kakao".equals(existingUser.getLoginType())) {
+                // 카카오 계정이 있는 경우 일반 계정 정보를 추가하여 연동
+                existingUser.setUserId(userId);
+                existingUser.setPassword(PasswordUtil.hashPassword(password));
+                existingUser.setKoreanName(koreanName);
+                existingUser.setEnglishName(englishName);
+                existingUser.setBirthDate(birthDate);
+                existingUser.setGender(gender);
+                existingUser.setPhone(phone);
+                existingUser.setAddress(address);
+                
+                boolean success = userDAO.linkNormalToKakaoUser(existingUser);
+                if (success) {
+                    request.setAttribute("message", "기존 카카오 계정과 연동되어 회원가입이 완료되었습니다. 로그인해주세요.");
+                    return "/views/login/login.jsp";
+                } else {
+                    request.setAttribute("error", "계정 연동 중 오류가 발생했습니다.");
+                    return "/views/login/register.jsp";
+                }
+            } else if ("both".equals(existingUser.getLoginType())) {
+                request.setAttribute("error", "해당 이메일로 계정이 이미 존재합니다.");
+                return "/views/login/register.jsp";
+            } else {
+                request.setAttribute("error", "해당 이메일로 계정이 이미 존재합니다.");
+                return "/views/login/register.jsp";
+            }
+        }
+        
         // 사용자 등록
         User user = new User();
         user.setUserId(userId);
-        user.setPassword(password);
+        // 비밀번호를 BCrypt로 암호화
+        user.setPassword(PasswordUtil.hashPassword(password));
         user.setKoreanName(koreanName);
         user.setEnglishName(englishName);
         user.setBirthDate(birthDate);

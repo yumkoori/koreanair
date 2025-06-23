@@ -5,48 +5,187 @@
     box-sizing: border-box;
 }
 
+/* 기본 body 스타일 (헤더/푸터 포함 페이지용) */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: #f9f9f9;
+}
+
+/* 로그인 페이지 전용 body 스타일 */
+body.login-page {
     background: linear-gradient(135deg, #87CEEB 0%, #FFB6C1 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #333;
+    padding: 20px;
+}
+
+/* 메인 콘텐츠 영역 */
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px); /* 헤더와 푸터 공간 확보 */
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #87CEEB 0%, #FFB6C1 100%);
 }
 
 .container {
     background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px;
-    text-align: center;
+    max-width: 1000px;
+    min-height: 600px;
+    display: flex;
+    overflow: hidden;
+}
+
+.left-section {
+    flex: 1;
+    background: white;
+    color: #333;
+    padding: 60px 20px 60px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    border-right: 1px solid #e1e5e9;
+}
+
+.left-content {
+    position: relative;
+    z-index: 1;
+    text-align: left;
+}
+
+.left-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: left;
+}
+
+.left-content p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+    line-height: 1.6;
+    color: #666;
+}
+
+.signup-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+.signup-btn:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.right-section {
+    flex: 1;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: white;
+}
+
+.login-tabs {
+    display: flex;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #e1e5e9;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.tab-btn.active {
+    color: #667eea;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #667eea;
+}
+
+.login-form {
+    text-align: left;
 }
 
 .register-container {
     max-width: 500px;
     padding: 2.5rem;
+    display: block;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .dashboard-container {
     max-width: 600px;
     padding: 3rem;
+    display: block;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
 }
 
 h1 {
-    color: #667eea;
+    color: #333;
     margin-bottom: 1.5rem;
     font-size: 2rem;
-    font-weight: 300;
+    font-weight: 400;
+    text-align: center;
 }
 
 h2 {
-    color: #667eea;
+    color: #333;
     margin-bottom: 2rem;
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 400;
+    text-align: center;
 }
 
 .form-group {
@@ -59,6 +198,7 @@ label {
     margin-bottom: 0.5rem;
     color: #555;
     font-weight: 500;
+    font-size: 14px;
 }
 
 input[type="text"],
@@ -175,19 +315,70 @@ textarea {
 }
 
 .links {
-    margin-top: 1.5rem;
     text-align: center;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 .links a {
     color: #667eea;
     text-decoration: none;
-    margin: 0 10px;
     font-size: 14px;
 }
 
 .links a:hover {
     text-decoration: underline;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.remember-me input[type="checkbox"] {
+    width: auto;
+    margin: 0 0.5em 0.5em 0;
+}
+
+.social-login {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.social-login p {
+    margin-bottom: 1rem;
+    color: #666;
+    font-size: 14px;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.social-btn.kakao {
+    background: #FEE500;
+    color: #3C1E1E;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+}
+
+.social-btn.kakao:hover {
+    background: #F7DD00;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(254, 229, 0, 0.3);
 }
 
 .user-info {
@@ -234,10 +425,73 @@ textarea {
 }
 
 /* 반응형 디자인 */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .container {
+        flex-direction: column;
+        max-width: 500px;
+        min-height: auto;
         margin: 1rem;
-        padding: 1.5rem;
+    }
+    
+    .left-section {
+        padding: 40px 30px;
+        text-align: center;
+        border-right: none;
+        border-bottom: 1px solid #e1e5e9;
+    }
+    
+    .left-content h1 {
+        font-size: 2rem;
+    }
+    
+    .right-section {
+        padding: 40px 30px;
+    }
+    
+    .login-tabs {
+        margin-bottom: 20px;
+    }
+    
+    .tab-btn {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .register-container {
+        padding: 2rem;
+    }
+    
+    .dashboard-container {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        max-width: 400px;
+        margin: 0.5rem;
+        padding: 0;
+        border-radius: 15px;
+    }
+    
+    .left-section {
+        padding: 30px 20px;
+    }
+    
+    .left-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .left-content p {
+        font-size: 1rem;
+    }
+    
+    .right-section {
+        padding: 30px 20px;
     }
     
     .register-container {
@@ -254,6 +508,11 @@ textarea {
     
     h2 {
         font-size: 1.2rem;
+    }
+    
+    .social-btn.kakao {
+        font-size: 14px;
+        padding: 10px 20px;
     }
 }
 
@@ -282,4 +541,293 @@ textarea {
 .error-icon {
     color: #dc3545;
     font-weight: bold;
+}
+
+/* 주소 입력 스타일 */
+.address-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.address-search {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.address-search input[type="text"] {
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-address-search {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.btn-address-search:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-address-search i {
+    font-size: 12px;
+}
+
+.address-input-group input[readonly] {
+    cursor: default;
+}
+
+.address-help-text {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.address-help-text i {
+    color: #17a2b8;
+}
+
+/* 주소 입력 모바일 반응형 */
+@media (max-width: 480px) {
+    .address-search {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .address-search input[type="text"] {
+        width: 100%;
+    }
+    
+    .btn-address-search {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border: none;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    line-height: 1;
+}
+
+.close:hover,
+.close:focus {
+    color: #f1f1f1;
+    text-decoration: none;
+}
+
+.modal-content form {
+    padding: 30px;
+}
+
+.modal-content .form-group {
+    margin-bottom: 20px;
+}
+
+.modal-content .form-group label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.modal-content .form-group input,
+.modal-content .form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.modal-content .form-group input:focus,
+.modal-content .form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.modal-content .form-group small {
+    color: #666;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e5e9;
+}
+
+.form-actions .btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 100px;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #138496 0%, #0f6674 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: #212529;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e0a800 0%, #c69500 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.edit-buttons .btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 140px;
+    flex: 1;
+    max-width: 180px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .modal-content form {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+    
+    .edit-buttons {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .edit-buttons .btn {
+        flex: 1;
+        min-width: 120px;
+        max-width: none;
+    }
 } 

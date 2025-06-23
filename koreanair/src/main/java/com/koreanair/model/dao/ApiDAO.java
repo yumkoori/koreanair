@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.koreanair.model.dto.AirportDTO;
-import com.koreanair.util.DBconn;
+import com.koreanair.util.DBConnection;
 
 public class ApiDAO {
 
@@ -27,7 +27,7 @@ public class ApiDAO {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DBconn.getConnection();
+            conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
 
             for (AirportDTO airport : list) {
@@ -48,7 +48,7 @@ public class ApiDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            DBconn.close(conn, pstmt);
+            DBConnection.close(conn);
         }
     }
     

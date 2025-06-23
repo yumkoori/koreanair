@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.koreanair.model.dto.AirportDTO;
-import com.koreanair.util.DBconn;
+import com.koreanair.util.DBConnection;
 
 public class AirportDAO {
 
@@ -17,7 +17,7 @@ public class AirportDAO {
 	        List<AirportDTO> list = new ArrayList<>();
 	        String sql = "SELECT * FROM airport WHERE airport_name LIKE ? OR airport_id LIKE ?";
 
-	        try (Connection conn = DBconn.getConnection();
+	        try (Connection conn = DBConnection.getConnection();
 	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 	            String pattern = "%" + keyword + "%";
