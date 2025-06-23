@@ -56,13 +56,13 @@ function updateNoticeContent(paymentMethod) {
     
     // 선택된 결제 수단에 해당하는 유의사항 표시
     switch(paymentMethod) {
-        case 'credit_card':
+        case 'creditcard':
             document.getElementById('creditCardNotice').style.display = 'block';
             break;
-        case 'kakao_pay':
+        case 'kakaopay':
             document.getElementById('kakaoPayNotice').style.display = 'block';
             break;
-        case 'toss_pay':
+        case 'tosspay':
             document.getElementById('tossPayNotice').style.display = 'block';
             break;
         default:
@@ -119,6 +119,10 @@ function processcreditcardPayment() {
 
 // 카카오페이 결제 처리
 function processKakaoPayment() {
+	
+	const btn = document.getElementById("payBtn");
+    btn.disabled = true;
+	
     if (!merchantUid) {
         alert('결제 준비 정보가 없습니다.');
         return;
@@ -214,29 +218,6 @@ function submitPaymentVerification(impUid) {
     form.submit();
 }
 
-// 결제도중 실패 로그기록
-function submitPaymentVerification(impUid) {
-    const form = document.getElementById("failure_log_form");
-    
-    // 결제 정보를 폼에 추가
-    const impUidInput = document.createElement('input');
-    impUidInput.type = 'hidden';
-    impUidInput.name = 'imp_uid';
-    impUidInput.value = impUid;
-    form.appendChild(impUidInput);
-    
-    const merchantUidInput = document.createElement('input');
-    merchantUidInput.type = 'hidden';
-    merchantUidInput.name = 'merchant_uid';
-    merchantUidInput.value = merchantUid;
-    form.appendChild(merchantUidInput);
-    
-    // 서버로 전송
-    form.method = "post";
-    form.action = contextPath + "/verifyPayment.do";
-    form.submit();
-}
-
 // 결제 준비 정보를 서버에 저장하는 함수 (개선된 버전)
 function Transmission(paymentMethod, amount, booking_Id, callback) {
     // 입력값 검증
@@ -255,8 +236,13 @@ function Transmission(paymentMethod, amount, booking_Id, callback) {
         return;
     }
     
-    const now = now();
-    const createdAt = now
+    const now = new Date();
+    const createdAt = now.getFullYear() + '-' + 
+        String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+        String(now.getDate()).padStart(2, '0') + ' ' +
+        String(now.getHours()).padStart(2, '0') + ':' +
+        String(now.getMinutes()).padStart(2, '0') + ':' +
+        String(now.getSeconds()).padStart(2, '0');
     
     // 고유한 상점 주문번호 생성
     merchantUid = 'ORD' + new Date().getTime();

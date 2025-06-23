@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>결제화면 - 대한항공</title>
     <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
-    <link rel="stylesheet" href="../css/payment.css">
+    <link rel="stylesheet" href="../../css/payment.css">
 </head><body>
     <header class="header">
         <div class="header-content">
@@ -21,7 +21,7 @@
                     <input type="radio" name="paymentMethod" value="card">
                     <div class="credit_card">
                         <div style="font-size: 1.3rem;">
-                            <img src="../images/credit_card.svg" alt="카카오페이 로고" style="height: 55px; width: 55px; vertical-align: middle;">
+                            <img src="../../images/credit_card.svg" alt="카카오페이 로고" style="height: 55px; width: 55px; vertical-align: middle;">
                             <span style="font-weight: bold;"> 신용/체크카드</span>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <label class="payment-method">
                     <input type="radio" name="paymentMethod" value="kakaopay">
                     <div class="kakao_pay" style="font-size: 0.9rem;border-top-width: 0px;padding-bottom: 0px;padding-top: 0px;border-bottom-width: 0px;height: 65px;">
-                        <img src="../images/kakaopay.png" alt="카카오페이 로고" style="height: 120px; width: 140px;">
+                        <img src="../../images/kakaopay.png" alt="카카오페이 로고" style="height: 120px; width: 140px;">
                     </div>
                 </label>
 
@@ -39,7 +39,7 @@
                 <label class="payment-method">
                     <input type="radio" name="paymentMethod" value="tosspay">
                     <div class="toss_pay" style="font-size: 0.9rem;">
-                        <img src="../images/tosspay.svg" alt="토스페이 로고">
+                        <img src="../../images/tosspay.svg" alt="토스페이 로고">
                     </div>
                 </label>
             </div>
@@ -90,7 +90,7 @@
         <br>
 
         <div>
-            <button class="payment-button" onclick="processPayment()">
+            <button id="payBtn" class="payment-button" onclick="processPayment()">
                 결제하기
             </button>
             <form id="reserv_form">
@@ -103,6 +103,6 @@
     </div>
 
     <script>const contextPath = "${pageContext.request.contextPath}";</script>
-	<script src="../js/payments.js"></script>
+	<script src="../../js/payments.js"></script>
 </body>
 </html>

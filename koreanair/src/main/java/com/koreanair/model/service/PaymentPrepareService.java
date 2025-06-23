@@ -43,13 +43,13 @@ public class PaymentPrepareService {
      */
     private boolean savePaymentInfo(PaymentPrepareDTO dto) throws Exception {
         try {
-            // DAO를 통해 결제 정보 저장
-            boolean result = paymentPrepareDAO.insertMerchantUid(dto);
+            // DAO를 통해 결제 정보와 로그를 트랜잭션으로 저장
+            boolean result = paymentPrepareDAO.insertPaymentWithLog(dto);
             
             if (result) {
-                System.out.println("[SUCCESS] 결제 정보 저장 성공 - MerchantUid: " + dto.getMerchantUid());
+                System.out.println("[SUCCESS] 결제 정보 및 로그 저장 성공 - MerchantUid: " + dto.getMerchantUid());
             } else {
-                System.err.println("[WARNING] 결제 정보 저장 실패 - MerchantUid: " + dto.getMerchantUid());
+                System.err.println("[WARNING] 결제 정보 및 로그 저장 실패 - MerchantUid: " + dto.getMerchantUid());
             }
             
             return result;
