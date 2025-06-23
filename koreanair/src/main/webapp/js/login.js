@@ -280,14 +280,64 @@ function validateRegisterForm() {
     return true;
 }
 
+// 쿠키 관련 함수들
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function deleteCookie(name) {
+    document.cookie = name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+}
+
+// 페이지 로드 시 저장된 아이디 불러오기
+function loadSavedUserId() {
+    const savedUserId = getCookie('savedUserId');
+    const userIdInput = document.getElementById('userId');
+    const rememberCheckbox = document.getElementById('remember');
+    
+    if (savedUserId && userIdInput) {
+        userIdInput.value = savedUserId;
+        if (rememberCheckbox) {
+            rememberCheckbox.checked = true;
+        }
+    }
+}
+
 // 로그인 폼 검증
 function validateLoginForm() {
     const userId = document.getElementById('userId').value;
     const password = document.getElementById('password').value;
+    const rememberCheckbox = document.getElementById('remember');
     
     if (!userId || !password) {
         alert('아이디와 비밀번호를 입력해주세요.');
         return false;
+    }
+    
+    // 아이디 저장 처리
+    if (rememberCheckbox && rememberCheckbox.checked) {
+        // 30일간 쿠키 저장
+        setCookie('savedUserId', userId.trim(), 30);
+    } else {
+        // 체크박스가 해제되면 쿠키 삭제
+        deleteCookie('savedUserId');
     }
     
     return true;
@@ -362,6 +412,9 @@ function initTabs() {
 document.addEventListener('DOMContentLoaded', function() {
     // 탭 기능 초기화
     initTabs();
+    
+    // 저장된 아이디 불러오기
+    loadSavedUserId();
     
     // 아이디 입력 필드에 이벤트 리스너 추가
     const userIdInput = document.getElementById('userId');

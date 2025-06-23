@@ -14,7 +14,7 @@
 <body class="airline-main-body">
     <jsp:include page="/views/common/header.jsp" />
     <main class="main-content">
-        <div class="container">
+    <div class="container">
         <!-- 좌측 섹션 -->
         <div class="left-section">
             <div class="left-content">
@@ -69,7 +69,8 @@
                     <div class="form-group">
                         <label for="userId">아이디<span style="color: red;">*</span></label>
                         <input type="text" id="userId" name="userId" required 
-                               placeholder="" autocomplete="username">
+                               placeholder="" autocomplete="username"
+                               value="<%= request.getAttribute("savedUserId") != null ? request.getAttribute("savedUserId") : "" %>">
                     </div>
                     
                     <div class="form-group">
@@ -79,7 +80,8 @@
                     </div>
                     
                     <div class="remember-me">
-                        <input type="checkbox" id="remember" name="remember">
+                        <input type="checkbox" id="remember" name="remember" 
+                               <%= Boolean.TRUE.equals(request.getAttribute("rememberChecked")) ? "checked" : "" %>>
                         <label for="remember">아이디 저장</label>
                     </div>
                     
@@ -110,7 +112,7 @@
                 </a>
             </div>
         </div>
-        </div>
+    </div>
     </main>
     
     <jsp:include page="/views/common/footer.jsp" />
