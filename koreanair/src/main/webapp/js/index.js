@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 탭 기능 구현 (메인 페이지에만 존재)
     console.log('=== INDEX.JS 로드됨 ===');
     console.log('DOMContentLoaded 이벤트 발생');
     
@@ -203,121 +204,133 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(initPassengerSelector, 1000);
     
     // 탭 기능 구현
-    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabBtns = document.querySelectorAll('.booking-tab-btn');
     const bookingContents = document.querySelectorAll('.booking-content');
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetTab = btn.getAttribute('data-tab');
-            
-            // 모든 탭 버튼에서 active 클래스 제거
-            tabBtns.forEach(b => b.classList.remove('active'));
-            // 클릭된 탭 버튼에 active 클래스 추가
-            btn.classList.add('active');
-            
-            // 모든 콘텐츠에서 active 클래스 제거
-            bookingContents.forEach(content => content.classList.remove('active'));
-            // 해당 콘텐츠에 active 클래스 추가
-            document.getElementById(targetTab).classList.add('active');
+    if (tabBtns.length > 0) {
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+                
+                // 모든 탭 버튼에서 active 클래스 제거
+                tabBtns.forEach(b => b.classList.remove('active'));
+                // 클릭된 탭 버튼에 active 클래스 추가
+                btn.classList.add('active');
+                
+                // 모든 콘텐츠에서 active 클래스 제거
+                bookingContents.forEach(content => content.classList.remove('active'));
+                // 해당 콘텐츠에 active 클래스 추가
+                const targetElement = document.getElementById(targetTab);
+                if (targetElement) {
+                    targetElement.classList.add('active');
+                }
+            });
         });
-    });
+    }
 
-    // 슬라이더 기능 구현
+    // 슬라이더 기능 구현 (메인 페이지에만 존재)
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
     const prevBtn = document.querySelector('.prev');
     const nextBtn = document.querySelector('.next');
     
-    let currentSlide = 0;
-    const slideCount = slides.length;
-    
-    // 슬라이드 이동 함수
-    function moveToSlide(index) {
-        // 현재 활성화된 슬라이드와 닷 비활성화
-        slides[currentSlide].classList.remove('active');
-        dots[currentSlide].classList.remove('active');
+    if (slides.length > 0 && dots.length > 0 && prevBtn && nextBtn) {
+        let currentSlide = 0;
+        const slideCount = slides.length;
         
-        // 새로운 슬라이드와 닷 활성화
-        currentSlide = index;
-        
-        // 슬라이드 인덱스 조정 (순환)
-        if (currentSlide < 0) {
-            currentSlide = slideCount - 1;
-        } else if (currentSlide >= slideCount) {
-            currentSlide = 0;
+        // 슬라이드 이동 함수
+        function moveToSlide(index) {
+            // 현재 활성화된 슬라이드와 닷 비활성화
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            
+            // 새로운 슬라이드와 닷 활성화
+            currentSlide = index;
+            
+            // 슬라이드 인덱스 조정 (순환)
+            if (currentSlide < 0) {
+                currentSlide = slideCount - 1;
+            } else if (currentSlide >= slideCount) {
+                currentSlide = 0;
+            }
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
         }
         
-        slides[currentSlide].classList.add('active');
-        dots[currentSlide].classList.add('active');
-    }
-    
-    // 다음 슬라이드로 이동
-    function nextSlide() {
-        moveToSlide(currentSlide + 1);
-    }
-    
-    // 이전 슬라이드로 이동
-    function prevSlide() {
-        moveToSlide(currentSlide - 1);
-    }
-    
-    // 이벤트 리스너 추가
-    prevBtn.addEventListener('click', prevSlide);
-    nextBtn.addEventListener('click', nextSlide);
-    
-    // 닷 클릭 이벤트
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            moveToSlide(index);
+        // 다음 슬라이드로 이동
+        function nextSlide() {
+            moveToSlide(currentSlide + 1);
+        }
+        
+        // 이전 슬라이드로 이동
+        function prevSlide() {
+            moveToSlide(currentSlide - 1);
+        }
+        
+        // 이벤트 리스너 추가
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+        
+        // 닷 클릭 이벤트
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                moveToSlide(index);
+            });
         });
-    });
-    
-    // 자동 슬라이드 기능
-    let slideInterval = setInterval(nextSlide, 5000);
-    
-    // 슬라이드에 마우스를 올리면 자동 슬라이드 멈춤
-    const bannerSlider = document.querySelector('.banner-slider');
-    
-    bannerSlider.addEventListener('mouseenter', () => {
-        clearInterval(slideInterval);
-    });
-    
-    // 슬라이드에서 마우스가 나가면 자동 슬라이드 재시작
-    bannerSlider.addEventListener('mouseleave', () => {
-        slideInterval = setInterval(nextSlide, 5000);
-    });
+        
+        // 자동 슬라이드 기능
+        let slideInterval = setInterval(nextSlide, 5000);
+        
+        // 슬라이드에 마우스를 올리면 자동 슬라이드 멈춤
+        const bannerSlider = document.querySelector('.banner-slider');
+        
+        if (bannerSlider) {
+            bannerSlider.addEventListener('mouseenter', () => {
+                clearInterval(slideInterval);
+            });
+            
+            // 슬라이드에서 마우스가 나가면 자동 슬라이드 재시작
+            bannerSlider.addEventListener('mouseleave', () => {
+                slideInterval = setInterval(nextSlide, 5000);
+            });
+        }
+    }
 
-    // 출발지/도착지 교환 버튼 기능
+    // 출발지/도착지 교환 버튼 기능 (메인 페이지에만 존재)
     const swapBtns = document.querySelectorAll('.swap-route-btn');
-    swapBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const routeInputs = btn.parentElement.querySelectorAll('.airport-input');
-            if (routeInputs.length === 2) {
-                const departure = routeInputs[0];
-                const arrival = routeInputs[1];
-                
-                // 코드와 이름 교환
-                const tempCode = departure.querySelector('.airport-code').textContent;
-                const tempName = departure.querySelector('.airport-name').textContent;
-                
-                departure.querySelector('.airport-code').textContent = arrival.querySelector('.airport-code').textContent;
-                departure.querySelector('.airport-name').textContent = arrival.querySelector('.airport-name').textContent;
-                
-                arrival.querySelector('.airport-code').textContent = tempCode;
-                arrival.querySelector('.airport-name').textContent = tempName;
-            }
+    if (swapBtns.length > 0) {
+        swapBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const routeInputs = btn.parentElement.querySelectorAll('.airport-input');
+                if (routeInputs.length === 2) {
+                    const departure = routeInputs[0];
+                    const arrival = routeInputs[1];
+                    
+                    // 코드와 이름 교환
+                    const tempCode = departure.querySelector('.airport-code').textContent;
+                    const tempName = departure.querySelector('.airport-name').textContent;
+                    
+                    departure.querySelector('.airport-code').textContent = arrival.querySelector('.airport-code').textContent;
+                    departure.querySelector('.airport-name').textContent = arrival.querySelector('.airport-name').textContent;
+                    
+                    arrival.querySelector('.airport-code').textContent = tempCode;
+                    arrival.querySelector('.airport-name').textContent = tempName;
+                }
+            });
         });
-    });
+    }
 
-    // 스크롤 이벤트 - 헤더 애니메이션
-    const header = document.querySelector('header');
-    const headerTop = document.querySelector('.header-top');
-    const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+    // 스크롤 이벤트 - 헤더 애니메이션 (모든 페이지에서 실행)
+    const header = document.querySelector('header.airline-header');
+    const headerTop = document.querySelector('.airline-header-top');
+    const dropdownMenus = document.querySelectorAll('.airline-dropdown-menu');
     let lastScrollTop = 0;
     let scrollDirection = 'none';
     
     // 드롭다운 메뉴의 위치를 헤더 높이에 맞게 조정하는 함수
     function adjustDropdownPositions() {
+        if (!header) return;
         const headerHeight = header.offsetHeight;
         const viewportWidth = window.innerWidth;
         
@@ -377,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const style = document.createElement('style');
         style.textContent = `
-            .nav-item::after {
+            .airline-nav-item::after {
                 top: ${bridgeTop}px !important;
                 width: 100vw;
             }
@@ -443,98 +456,108 @@ document.addEventListener('DOMContentLoaded', function() {
         checkDropdownBounds();
     });
     
-    window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        // 스크롤 방향 감지
-        if (scrollTop > lastScrollTop) {
-            scrollDirection = 'down';
-        } else {
-            scrollDirection = 'up';
-        }
-        
-        // 스크롤 위치에 따른 헤더 스타일 변경
-        if (scrollTop > 100) {
-            header.classList.add('scrolled');
+    // 스크롤 이벤트 (헤더가 있는 모든 페이지에서 실행)
+    if (header && headerTop) {
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
-            // 스크롤 다운 시 상단 메뉴 숨기기
-            if (scrollDirection === 'down' && scrollTop > 200) {
-                headerTop.style.transform = 'translateY(-100%)';
-                headerTop.style.opacity = '0';
-                header.style.transform = 'translateY(-' + headerTop.offsetHeight + 'px)';
-            } 
-            // 스크롤 업 시 상단 메뉴 다시 보이기
-            else if (scrollDirection === 'up') {
+            // 스크롤 방향 감지
+            if (scrollTop > lastScrollTop) {
+                scrollDirection = 'down';
+            } else {
+                scrollDirection = 'up';
+            }
+            
+            // 스크롤 위치에 따른 헤더 스타일 변경
+            if (scrollTop > 100) {
+                header.classList.add('scrolled');
+                
+                // 스크롤 다운 시 상단 메뉴 숨기기
+                if (scrollDirection === 'down' && scrollTop > 200) {
+                    headerTop.style.transform = 'translateY(-100%)';
+                    headerTop.style.opacity = '0';
+                    header.style.transform = 'translateY(-' + headerTop.offsetHeight + 'px)';
+                } 
+                // 스크롤 업 시 상단 메뉴 다시 보이기
+                else if (scrollDirection === 'up') {
+                    headerTop.style.transform = 'translateY(0)';
+                    headerTop.style.opacity = '1';
+                    header.style.transform = 'translateY(0)';
+                }
+            } else {
+                header.classList.remove('scrolled');
                 headerTop.style.transform = 'translateY(0)';
                 headerTop.style.opacity = '1';
                 header.style.transform = 'translateY(0)';
             }
-        } else {
-            header.classList.remove('scrolled');
-            headerTop.style.transform = 'translateY(0)';
-            headerTop.style.opacity = '1';
-            header.style.transform = 'translateY(0)';
-        }
-        
-        // 헤더 상태 변화에 따라 드롭다운 메뉴 위치 조정
-        adjustDropdownPositions();
-        
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // iOS 바운스 효과 방지
-    });
+            
+            // 헤더 상태 변화에 따라 드롭다운 메뉴 위치 조정
+            adjustDropdownPositions();
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // iOS 바운스 효과 방지
+        });
+    }
 
-    // 폼 유효성 검사
+    // 폼 유효성 검사 (메인 페이지에만 존재)
     const bookingForms = document.querySelectorAll('.booking-form');
     
-    bookingForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            let isValid = true;
-            const inputs = this.querySelectorAll('input[type="text"], input[type="date"]');
-            
-            inputs.forEach(input => {
-                if (input.value.trim() === '') {
-                    isValid = false;
-                    input.classList.add('error');
+    if (bookingForms.length > 0) {
+        bookingForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                let isValid = true;
+                const inputs = this.querySelectorAll('input[type="text"], input[type="date"]');
+                
+                inputs.forEach(input => {
+                    if (input.value.trim() === '') {
+                        isValid = false;
+                        input.classList.add('error');
+                    } else {
+                        input.classList.remove('error');
+                    }
+                });
+                
+                if (isValid) {
+                    // 실제 제출 코드 (실제 구현 시 서버로 전송)
+                    alert('항공권 검색을 시작합니다.');
+                    // form.submit();
                 } else {
-                    input.classList.remove('error');
+                    alert('모든 필수 항목을 입력해주세요.');
                 }
             });
-            
-            if (isValid) {
-                // 실제 제출 코드 (실제 구현 시 서버로 전송)
-                alert('항공권 검색을 시작합니다.');
-                // form.submit();
-            } else {
-                alert('모든 필수 항목을 입력해주세요.');
-            }
         });
-    });
+    }
 
-    // 여행 타입 버튼 기능
+    // 여행 타입 버튼 기능 (메인 페이지에만 존재)
     const tripTypeBtns = document.querySelectorAll('.trip-type-btn');
-    tripTypeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tripTypeBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    if (tripTypeBtns.length > 0) {
+        tripTypeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tripTypeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
         });
-    });
+    }
     
-    // 상태 버튼 기능
+    // 상태 버튼 기능 (메인 페이지에만 존재)
     const statusBtns = document.querySelectorAll('.status-btn');
-    statusBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            statusBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    if (statusBtns.length > 0) {
+        statusBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                statusBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
         });
-    });
+    }
 
-    // 드롭다운 메뉴 기능
-    const navItems = document.querySelectorAll('.nav-item.dropdown');
+    // 드롭다운 메뉴 기능 (모든 페이지에서 실행)
+    const navItems = document.querySelectorAll('.airline-nav-item.dropdown');
     
-    navItems.forEach(navItem => {
-        const navLink = navItem.querySelector('.nav-link');
-        const dropdownMenu = navItem.querySelector('.dropdown-menu');
+    if (navItems.length > 0) {
+        navItems.forEach(navItem => {
+        const navLink = navItem.querySelector('.airline-nav-link');
+        const dropdownMenu = navItem.querySelector('.airline-dropdown-menu');
         let hoverTimeout;
         let isMouseOverDropdown = false;
         let isMouseOverNavItem = false;
@@ -616,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 다른 드롭다운 메뉴 닫기
                     navItems.forEach(item => {
                         if (item !== navItem) {
-                            const otherMenu = item.querySelector('.dropdown-menu');
+                            const otherMenu = item.querySelector('.airline-dropdown-menu');
                             otherMenu.style.opacity = '0';
                             otherMenu.style.visibility = 'hidden';
                         }
@@ -656,8 +679,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 모바일에서 터치 이벤트 처리
     if ('ontouchstart' in window) {
         navItems.forEach(navItem => {
-            const navLink = navItem.querySelector('.nav-link');
-            const dropdownMenu = navItem.querySelector('.dropdown-menu');
+            const navLink = navItem.querySelector('.airline-nav-link');
+            const dropdownMenu = navItem.querySelector('.airline-dropdown-menu');
             
             navLink.addEventListener('touchstart', (e) => {
                 e.preventDefault();
@@ -665,7 +688,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 다른 드롭다운 메뉴 닫기
                 navItems.forEach(item => {
                     if (item !== navItem) {
-                        const otherMenu = item.querySelector('.dropdown-menu');
+                        const otherMenu = item.querySelector('.airline-dropdown-menu');
                         otherMenu.style.opacity = '0';
                         otherMenu.style.visibility = 'hidden';
                     }
@@ -682,6 +705,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     dropdownMenu.style.transform = 'translateX(-50%) translateY(0)';
                 }
             });
+        });
+    }
+    }
+    
+    // 페이지 캐시 관련 이벤트 (메인 페이지에만 존재)
+    const checkinTab = document.querySelector('#checkin');
+    if (checkinTab) {
+        window.addEventListener('pageshow', function(event) {
+            // event.persisted 속성은 페이지가 bfcache에서 로드되었을 때 true가 됩니다.
+            if (event.persisted) {
+                // '예약 조회' 탭의 비회원 조회 폼을 찾습니다.
+                const lookupForm = document.querySelector('#checkin .checkin-form');
+                if (lookupForm) {
+                    // reset() 대신 각 필드를 직접 찾아 값을 비웁니다.
+                    const bookingIdInput = lookupForm.querySelector('input[name="bookingId"]');
+                    const departureDateInput = lookupForm.querySelector('input[name="departureDate"]');
+                    const lastNameInput = lookupForm.querySelector('input[name="lastName"]');
+                    const firstNameInput = lookupForm.querySelector('input[name="firstName"]');
+                    const checkbox = lookupForm.querySelector('input[type="checkbox"]');
+
+                    if (bookingIdInput) bookingIdInput.value = '';
+                    if (departureDateInput) departureDateInput.value = '';
+                    if (lastNameInput) lastNameInput.value = '';
+                    if (firstNameInput) firstNameInput.value = '';
+                    if (checkbox) checkbox.checked = false; // 체크박스도 해제
+                }
+                
+                // bfcache에 남아있을 수 있는 조회 실패 오류 메시지를 찾아 제거합니다.
+                const lookupError = document.querySelector('#checkin .booking-error');
+                if (lookupError) {
+                    lookupError.remove();
+                }
+            }
         });
     }
 
@@ -1360,4 +1416,4 @@ document.querySelector('#arrival-search').addEventListener('input', function () 
             });
         })
         .catch(console.error);
-});
+}); 
