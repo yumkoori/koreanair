@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import com.koreanair.model.dto.PaymentCompareDTO;
 import com.koreanair.util.DBConnection;
@@ -133,10 +135,12 @@ public class PaymentVerifyDAOImpl implements PaymentVerifyDAO {
             conn = DBConnection.getConnection();
             
             // SQL 쿼리 - status_code를 PAID로, paid_at을 현재 시간으로 업데이트
-            String sql = "UPDATE payment SET status_code = 'PAID', paid_at = NOW() WHERE merchant_uid = ?";
             
+            String sql = "UPDATE payment SET status_code = 'PAID', paid_at = ? WHERE merchant_uid = ?";
+            LocalDateTime now = LocalDateTime.now();
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, merchantUid);
+            pstmt.setTimestamp(1, Timestamp.valueOf(now));
+            pstmt.setString(2, merchantUid);
             
             int updatedRows = pstmt.executeUpdate();
             
