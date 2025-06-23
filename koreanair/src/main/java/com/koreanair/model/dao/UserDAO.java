@@ -367,6 +367,58 @@ public class UserDAO {
         }
     }
     
+    // 회원 정보 수정 (비밀번호 제외)
+    public boolean updateUser(User user) {
+        String sql = "UPDATE users SET korean_name = ?, english_name = ?, birth_date = ?, gender = ?, email = ?, phone = ?, address = ? WHERE user_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user.getKoreanName());
+            pstmt.setString(2, user.getEnglishName());
+            pstmt.setDate(3, user.getBirthDate());
+            pstmt.setString(4, user.getGender());
+            pstmt.setString(5, user.getEmail());
+            pstmt.setString(6, user.getPhone());
+            pstmt.setString(7, user.getAddress());
+            pstmt.setString(8, user.getUserId());
+            
+            int result = pstmt.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeResources(conn, pstmt, null);
+        }
+    }
+    
+    // 비밀번호 변경
+    public boolean updatePassword(String userId, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE user_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, userId);
+            
+            int result = pstmt.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeResources(conn, pstmt, null);
+        }
+    }
+    
     // ResultSet을 User 객체로 매핑하는 헬퍼 메소드
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
