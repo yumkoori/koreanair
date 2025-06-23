@@ -31,13 +31,11 @@ public class AuthenticationFilter implements Filter {
         String contextPath = httpRequest.getContextPath();
         String path = uri.substring(contextPath.length());
         
-        // 인증이 필요하지 않은 경로들
         if (isPublicPath(path)) {
             chain.doFilter(request, response);
             return;
         }
         
-        // 세션에서 사용자 정보 확인
         HttpSession session = httpRequest.getSession(false);
         User user = null;
         
@@ -45,13 +43,23 @@ public class AuthenticationFilter implements Filter {
             user = (User) session.getAttribute("user");
         }
         
-        // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
         if (user == null) {
+            // 1. 앞으로 가려던 목적지 URL을 세션에 저장합니다.
+            HttpSession sessionToStoreUrl = httpRequest.getSession(); // 세션이 없으면 새로 생성
+            String targetUrl = httpRequest.getRequestURI();
+            String queryString = httpRequest.getQueryString();
+            if (queryString != null) {
+                targetUrl += "?" + queryString;
+            }
+            
+            // LoginHandler에서 사용할 수 있도록 contextPath를 제외한 경로를 저장합니다.
+            String relativeTargetUrl = targetUrl.substring(contextPath.length());
+            sessionToStoreUrl.setAttribute("targetUrl", relativeTargetUrl);
+            
             httpResponse.sendRedirect(contextPath + "/loginForm.do");
             return;
         }
         
-        // 인증된 사용자는 요청 계속 처리
         chain.doFilter(request, response);
     }
     
@@ -89,6 +97,9 @@ public class AuthenticationFilter implements Filter {
             "/registerForm.do",
             "/register.do",
             "/checkUserId.do",
+            "/lookup",
+            "/checkinDetail.do", 
+            "/checkinApply.do",
             "/airportSearch.do",
             "/search/search.jsp",
             "/views/search/search.jsp",

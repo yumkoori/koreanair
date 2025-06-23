@@ -1,0 +1,268 @@
+@charset "UTF-8";
+
+/* ================================================================ */
+/* 전체 레이아웃 및 배경 */
+/* ================================================================ */
+
+/* body가 전체 높이를 차지하고, 자식들을 수직으로 쌓도록 변경 */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column; /* 자식 요소(header, main, footer)를 수직으로 정렬 */
+    background-color: #f4f7fb;
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+/* main 영역이 남는 공간을 모두 차지하고, 내부 콘텐츠를 중앙 정렬하도록 변경 */
+.checkup-main-content {
+    flex: 1; /* header와 footer를 제외한 모든 공간을 차지 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 15px;
+}
+
+/* ================================================================ */
+/* 조회 폼 컨테이너 (기존 스타일 유지) */
+/* ================================================================ */
+
+.checkup-container {
+    background: #fff;
+    width: 100%;
+    max-width: 680px;
+    padding: 40px 50px;
+    border-radius: 12px;
+    border: 1px solid #d9e2eb;
+    box-shadow: 0 4px 20px rgba(0, 37, 108, 0.08);
+    transition: all 0.3s ease;
+}
+
+.checkup-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    color: #0d2c5a;
+}
+
+.checkup-header i {
+    font-size: 26px;
+    color: #0064de;
+}
+
+.checkup-header h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+}
+
+/* ================================================================ */
+/* 폼 스타일 (기존 스타일 유지) */
+/* ================================================================ */
+
+.checkup-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px 30px; /* 세로 간격, 가로 간격 */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1; /* 두 컬럼을 모두 차지 */
+}
+
+.form-group label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* 둥근 모서리 */
+    background-color: #fdfdfd;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box; /* padding을 포함한 너비 계산 */
+}
+
+.form-group input::placeholder {
+    color: #aaa;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #0064de; /* 포커스 시 파란색 테두리 */
+    box-shadow: 0 0 0 3px rgba(0, 100, 222, 0.15); /* 포커스 시 그림자 효과 */
+}
+
+.instruction-text {
+    font-size: 14px;
+    color: #666;
+    background-color: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 6px;
+}
+
+.instruction-text i {
+    color: #0064de;
+    margin-right: 8px;
+}
+
+/* ================================================================ */
+/* 커스텀 체크박스 (기존 스타일 유지) */
+/* ================================================================ */
+
+.checkbox-group {
+    display: flex;
+    align-items: center; 
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox-group input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-right: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-group:hover .checkmark {
+    border-color: #0064de;
+}
+
+.checkbox-group input[type="checkbox"]:checked + .checkmark {
+    background-color: #0064de;
+    border-color: #0064de;
+}
+
+.checkmark::after {
+    content: '';
+    position: absolute;
+    display: none;
+    left:3.5px; /* 왼쪽으로 1px 이동 */
+    top: -1px;  /* 위쪽으로 1px 이동 */
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-group input[type="checkbox"]:checked + .checkmark::after {
+    display: block;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    position: relative; /* 위치 조정을 위해 추가 */
+    top: -1px;          /* 텍스트를 위로 1px 이동 */
+}
+
+/* ================================================================ */
+/* 버튼 스타일 (기존 스타일 유지) */
+/* ================================================================ */
+
+.form-actions {
+    grid-column: 1 / -1; /* ◀◀◀ 이 줄을 추가하여 컨테이너가 폼의 전체 너비를 차지하도록 합니다. */
+    display: flex;
+    justify-content: center; 
+    gap: 12px;
+    margin-top: 20px;
+    border-top: 1px solid #e9ecef;
+    padding-top: 25px;
+}
+
+.btn {
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-secondary {
+    background-color: #fff;
+    color: #555;
+    border-color: #ccc;
+}
+
+.btn-secondary:hover {
+    background-color: #f5f5f5;
+    border-color: #999;
+}
+
+.btn-primary {
+    background-color: #0064de;
+    color: #fff;
+    border-color: #0064de;
+}
+
+.btn-primary:hover {
+    background-color: #0056c0;
+    border-color: #0056c0;
+    box-shadow: 0 4px 12px rgba(0, 100, 222, 0.2);
+    transform: translateY(-2px);
+}
+
+.error-message {
+    background-color: #fff5f5;
+    color: #e53e3e;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid #fed7d7;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* ================================================================ */
+/* 반응형 디자인 (기존 스타일 유지) */
+/* ================================================================ */
+
+@media (max-width: 768px) {
+    .checkup-container {
+        padding: 30px;
+    }
+    .checkup-form {
+        grid-template-columns: 1fr; /* 1열로 변경 */
+        gap: 20px 0;
+    }
+    .form-actions {
+        flex-direction: column-reverse; /* 버튼을 수직으로 쌓고, primary 버튼이 위로 오게 */
+    }
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -433,18 +433,20 @@ main.container {
 .action-btn {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center;       /* 가로 중앙 정렬 */
+    justify-content: center;   /* 세로 중앙 정렬 (추가) */
     text-decoration: none;
     background: #f8f9fa;
     border: 1px solid #e9eff5;
     border-radius: 12px;
-    padding: 24px 32px 18px 32px;
+    padding: 24px;             /* 패딩을 상하좌우 동일하게 조정 */
     font-size: 16px;
     color: #174ea6;
     font-weight: 700;
     box-shadow: none;
     transition: all 0.2s ease-in-out;
     min-width: 180px;
+    min-height: 140px;         /* 최소 높이를 지정하여 크기를 고정 */
 }
 
 .action-btn:hover {
@@ -456,14 +458,15 @@ main.container {
 
 .action-btn-icon {
     font-size: 30px;
-    margin-bottom: 12px;
+    margin-bottom: 16px; /* 아이콘과 라벨 사이 간격 조정 */
     color: #0064de;
 }
 
 .action-btn-label {
     font-size: 16px;
-    margin-top: 4px;
-    gap: 4px;
+    display: flex;       /* 내부 아이콘과 텍스트 정렬을 위해 flex 추가 */
+    align-items: center;
+    gap: 8px;            /* 텍스트와 화살표 아이콘 간격 */
 }
 
 
@@ -557,6 +560,104 @@ main.container {
         margin: 16px;
         width: calc(100% - 32px);
     }
+}
+
+/* ==================== 모달 창 스타일 ==================== */
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(13, 44, 90, 0.25);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.modal-header h2 {
+    font-size: 22px;
+    color: #333;
+    margin: 0;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #888;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 메뉴 간 간격 */
+}
+
+.modal-service-link {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.modal-service-link:hover {
+    border-color: #0064de;
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.modal-service-link i {
+    font-size: 20px;
+    color: #0064de;
+    margin-right: 15px;
+    width: 30px;
+    text-align: center;
+}
+
+.modal-footer {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.modal-footer .btn-secondary {
+    padding: 10px 40px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+.modal-footer .btn-secondary:hover {
+    background: #5a6268;
 }
 @media (max-width: 600px) {
     .flight-path-info {

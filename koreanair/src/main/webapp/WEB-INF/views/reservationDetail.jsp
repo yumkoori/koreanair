@@ -18,7 +18,6 @@
 
 <c:choose>
     <c:when test="${not empty reservation}">
-        <%-- 비행시간 계산 로직 (가독성을 위해 상단으로 이동) --%>
         <c:set var="durationInMillis" value="${reservation.arrivalTime.time - reservation.departureTime.time}" />
         <c:set var="durationInMinutes" value="${durationInMillis / (1000 * 60)}" />
         <c:set var="durationHours" value="${durationInMinutes / 60}" />
@@ -44,7 +43,6 @@
                 </div>
 
                 <div class="journey-card-body">
-                    <%-- 왼쪽 컨텐츠 --%>
                     <div class="journey-details-left">
                         <div class="journey-date">
                             <fmt:formatDate value="${reservation.departureTime}" pattern="yyyy년 MM월 dd일 (E)" />
@@ -77,118 +75,148 @@
                                 <div class="airport-code">${reservation.arrivalAirportId}</div>
                             </div>
                         </div>
-
                         <div class="checkin-button-container">
-                            <button class="checkin-btn">체크인</button>
+                            <c:choose>
+                                <c:when test="${not empty reservation.assignedSeat}">
+                                    <a href="${pageContext.request.contextPath}/checkinDetail.do?bookingId=${reservation.bookingId}" class="checkin-btn">
+                                        <i class="fas fa-user-check"></i> 체크인
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/checkinDetail.do?bookingId=${reservation.bookingId}" class="checkin-btn">
+                                        <i class="fas fa-plane-departure"></i> 온라인 체크인
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
-                        
                         <div class="flight-extra-info">
                             <span>${reservation.flightId}</span>
                             <span>&middot;</span>
-                            <%-- 항공기 기종 정보가 DB에 없으므로, 있을 경우 표시하고 없으면 예시 데이터를 보여줍니다. --%>
                             <span><c:out value="${not empty reservation.aircraftType ? reservation.aircraftType : 'B737-900'}" /></span>
                              <span>&middot;</span>
                             <span>${reservation.cabinClass}</span>
                         </div>
                     </div>
-
-                    <%-- 오른쪽 컨텐츠 --%>
                     <div class="journey-services-right">
                         <div class="services-box">
                             <h3 class="services-title">좌석 및 서비스 신청</h3>
                             <div class="service-items">
-                                <a href="#" class="service-item">
-                                    <i class="fa-solid fa-chair"></i>
-                                    <span>좌석 선택</span>
-                                </a>
-                                <a href="#" class="service-item">
-                                    <i class="fa-solid fa-ellipsis"></i>
-                                    <span>기타 서비스</span>
+                                <c:choose>
+                                    <c:when test="${not empty reservation.assignedSeat}">
+                                        <a href="${pageContext.request.contextPath}/checkinSeat.do?bookingId=${reservation.bookingId}" class="service-item">
+                                            <i class="fa-solid fa-chair"></i>
+                                            <span>${reservation.assignedSeat} (좌석 변경)</span>
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/checkinSeat.do?bookingId=${reservation.bookingId}" class="service-item">
+                                            <i class="fa-solid fa-chair"></i>
+                                            <span>좌석 신청</span>
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <a href="#" id="openServicesModalBtn" class="service-item">
+                                    <i class="fa-solid fa-ellipsis"></i> <span>기타 서비스</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="section-card passenger-section">
-                <div class="section-title">
-                    <span>탑승객 정보</span>
-                    <span class="section-toggle"><i class="fa-solid fa-chevron-down"></i></span>
-                </div>
-                <div class="section-divider"></div>
-                <div class="passenger-table">
-                    <div class="passenger-row passenger-row-header">
-							<div class="passenger-cell label">대표자 연락처</div>
-							<div class="passenger-cell value">
-								<div class="contact-item">
-									<i class="fa-solid fa-phone"></i> 전화번호&nbsp; <span
-										class="strong">${reservation.phone}</span>
-								</div>
-								<div class="contact-item">
-									<i class="fa-solid fa-envelope"></i> 이메일&nbsp; <span
-										class="strong">${reservation.email}</span>
-								</div>
-							</div>
-						</div>
-                    <div class="passenger-row passenger-row-header2">
-                        <div class="passenger-cell label">탑승객/회원번호</div>
-                        <div class="passenger-cell label">연락처</div>
-                        <div class="passenger-cell label">항공권 번호</div>
-                        <div class="passenger-cell label">e-티켓/구매증서</div>
-                    </div>
-                    <div class="passenger-row">
-                        <div class="passenger-cell value">
-                            <span class="strong">${reservation.lastName} ${reservation.firstName}</span><br>
-                            (KE) ${reservation.memberId}
+                <div id="servicesModal" class="modal-overlay" style="display:none;">
+                    <div class="modal-container">
+                        <div class="modal-header">
+                            <h2>기타 부가서비스 신청/변경</h2>
+                            <button id="closeServicesModalBtn" class="modal-close-btn">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
                         </div>
-                        <div class="passenger-cell value">
-                            ${reservation.phone}<br>
-                            ${reservation.email}
-                            <button class="edit-btn" title="수정"><i class="fa-regular fa-pen-to-square"></i></button>
+                        <div class="modal-body">
+                            <a href="#" class="modal-service-link">
+                                <i class="fa-solid fa-dog"></i> 반려동물 동반
+                            </a>
+                            <a href="#" class="modal-service-link">
+                                <i class="fa-solid fa-wheelchair"></i> 도움이 필요한 승객
+                            </a>
                         </div>
-                        <div class="passenger-cell value">
-                            <c:choose>
-                                <c:when test="${not empty reservation.ticketNumber}">${reservation.ticketNumber}</c:when>
-                                <c:otherwise>정보 없음</c:otherwise>
-                            </c:choose>
-                        </div>
-                        <div class="passenger-cell value">
-                            <a href="#" class="ticket-link">e-티켓/영수증 보기</a>
+                        <div class="modal-footer">
+                            <button id="footerCloseServicesModalBtn" class="btn-secondary">닫기</button>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="section-card passenger-section">
+                    <div class="section-title">
+                        <span>탑승객 정보</span>
+                        <span class="section-toggle"><i class="fa-solid fa-chevron-down"></i></span>
+                    </div>
+                    <div class="section-divider"></div>
+                    <div class="passenger-table">
+                        <div class="passenger-row passenger-row-header">
+                            <div class="passenger-cell label">대표자 연락처</div>
+                            <div class="passenger-cell value">
+                                <div class="contact-item">
+                                    <i class="fa-solid fa-phone"></i> 전화번호&nbsp; <span
+                                        class="strong">${reservation.phone}</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fa-solid fa-envelope"></i> 이메일&nbsp; <span
+                                        class="strong">${reservation.email}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="passenger-row passenger-row-header2">
+                            <div class="passenger-cell label">탑승객/회원번호</div>
+                            <div class="passenger-cell label">연락처</div>
+                            <div class="passenger-cell label">항공권 번호</div>
+                            <div class="passenger-cell label">e-티켓/구매증서</div>
+                        </div>
+                        <div class="passenger-row">
+                            <div class="passenger-cell value">
+                                <span class="strong">${reservation.lastName} ${reservation.firstName}</span><br>
+                                (KE) ${reservation.memberId}
+                            </div>
+                            <div class="passenger-cell value">
+                                ${reservation.phone}<br>
+                                ${reservation.email}
+                                <button class="edit-btn" title="수정"><i class="fa-regular fa-pen-to-square"></i></button>
+                            </div>
+                            <div class="passenger-cell value">
+                                <c:choose>
+                                    <c:when test="${not empty reservation.ticketNumber}">${reservation.ticketNumber}</c:when>
+                                    <c:otherwise>정보 없음</c:otherwise>
+                                </c:choose>
+                            </div>
+                            <div class="passenger-cell value">
+                                <a href="#" class="ticket-link">e-티켓/영수증 보기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="section-card action-section">
-                <div class="section-title">
-                    <span>여행 변경 및 취소</span>
-                    <span class="section-toggle"><i class="fa-solid fa-chevron-down"></i></span>
-                </div>
-                <div class="section-divider"></div>
-                <div class="action-btn-row">
-                    <a href="#" class="action-btn">
-                        <div class="action-btn-icon"><i class="fa-regular fa-calendar-days"></i></div>
-                        <div class="action-btn-label">예약변경 <i class="fa-solid fa-chevron-right"></i></div>
-                    </a>
-                    <a href="#" class="action-btn">
-                        <div class="action-btn-icon"><i class="fa-regular fa-calendar-xmark"></i></div>
-                        <div class="action-btn-label">예약취소/환불 <i class="fa-solid fa-chevron-right"></i></div>
-                    </a>
-                </div>
-            </div>
-
-           <!--  <div class="detail-recommend-section">
-                <div class="detail-recommend-title">추천 상품</div>
-                <div class="detail-recommend-card">
-                    <img class="detail-recommend-img" src="https://cdn.pixabay.com/photo/2016/11/29/09/32/beach-1867285_1280.jpg" alt="제주 호텔">
-                    <div class="detail-recommend-info">
-                        <p>제주 호텔 특가 상품을 추천해 드립니다.</p>
-                        <img class="agoda-logo" src="https://cdn6.agoda.net/images/kite-js/logo/agoda/color-default.svg" alt="agoda">
+                <div class="section-card action-section">
+                    <div class="section-title">
+                        <span>여행 변경 및 취소</span>
+                        <span class="section-toggle"><i class="fa-solid fa-chevron-down"></i></span>
                     </div>
+                    <div class="section-divider"></div>
+					 <div class="action-btn-row">
+					    <a href="${pageContext.request.contextPath}/changeReservationSelect.do?bookingId=${reservation.bookingId}" class="action-btn">
+					        <div class="action-btn-icon"><i class="fa-regular fa-calendar-days"></i></div>
+					        <div class="action-btn-label">
+					            <span>예약변경</span>
+					            <i class="fa-solid fa-chevron-right"></i>
+					        </div>
+					    </a>
+					    <a href="${pageContext.request.contextPath}/cancelReservationForm.do?bookingId=${reservation.bookingId}" class="action-btn">
+					        <div class="action-btn-icon"><i class="fas fa-times-circle"></i></div>
+					        <div class="action-btn-label">
+					            <span>예약 취소</span>
+					        </div>
+					    </a>
+					</div>
                 </div>
-            </div>
-        </div> -->
-    </c:when>
+
+            </c:when>
     <c:otherwise>
         <div class="container">
             <div class="card">
