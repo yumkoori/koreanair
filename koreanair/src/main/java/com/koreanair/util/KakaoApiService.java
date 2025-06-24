@@ -1,13 +1,13 @@
 package com.koreanair.util;
 
 import java.io.IOException;
+import java.net.http.HttpClient;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
