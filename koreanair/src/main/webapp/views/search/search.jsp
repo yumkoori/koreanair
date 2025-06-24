@@ -9,89 +9,27 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes">
+<meta name="format-detection" content="telephone=no">
 <title>항공권 검색 결과 - 항공사 웹사이트</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/search.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
 	rel="stylesheet">
 </head>
-<body>
-	<header>
-		<div class="header-top">
-			<div class="container">
-				<div class="logo">
-					<a href="index.jsp"> <svg width="150" height="40"
-							viewBox="0 0 200 50">
-                        <path
-								d="M20,10 C30,4 40,10 40,20 C40,30 30,36 20,30 C10,36 0,30 0,20 C0,10 10,4 20,10 Z"
-								fill="#0064de" />
-                        <path
-								d="M50,15 L180,15 C185,15 190,20 190,25 C190,30 185,35 180,35 L50,35"
-								stroke="#0064de" stroke-width="5" fill="none" />
-                        <text x="60" y="28" font-family="Arial"
-								font-size="15" font-weight="bold" fill="#0064de">AIRLINE</text>
-                    </svg>
-					</a>
-				</div>
-				<nav class="top-nav">
-					<ul>
-						<li><a href="#">로그인</a></li>
-						<li><a href="#">회원가입</a></li>
-						<li><a href="#">마이페이지</a></li>
-						<li class="language-selector"><select>
-								<option value="ko">한국어</option>
-								<option value="en">English</option>
-								<option value="ja">日本語</option>
-								<option value="zh">中文</option>
-						</select></li>
-					</ul>
-				</nav>
-			</div>
-		</div>
-		<div class="header-main">
-			<div class="container">
-				<nav class="main-nav">
-					<ul>
-						<li class="dropdown"><a href="#">예매</a>
-							<div class="dropdown-content">
-								<a href="#">항공권 예매</a> <a href="#">예매 조회</a> <a href="#">체크인</a>
-								<a href="#">운임 안내</a>
-							</div></li>
-						<li class="dropdown"><a href="#">여행 정보</a>
-							<div class="dropdown-content">
-								<a href="#">취항지 안내</a> <a href="#">여행 상품</a> <a href="#">여행
-									가이드</a> <a href="#">비자 정보</a>
-							</div></li>
-						<li class="dropdown"><a href="#">서비스</a>
-							<div class="dropdown-content">
-								<a href="#">기내 서비스</a> <a href="#">공항 서비스</a> <a href="#">특별
-									서비스</a> <a href="#">수하물 안내</a>
-							</div></li>
-						<li class="dropdown"><a href="#">마일리지</a>
-							<div class="dropdown-content">
-								<a href="#">마일리지 적립</a> <a href="#">마일리지 사용</a> <a href="#">제휴
-									프로그램</a> <a href="#">마일리지 몰</a>
-							</div></li>
-						<li class="dropdown"><a href="#">항공사 소개</a>
-							<div class="dropdown-content">
-								<a href="#">회사 소개</a> <a href="#">뉴스룸</a> <a href="#">ESG 경영</a>
-								<a href="#">채용 정보</a>
-							</div></li>
-					</ul>
-				</nav>
-				<div class="search">
-					<input type="text" placeholder="검색어를 입력하세요">
-					<button>
-						<i class="fas fa-search"></i>
-					</button>
-				</div>
-			</div>
-		</div>
-	</header>
+<body class="airline-main-body">
+
+<script>
+    window.contextPath = "${pageContext.request.contextPath}";
+    console.log("contextPath:", window.contextPath);
+</script>
+
+    <jsp:include page="/views/common/header.jsp" />
 
 	<div class="search-condition-bar">
 		<div class="container">
@@ -770,51 +708,7 @@
 		</div>
 	</div>
 
-	<footer>
-		<div class="container">
-			<div class="footer-content">
-				<div class="footer-section">
-					<h3>고객 서비스</h3>
-					<ul>
-						<li><a href="#">고객센터</a></li>
-						<li><a href="#">자주 묻는 질문</a></li>
-						<li><a href="#">문의하기</a></li>
-						<li><a href="#">예약 변경/취소</a></li>
-					</ul>
-				</div>
-				<div class="footer-section">
-					<h3>회사 정보</h3>
-					<ul>
-						<li><a href="#">회사 소개</a></li>
-						<li><a href="#">채용 정보</a></li>
-						<li><a href="#">투자 정보</a></li>
-						<li><a href="#">뉴스룸</a></li>
-					</ul>
-				</div>
-				<div class="footer-section">
-					<h3>법적 고지</h3>
-					<ul>
-						<li><a href="#">이용약관</a></li>
-						<li><a href="#">개인정보처리방침</a></li>
-						<li><a href="#">운송약관</a></li>
-						<li><a href="#">법적 고지문</a></li>
-					</ul>
-				</div>
-				<div class="footer-section">
-					<h3>소셜 미디어</h3>
-					<div class="social-links">
-						<a href="#"><i class="fab fa-facebook"></i></a> <a href="#"><i
-							class="fab fa-twitter"></i></a> <a href="#"><i
-							class="fab fa-instagram"></i></a> <a href="#"><i
-							class="fab fa-youtube"></i></a>
-					</div>
-				</div>
-			</div>
-			<div class="footer-bottom">
-				<p>&copy; 2024 항공사. All rights reserved.</p>
-			</div>
-		</div>
-	</footer>
+	<jsp:include page="/views/common/footer.jsp" />
 
 	<%
 		// 승객 수 정보를 JavaScript로 전달하기 위한 변수 준비
