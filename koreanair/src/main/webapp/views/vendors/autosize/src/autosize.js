@@ -134,18 +134,20 @@ function assign(ta, {setOverflowX = true, setOverflowY = true} = {}) {
 		}
 	};
 
-	const destroy = style => {
-		window.removeEventListener('resize', pageResize, false);
-		ta.removeEventListener('input', update, false);
-		ta.removeEventListener('keyup', update, false);
-		ta.removeEventListener('autosize:destroy', destroy, false);
-		ta.removeEventListener('autosize:update', update, false);
-		set.delete(ta);
+	const destroy = (function(style) {
+		return function() {
+			window.removeEventListener('resize', pageResize, false);
+			ta.removeEventListener('input', update, false);
+			ta.removeEventListener('keyup', update, false);
+			ta.removeEventListener('autosize:destroy', destroy, false);
+			ta.removeEventListener('autosize:update', update, false);
+			set.delete(ta);
 
-		Object.keys(style).forEach(key => {
-			ta.style[key] = style[key];
-		});
-	}.bind(ta, {
+			Object.keys(style).forEach(key => {
+				ta.style[key] = style[key];
+			});
+		};
+	})({
 		height: ta.style.height,
 		resize: ta.style.resize,
 		overflowY: ta.style.overflowY,

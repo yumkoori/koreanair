@@ -9,7 +9,7 @@ import com.koreanair.model.dto.SaveSchedulesDBDTO;
 public class SaveSchedulesDBService {
 	
 	public int saveSchdulesDB( List<SaveSchedulesDBDTO> scheduleList) throws Exception{
-		System.out.println("서비스에서 받고 있습니다>>>>>>>" + scheduleList);
+		// System.out.println("서비스에서 받고 있습니다>>>>>>>" + scheduleList);
 		ProjectDao dao = new ProjectDaoimpl();
 		return dao.saveSchdulesDB(scheduleList);
 	}

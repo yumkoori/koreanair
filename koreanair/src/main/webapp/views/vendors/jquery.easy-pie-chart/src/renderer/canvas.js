@@ -132,7 +132,7 @@ var CanvasRenderer = function(el, options) {
 	 * Draw the complete chart
 	 * @param {number} percent Percent shown by the chart between -100 and 100
 	 */
-	this.draw = function(percent) {
+	this.draw = (function(percent) {
 		// do we need to render a background
 		if (!!options.scaleColor || !!options.trackColor) {
 			// getImageData and putImageData are supported
@@ -163,17 +163,17 @@ var CanvasRenderer = function(el, options) {
 
 		// draw bar
 		drawCircle(color, options.lineWidth, percent / 100);
-	}.bind(this);
+	}).bind(this);
 
 	/**
 	 * Animate from some percent to some other percentage
 	 * @param {number} from Starting percentage
 	 * @param {number} to   Final percentage
 	 */
-	this.animate = function(from, to) {
+	this.animate = (function(from, to) {
 		var startTime = Date.now();
 		options.onStart(from, to);
-		var animation = function() {
+		var animation = (function() {
 			var process = Math.min(Date.now() - startTime, options.animate.duration);
 			var currentValue = options.easing(this, process, from, to - from, options.animate.duration);
 			this.draw(currentValue);
@@ -183,8 +183,8 @@ var CanvasRenderer = function(el, options) {
 			} else {
 				reqAnimationFrame(animation);
 			}
-		}.bind(this);
+		}).bind(this);
 
 		reqAnimationFrame(animation);
-	}.bind(this);
+	}).bind(this);
 };

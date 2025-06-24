@@ -46,7 +46,7 @@ var EasyPieChart = function(el, opts) {
 	/**
 	 * Initialize the plugin by creating the options object and initialize rendering
 	 */
-	var init = function() {
+	var init = (function() {
 		this.el = el;
 		this.options = options;
 
@@ -94,14 +94,14 @@ var EasyPieChart = function(el, opts) {
 		} else if (el.getAttribute && el.getAttribute('data-percent')) {
 			this.update(parseFloat(el.getAttribute('data-percent')));
 		}
-	}.bind(this);
+	}).bind(this);
 
 	/**
 	 * Update the value of the chart
 	 * @param  {number} newValue Number between 0 and 100
 	 * @return {object}          Instance of the plugin for method chaining
 	 */
-	this.update = function(newValue) {
+	this.update = (function(newValue) {
 		newValue = parseFloat(newValue);
 		if (options.animate.enabled) {
 			this.renderer.animate(currentValue, newValue);
@@ -110,7 +110,7 @@ var EasyPieChart = function(el, opts) {
 		}
 		currentValue = newValue;
 		return this;
-	}.bind(this);
+	}).bind(this);
 
 	/**
 	 * Disable animation

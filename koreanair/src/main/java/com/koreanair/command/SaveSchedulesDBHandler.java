@@ -40,7 +40,7 @@ public class SaveSchedulesDBHandler implements CommandHandler{
 	        }
 	        String jsonData = buffer.toString();
 	        
-	        System.out.println("핸들러가 받은 JSON 데이터: " + jsonData);
+	        // System.out.println("핸들러가 받은 JSON 데이터: " + jsonData);
 	        
 	        // 2. JSON → DTO 배열 → 리스트로 변환
 	        

@@ -33,15 +33,7 @@ public class FlightScheduleService {
      */
                                                     //처음에는  오늘날짜             all     
     public List<FlightScheduleDTO> getFlightData(String requestedDate, String flightType) throws Exception {
-<<<<<<< HEAD
     	// System.out.println("서비스에 도착");
-=======
-<<<<<<< HEAD
-    	// System.out.println("서비스에 도착");
-=======
-    	System.out.println("서비스에 도착");
->>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
     	
         if (flightType == null || flightType.trim().isEmpty()) {
             flightType = "all";
@@ -49,15 +41,7 @@ public class FlightScheduleService {
         }
         if ("realtime".equalsIgnoreCase(flightType)) {
             requestedDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
-<<<<<<< HEAD
             // System.out.println("8888");
-=======
-<<<<<<< HEAD
-            // System.out.println("8888");
-=======
-            System.out.println("8888");
->>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
         }
         if (requestedDate == null || requestedDate.trim().isEmpty()) {
             throw new IllegalArgumentException("날짜 파라미터가 필요합니다.");
@@ -264,15 +248,15 @@ public class FlightScheduleService {
                 
                 if("OUT".equalsIgnoreCase(ioType)) {
                     // 출발편: 인천 -> 해외도시
-                    originVal = apiFlight.optString("cityCode", "제공안함");  // 기본값을 인천으로 설정
-                    destVal = apiFlight.optString("airportCode", "제공안함");
+                    originVal = apiFlight.optString("airportCode", "인천");  // 출발지는 공항(인천)
+                    destVal = apiFlight.optString("cityCode", "N/A");       // 도착지는 해외도시
                     depTimeVal = formatTime(apiFlight.optString("internationalTime", ""));
                     arrTimeVal = addHoursToTime(depTimeVal, 2); // 출발시간에 2시간 추가
                     // // System.out.println("디버깅 - 출발편: " + originVal + " -> " + destVal + " at " + depTimeVal);
                 } else if("IN".equalsIgnoreCase(ioType)) {
                     // 도착편: 해외도시 -> 인천
-                    originVal = apiFlight.optString("airportCode", "N/A");
-                    destVal = apiFlight.optString("cityCode", "인천");  // 기본값을 인천으로 설정
+                    originVal = apiFlight.optString("cityCode", "N/A");      // 출발지는 해외도시
+                    destVal = apiFlight.optString("airportCode", "인천");    // 도착지는 공항(인천)
                     depTimeVal = formatTime(apiFlight.optString("internationalTime", ""));
                     arrTimeVal = addHoursToTime(depTimeVal, 2); // 출발시간에 2시간 추가
                     //// System.out.println("디버깅 - 도착편: " + originVal + " -> " + destVal + " at " + arrTimeVal);
@@ -284,7 +268,7 @@ public class FlightScheduleService {
                     arrTimeVal = "N/A";
                    // // System.out.println("디버깅 - 타입 불명: " + originVal + " <-> " + destVal);
                 }
-                statusVal = "제공안함쓰";
+                statusVal = "제공안함";
             }
 
             // DTO 객체에 값을 설정합니다. (FlightScheduleDTO에 setter가 있어야 합니다)

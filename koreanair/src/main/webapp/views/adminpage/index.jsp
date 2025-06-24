@@ -10,6 +10,11 @@ String contextPath = request.getContextPath();
 <html lang="ko">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- 캐시 무력화를 위한 메타 태그 추가 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -61,16 +66,17 @@ String contextPath = request.getContextPath();
         <jsp:include page="topnav.jsp"></jsp:include>
 
         <div class="right_col" role="main">
+
+          
           <!-- top tiles -->
           <div class="row" style="display: inline-block;" >
           <div class="tile_count">
             <div class="col-md-2 col-sm-4 tile_stats_count" data-stat="total-users">
               <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
-<<<<<<< HEAD
+
               <div class="count"></div>
-=======
-              <div class="count">190</div>
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
+
+
               <span class="count_bottom"><i class="green">4% </i> From last Week</span>
             </div>
             <div class="col-md-2 col-sm-4 tile_stats_count" data-stat="average-time">
@@ -90,20 +96,18 @@ String contextPath = request.getContextPath();
             </div>
             <div class="col-md-2 col-sm-4 tile_stats_count" data-stat="total-collections">
               <span class="count_top"><i class="fa fa-plane"></i> Total Reservations</span>
-<<<<<<< HEAD
+
               <div class="count"></div>
-=======
-              <div class="count">2,315</div>
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
+
+
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
             </div>
             <div class="col-md-2 col-sm-4 tile_stats_count" data-stat="total-connections">
               <span class="count_top"><i class="fa fa-globe"></i> Total Sessions</span>
-<<<<<<< HEAD
+
               <div class="count"></div>
-=======
-              <div class="count">7,325</div>
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
+
+
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
             </div>
           </div>
@@ -119,9 +123,11 @@ String contextPath = request.getContextPath();
                     <h3>Network Activities <small>Graph title sub-title</small></h3>
                   </div>
                   <div class="col-md-6">
-                    <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                    <div id="yearSelector" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
                       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                      <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+                      <select id="yearSelect" style="border: none; background: transparent; font-size: 14px;">
+                        <!-- 년도 옵션들이 JavaScript로 추가됩니다 -->
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -131,44 +137,16 @@ String contextPath = request.getContextPath();
                 </div>
                 <div class="col-md-3 col-sm-3  bg-white">
                   <div class="x_title">
-                    <h2>Top Campaign Performance</h2>
+                    <h2>월별 예약 순위 <small>Top Monthly Reservations</small></h2>
                     <div class="clearfix"></div>
                   </div>
 
-                  <div class="col-md-12 col-sm-12 ">
-                    <div>
-                      <p>Facebook Campaign</p>
-                      <div class="">
-                        <div class="progress progress_sm" style="width: 76%;">
-                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="80"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <p>Twitter Campaign</p>
-                      <div class="">
-                        <div class="progress progress_sm" style="width: 76%;">
-                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-12 col-sm-12 ">
-                    <div>
-                      <p>Conventional Media</p>
-                      <div class="">
-                        <div class="progress progress_sm" style="width: 76%;">
-                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="40"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <p>Bill boards</p>
-                      <div class="">
-                        <div class="progress progress_sm" style="width: 76%;">
-                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="50"></div>
-                        </div>
-                      </div>
+                  <!-- JavaScript에서 동적으로 생성될 월별 예약 순위 컨테이너 -->
+                  <div id="topReservationContainer" class="col-md-12 col-sm-12">
+                    <!-- 데이터 로딩 중 표시 -->
+                    <div class="text-center" style="padding: 50px 0; color: #999;">
+                      <i class="fa fa-spinner fa-spin" style="font-size: 24px;"></i><br>
+                      <small>월별 예약 데이터 로딩 중...</small>
                     </div>
                   </div>
 
@@ -185,9 +163,21 @@ String contextPath = request.getContextPath();
 
 
             <div class="col-md-4 col-sm-4 ">
-              <div class="x_panel tile fixed_height_320">
+              <div id="routeStatsPanel" class="x_panel tile fixed_height_320">
                 <div class="x_title">
-                  <h2>App Versions</h2>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h2>인기 항공노선</h2>
+                    </div>
+                    <div class="col-md-6">
+                      <div id="routeStatsYearSelector" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; margin-top: 5px;">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                        <select id="routeStatsYearSelect" style="border: none; background: transparent; font-size: 12px;">
+                          <!-- 년도 옵션들이 JavaScript로 추가됩니다 -->
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                   <ul class="nav navbar-right panel_toolbox">
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -203,90 +193,12 @@ String contextPath = request.getContextPath();
                   </ul>
                   <div class="clearfix"></div>
                 </div>
-                <div class="x_content">
-                  <h4>App Usage across versions</h4>
-                  <div class="widget_summary">
-                    <div class="w_left w_25">
-                      <span>0.1.5.2</span>
-                    </div>
-                    <div class="w_center w_55">
-                      <div class="progress">
-                        <div class="progress-bar bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 66%;">
-                          <span class="sr-only">60% Complete</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="w_right w_20">
-                      <span>123k</span>
-                    </div>
-                    <div class="clearfix"></div>
+                <div class="x_content" id="routeStatsContent">
+                  <!-- 데이터 로딩 중 표시 -->
+                  <div class="text-center" style="padding: 50px 0; color: #999;">
+                    <i class="fa fa-spinner fa-spin" style="font-size: 24px;"></i><br>
+                    <small>항공노선 데이터 로딩 중...</small>
                   </div>
-
-                  <div class="widget_summary">
-                    <div class="w_left w_25">
-                      <span>0.1.5.3</span>
-                    </div>
-                    <div class="w_center w_55">
-                      <div class="progress">
-                        <div class="progress-bar bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
-                          <span class="sr-only">60% Complete</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="w_right w_20">
-                      <span>53k</span>
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="widget_summary">
-                    <div class="w_left w_25">
-                      <span>0.1.5.4</span>
-                    </div>
-                    <div class="w_center w_55">
-                      <div class="progress">
-                        <div class="progress-bar bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
-                          <span class="sr-only">60% Complete</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="w_right w_20">
-                      <span>23k</span>
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="widget_summary">
-                    <div class="w_left w_25">
-                      <span>0.1.5.5</span>
-                    </div>
-                    <div class="w_center w_55">
-                      <div class="progress">
-                        <div class="progress-bar bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;">
-                          <span class="sr-only">60% Complete</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="w_right w_20">
-                      <span>3k</span>
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="widget_summary">
-                    <div class="w_left w_25">
-                      <span>0.1.5.6</span>
-                    </div>
-                    <div class="w_center w_55">
-                      <div class="progress">
-                        <div class="progress-bar bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
-                          <span class="sr-only">60% Complete</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="w_right w_20">
-                      <span>1k</span>
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-
                 </div>
               </div>
             </div>
@@ -326,10 +238,10 @@ String contextPath = request.getContextPath();
                       </th>
                     </tr>
                     <tr>
-                      <td>
-                        <canvas id="seatRevenueChart" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
+                      <td style="text-align: center; vertical-align: middle; width: 37%;">
+                        <canvas id="seatRevenueChart" height="130" width="130"></canvas>
                       </td>
-                      <td>
+                      <td style="vertical-align: middle;">
                         <table class="tile_info" id="seatRevenueTable">
                           <tr data-seat-class="first">
                             <td>
@@ -364,57 +276,7 @@ String contextPath = request.getContextPath();
             </div>
 
 
-            <div class="col-md-4 col-sm-4 ">
-              <div class="x_panel tile fixed_height_320">
-                <div class="x_title">
-                  <h2>Quick Settings</h2>
-                  <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="#">Settings 1</a>
-                          <a class="dropdown-item" href="#">Settings 2</a>
-                        </div>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                  </ul>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                  <div class="dashboard-widget-content">
-                    <ul class="quick-list">
-                      <li><i class="fa fa-calendar-o"></i><a href="#">Settings</a>
-                      </li>
-                      <li><i class="fa fa-bars"></i><a href="#">Subscription</a>
-                      </li>
-                      <li><i class="fa fa-bar-chart"></i><a href="#">Auto Renewal</a> </li>
-                      <li><i class="fa fa-line-chart"></i><a href="#">Achievements</a>
-                      </li>
-                      <li><i class="fa fa-bar-chart"></i><a href="#">Auto Renewal</a> </li>
-                      <li><i class="fa fa-line-chart"></i><a href="#">Achievements</a>
-                      </li>
-                      <li><i class="fa fa-area-chart"></i><a href="#">Logout</a>
-                      </li>
-                    </ul>
-
-                    <div class="sidebar-widget">
-                        <h4>Profile Completion</h4>
-                        <canvas width="150" height="80" id="chart_gauge_01" class="" style="width: 160px; height: 100px;"></canvas>
-                        <div class="goal-wrapper">
-                          <span id="gauge-text" class="gauge-value pull-left">0</span>
-                          <span class="gauge-value pull-left">%</span>
-                          <span id="goal-text" class="goal-value pull-right">100%</span>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
+            
 
 
           <div class="row">
@@ -797,19 +659,35 @@ String contextPath = request.getContextPath();
     <script src="<%=contextPath%>/views/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
     <!-- Custom Theme Scripts -->
-<<<<<<< HEAD
-    <script src="<%=contextPath%>/views/build/js/custom.js"></script>
-=======
     <script src="<%=contextPath%>/views/build/js/custom.min.js"></script>
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
-    
-    <!-- Statistics JavaScript -->
-    <script src="<%=contextPath%>/views/adminpage/js/statistics.js"></script>
-    
+
     <script>
-        // contextPath 전역 변수 설정
+        // contextPath 전역 변수 설정 (statistics.js 로드 전에 설정)
         const contextPath = '<%=contextPath%>';
         console.log('Index.jsp 로드 완료, contextPath:', contextPath);
+    </script>
+    
+    <!-- Statistics JavaScript (캐시 방지용 버전 파라미터 추가) -->
+    <script src="<%=contextPath%>/views/adminpage/js/statistics.js?v=20241219-v3"></script>
+    
+    <!-- 추가 디버깅을 위한 스크립트 -->
+    <script>
+        // 페이지 로드 완료 후 추가 디버깅
+        window.addEventListener('load', function() {
+            console.log('=== 페이지 완전 로드 완료 ===');
+            console.log('Chart.js 사용 가능:', typeof Chart !== 'undefined');
+            console.log('contextPath 설정:', contextPath);
+            console.log('seatRevenueChart 캔버스:', document.getElementById('seatRevenueChart') ? '존재함' : '존재하지 않음');
+            
+            // statistics.js가 로드될 때까지 대기 후 함수 호출
+            setTimeout(function() {
+                if (typeof loadSeatRevenueData === 'function') {
+                    console.log('loadSeatRevenueData 함수 사용 가능');
+                } else {
+                    console.error('loadSeatRevenueData 함수를 찾을 수 없습니다');
+                }
+            }, 100);
+        });
     </script>
 	
   </body>

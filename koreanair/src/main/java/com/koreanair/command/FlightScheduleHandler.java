@@ -18,19 +18,9 @@ public class FlightScheduleHandler implements CommandHandler {
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-<<<<<<< HEAD
         System.out.println("=== FlightScheduleHandler 시작 ===");
         System.out.println("요청 URI: " + request.getRequestURI());
         System.out.println("요청 메소드: " + request.getMethod());
-=======
-<<<<<<< HEAD
-        System.out.println("=== FlightScheduleHandler 시작 ===");
-        System.out.println("요청 URI: " + request.getRequestURI());
-        System.out.println("요청 메소드: " + request.getMethod());
-=======
-        System.out.println("> FlightScheduleHandler called...");
->>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
         
         // 요청 파라미터 받기
         String date = request.getParameter("date");
@@ -41,15 +31,7 @@ public class FlightScheduleHandler implements CommandHandler {
             date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
         }
         if (flightType == null || flightType.trim().isEmpty()) {
-<<<<<<< HEAD
             flightType = "international";
-=======
-<<<<<<< HEAD
-            flightType = "international";
-=======
-            flightType = "all";
->>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
         }
         
         System.out.println("요청 파라미터 - date: " + date + ", flightType: " + flightType);
@@ -63,15 +45,7 @@ public class FlightScheduleHandler implements CommandHandler {
         
         String jsonResponse = gson.toJson(flightList);
         System.out.println("JSON 응답 데이터 크기: " + flightList.size());
-<<<<<<< HEAD
         // System.out.println(flightList);
-=======
-<<<<<<< HEAD
-        // System.out.println(flightList);
-=======
-        
->>>>>>> 1f3e8f056f7dad1b16f9666de5ce634c38e3b706
->>>>>>> cd5ba6535013433d0eef20955581fa8717c00dbc
         response.getWriter().write(jsonResponse);
         return null; // JSP로 포워딩하지 않음
     }

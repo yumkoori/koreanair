@@ -5029,14 +5029,14 @@ $(document).ready(function () {
     init_daterangepicker_reservation();
     init_SmartWizard();
     init_EasyPieChart();
-    init_charts();
+    // init_charts(); // statistics.js에서 차트 초기화를 담당하므로 주석 처리
     init_echarts();
     init_morris_charts();
     init_skycons();
     init_select2();
     init_validator();
     init_DataTables();
-    init_chart_doughnut();
+    // init_chart_doughnut(); // statistics.js에서 차트 초기화를 담당하므로 주석 처리
     init_gauge();
     init_PNotify();
     init_starrr();
