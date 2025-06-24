@@ -14,10 +14,11 @@ public class TestPaymentHandler implements CommandHandler{
 		System.out.println(bookingId);
 		System.out.println(totalAmount);
 
-		request.setAttribute("bookingId", bookingId);
-		request.setAttribute("totalAmount", totalAmount);
-
-		return null;		//payment.jsp 반환 
+		// 리다이렉트 방식으로 파라미터 전달
+		String redirectUrl = request.getContextPath() + "/views/payment/Payment_Page.jsp?bookingId=" + bookingId + "&totalAmount=" + totalAmount;
+		response.sendRedirect(redirectUrl);
+		
+		return null; // 리다이렉트 후에는 null 반환
 	}
 
 }
