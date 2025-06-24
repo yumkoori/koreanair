@@ -116,7 +116,11 @@ public class AuthenticationFilter implements Filter {
             "/kakao/login.do",
             "/kakao/callback.do",
             "/kakao/signup.do",
-            "/updateNonUserPW.do"
+            "/updateNonUserPW.do",
+            "/savemerchantUid.do",
+            "/views/payment/Payment_Page.jsp",
+            "/verifyPayment.do",
+            "/RefundProcess.do"
 
         };
         
