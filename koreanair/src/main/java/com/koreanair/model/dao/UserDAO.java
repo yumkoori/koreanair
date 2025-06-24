@@ -102,6 +102,33 @@ public class UserDAO {
         return false;
     }
     
+    // 이메일 중복 체크
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            
+            rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+        
+        return false;
+    }
+    
     // 회원 정보 조회
     public User getUserById(String userId) {
         String sql = "SELECT * FROM users WHERE user_id = ?";

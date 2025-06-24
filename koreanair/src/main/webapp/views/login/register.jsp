@@ -86,6 +86,7 @@
                 <label for="email">이메일 주소 *</label>
                 <input type="email" id="email" name="email" required 
                        placeholder="이메일을 입력하세요" autocomplete="email">
+                <div id="emailCheckResult" style="margin-top: 5px; font-size: 14px;"></div>
             </div>
             
             <div class="form-group">

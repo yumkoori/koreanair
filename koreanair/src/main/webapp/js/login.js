@@ -30,6 +30,40 @@ function checkUserId() {
     xhr.send('userId=' + encodeURIComponent(userId));
 }
 
+// 이메일 중복 체크 함수
+function checkEmail() {
+    const email = document.getElementById('email').value;
+    const checkResult = document.getElementById('emailCheckResult');
+    
+    // 이메일 형식 검증
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        checkResult.innerHTML = '<span class="error-icon">✗</span> 올바른 이메일 형식을 입력하세요.';
+        checkResult.setAttribute('data-status', 'invalid');
+        return;
+    }
+    
+    // AJAX 요청
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'checkEmail.do', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.exists) {
+                checkResult.innerHTML = '<span class="error-icon">✗</span> 이미 사용 중인 이메일입니다.';
+                checkResult.setAttribute('data-status', 'duplicate');
+            } else {
+                checkResult.innerHTML = '<span class="check-icon">✓</span> 사용 가능한 이메일입니다.';
+                checkResult.setAttribute('data-status', 'available');
+            }
+        }
+    };
+    
+    xhr.send('email=' + encodeURIComponent(email));
+}
+
 // 개별 검증 함수들 (재사용 가능)
 function validateRequiredFields(fields) {
     for (let field of fields) {
@@ -138,6 +172,23 @@ function validateUserIdDuplication() {
     } else if (checkStatus !== 'available') {
         alert('아이디 중복 확인을 해주세요.');
         document.getElementById('userId').focus();
+        return false;
+    }
+    return true;
+}
+
+function validateEmailDuplication() {
+    const checkResult = document.getElementById('emailCheckResult');
+    if (!checkResult) return true; // 이메일 중복 체크가 없는 경우
+    
+    const checkStatus = checkResult.getAttribute('data-status');
+    if (checkStatus === 'duplicate') {
+        alert('이미 사용 중인 이메일입니다. 다른 이메일을 입력해주세요.');
+        document.getElementById('email').focus();
+        return false;
+    } else if (checkStatus !== 'available') {
+        alert('이메일 중복 확인을 해주세요.');
+        document.getElementById('email').focus();
         return false;
     }
     return true;
@@ -271,6 +322,11 @@ function validateRegisterForm() {
         return false;
     }
     
+    // 이메일 중복 체크 결과 확인
+    if (!validateEmailDuplication()) {
+        return false;
+    }
+    
     // 휴대폰 번호 형식 체크
     if (!validatePhoneNumber(phone)) {
         document.getElementById('phone').focus();
@@ -306,17 +362,20 @@ function deleteCookie(name) {
     document.cookie = name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
 }
 
-// 페이지 로드 시 저장된 아이디 불러오기
+// 페이지 로드 시 저장된 아이디 불러오기 (로그인 페이지에서만)
 function loadSavedUserId() {
+    // 로그인 페이지에서만 실행 (remember 체크박스가 있는 경우)
+    const rememberCheckbox = document.getElementById('remember');
+    if (!rememberCheckbox) {
+        return; // 로그인 페이지가 아니면 실행하지 않음
+    }
+    
     const savedUserId = getCookie('savedUserId');
     const userIdInput = document.getElementById('userId');
-    const rememberCheckbox = document.getElementById('remember');
     
     if (savedUserId && userIdInput) {
         userIdInput.value = savedUserId;
-        if (rememberCheckbox) {
-            rememberCheckbox.checked = true;
-        }
+        rememberCheckbox.checked = true;
     }
 }
 
@@ -424,6 +483,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // 아이디 입력 시 중복 체크 상태 초기화
         userIdInput.addEventListener('input', function() {
             const checkResult = document.getElementById('userIdCheckResult');
+            if (checkResult) {
+                checkResult.innerHTML = '';
+                checkResult.removeAttribute('data-status');
+            }
+        });
+    }
+    
+    // 이메일 입력 필드에 이벤트 리스너 추가
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+        emailInput.addEventListener('blur', checkEmail);
+        
+        // 이메일 입력 시 중복 체크 상태 초기화
+        emailInput.addEventListener('input', function() {
+            const checkResult = document.getElementById('emailCheckResult');
             if (checkResult) {
                 checkResult.innerHTML = '';
                 checkResult.removeAttribute('data-status');

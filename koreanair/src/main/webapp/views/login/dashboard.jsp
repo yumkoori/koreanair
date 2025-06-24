@@ -43,7 +43,9 @@
         
         <div class="user-info">
             <h3>회원 정보</h3>
-            <p><strong>아이디:</strong> <%= user.getUserId() %></p>
+            <% if (user.getUserId() != null && !user.getUserId().trim().isEmpty()) { %>
+                <p><strong>아이디:</strong> <%= user.getUserId() %></p>
+            <% } %>
             <p><strong>한글 이름:</strong> <%= user.getKoreanName() %></p>
             <p><strong>영문 이름:</strong> <%= user.getEnglishName() %></p>
             <% if (user.getBirthDate() != null) { %>
