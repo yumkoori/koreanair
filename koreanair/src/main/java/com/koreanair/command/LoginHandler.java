@@ -32,6 +32,8 @@ public class LoginHandler implements CommandHandler {
                 return showLoginForm(request, response);
             case "/checkUserId.do":
                 return checkUserId(request, response);
+            case "/checkEmail.do":
+                return checkEmail(request, response);
             default:
                 return "/views/login/login.jsp";
         }
@@ -145,6 +147,27 @@ public class LoginHandler implements CommandHandler {
         }
         
         boolean exists = userDAO.isUserIdExists(userId);
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"exists\": " + exists + "}");
+        
+        return null; // AJAX 응답이므로 뷰 없음
+    }
+    
+    // 이메일 중복 체크 (AJAX 요청용)
+    private String checkEmail(HttpServletRequest request, HttpServletResponse response) 
+            throws Exception {
+        String email = request.getParameter("email");
+        
+        if (email == null || email.trim().isEmpty()) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"exists\": true}");
+            return null; // AJAX 응답이므로 뷰 없음
+        }
+        
+        boolean exists = userDAO.isEmailExists(email);
         
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
