@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>항공권 예약 - 대한항공</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/booking.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -47,27 +48,7 @@
     </script>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo">
-                <i class="fas fa-plane"></i>
-                <span>KOREAN AIR</span>
-                <i class="fas fa-globe"></i>
-            </div>
-            <nav class="main-nav">
-                <a href="#" class="nav-item">예약</a>
-                <a href="#" class="nav-item">여행 준비</a>
-                <a href="#" class="nav-item">스카이패스</a>
-            </nav>
-            <div class="header-right">
-                <div class="search-box">
-                    <input type="text" placeholder="궁금한 것을 검색해 보세요!">
-                    <i class="fas fa-search"></i>
-                </div>
-                <button class="login-btn">로그인</button>
-            </div>
-        </div>
-    </header>
+    <jsp:include page="/views/common/header.jsp" />
 
     <main class="booking-container">
         <!-- 진행 단계 표시 -->

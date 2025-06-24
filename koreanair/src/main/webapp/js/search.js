@@ -656,22 +656,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 header.classList.add('scrolled');
                 
                 // 스크롤 다운 시 상단 메뉴 숨기기
-                if (scrollDirection === 'down' && scrollTop > 200) {
+                if (scrollDirection === 'down' && scrollTop > 200 && headerTop) {
                     headerTop.style.transform = 'translateY(-100%)';
                     headerTop.style.opacity = '0';
                     header.style.transform = 'translateY(-' + headerTop.offsetHeight + 'px)';
                 } 
                 // 스크롤 업 시 상단 메뉴 다시 보이기
-                else if (scrollDirection === 'up') {
+                else if (scrollDirection === 'up' && headerTop) {
                     headerTop.style.transform = 'translateY(0)';
                     headerTop.style.opacity = '1';
                     header.style.transform = 'translateY(0)';
                 }
             } else {
                 header.classList.remove('scrolled');
-                headerTop.style.transform = 'translateY(0)';
-                headerTop.style.opacity = '1';
-                header.style.transform = 'translateY(0)';
+                if (headerTop) {
+                    headerTop.style.transform = 'translateY(0)';
+                    headerTop.style.opacity = '1';
+                    header.style.transform = 'translateY(0)';
+                }
             }
             
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // iOS 바운스 효과 방지
