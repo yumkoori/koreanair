@@ -318,7 +318,7 @@ header.airline-header.scrolled {
     background: transparent;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    overflow: visible;
+    overflow: hidden;
     backdrop-filter: blur(10px);
     font-family: 'Nanum Gothic', sans-serif;
 }
