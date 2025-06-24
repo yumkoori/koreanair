@@ -385,19 +385,9 @@
 					</h3>
 				<% } else { %>
 					<h2>항공권 검색 결과</h2>
-					<% if (isRoundTrip) { %>
-						<div style="color: #0064de; font-weight: 500; margin-bottom: 10px;">
-							<i class="fas fa-plane" style="margin-right: 8px;"></i>
-							가는 편을 선택해주세요
-						</div>
-					<% } %>
 				<% } %>
 				
-				<div class="route-info">
-					<span class="departure">${param.departure != null ? param.departure : '서울(ICN)'}</span>
-					<i class="fas fa-arrow-right"></i> <span class="arrival">${param.arrival != null ? param.arrival : '도쿄(NRT)'}</span>
-					<span class="date">${param.departureDate != null ? param.departureDate : '2024년 3월 20일'}</span>
-				</div>
+
 				<div class="filter-options">
 					<select class="sort-by">
 						<option value="price">가격순</option>
@@ -417,17 +407,33 @@
 						<div class="flight-info-column">
 							<div class="flight-times">
 								<div class="departure-block">
+									<div class="departure-time">
+										${flight.departureTimeFormatted}
+									</div>
 									<div class="departure-code">${param.departure}</div>
 								</div>
-								<div class="flight-duration">
-									<div class="duration-time">${flight.durationMinutes}분</div>
 
-									<div class="flight-path">
-										<div class="path-line"></div>
-										<i class="fas fa-plane"></i>
+								<div class="duration-block">
+									<div class="duration-text">
+										<c:choose>
+											<c:when test="${flight.durationMinutes > 0}">
+												${flight.durationFormatted}
+											</c:when>
+											<c:otherwise>
+												소요시간 미정
+											</c:otherwise>
+										</c:choose>
 									</div>
+									<div class="route-line">
+										<span class="route-arrow-text">→</span>
+									</div>
+									<div class="flight-type">직항</div>
 								</div>
+
 								<div class="arrival-block">
+									<div class="arrival-time">
+										${flight.arrivalTimeFormatted}
+									</div>
 									<div class="arrival-code">${param.arrival}</div>
 								</div>
 							</div>
@@ -770,6 +776,67 @@
 		console.log("📝 표시용 문자열:", window.passengersInfo);
 		console.log("👥 총 승객 수:", window.passengerCount);
 		console.log("👨 성인:", window.adultCount, "👶 소아:", window.childCount, "🍼 유아:", window.infantCount);
+		
+		// 불필요한 "가는 편을 선택해주세요" 메시지 제거
+		document.addEventListener('DOMContentLoaded', function() {
+			// 여러 가지 방법으로 메시지 찾아서 제거
+			const textToRemove = ["가는 편을 선택해주세요", "가는편을 선택해주세요", "가는 편을 선택"];
+			
+			function removeUnwantedMessages() {
+				// 텍스트 노드를 찾아서 제거하는 함수
+				function removeTextNodes(element) {
+					const walker = document.createTreeWalker(
+						element,
+						NodeFilter.SHOW_TEXT,
+						null,
+						false
+					);
+					
+					const textNodes = [];
+					let node;
+					while (node = walker.nextNode()) {
+						textNodes.push(node);
+					}
+					
+					textNodes.forEach(textNode => {
+						const text = textNode.textContent.trim();
+						if (textToRemove.some(unwanted => text.includes(unwanted))) {
+							const parent = textNode.parentNode;
+							if (parent) {
+								// 부모 요소도 숨기거나 제거
+								parent.style.display = 'none';
+								parent.remove();
+							}
+						}
+					});
+				}
+				
+				// 전체 문서에서 검색
+				removeTextNodes(document.body);
+				
+				// 특정 클래스나 ID를 가진 요소들도 확인
+				const elementsToCheck = [
+					'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span'
+				];
+				
+				elementsToCheck.forEach(tagName => {
+					const elements = document.getElementsByTagName(tagName);
+					Array.from(elements).forEach(element => {
+						const text = element.textContent.trim();
+						if (textToRemove.some(unwanted => text.includes(unwanted))) {
+							element.style.display = 'none';
+							element.remove();
+						}
+					});
+				});
+			}
+			
+			// 페이지 로드 즉시 실행
+			removeUnwantedMessages();
+			
+			// 1초 후에도 한 번 더 실행 (동적 콘텐츠 대비)
+			setTimeout(removeUnwantedMessages, 1000);
+		});
 	</script>
 	<script src="${pageContext.request.contextPath}/js/search.js"></script>
 	<script src="${pageContext.request.contextPath}/js/seat-selection.js"></script>

@@ -2417,3 +2417,99 @@ html body section div div.flights-list div div.fare-columns {
     box-shadow: none !important;
 }
 
+/* 새로운 레이아웃의 소요시간 블록 스타일 */
+.duration-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    padding: 0 15px;
+}
+
+.duration-text {
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.route-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.route-arrow-text {
+    color: #0064de;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.route-dot {
+    width: 0;
+    height: 0;
+    flex-shrink: 0;
+}
+
+.route-dot:first-child {
+    border-left: 5px solid #0064de;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-right: none;
+}
+
+.route-dot:last-child {
+    border-right: 5px solid #0064de;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-left: none;
+}
+
+.route-dash {
+    flex: 1;
+    height: 1px;
+    background: repeating-linear-gradient(to right, #0064de 0, #0064de 3px, transparent 3px, transparent 6px);
+    margin: 0 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-dash i {
+    color: #0064de;
+    font-size: 10px;
+    background-color: #f9f9f9;
+    padding: 1px 3px;
+    border-radius: 2px;
+}
+
+.route-arrow {
+    color: #0064de;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    padding: 1px 3px;
+    border-radius: 2px;
+}
+
+.route-arrow {
+    color: #0064de;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.flight-type {
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+}
+
