@@ -97,6 +97,7 @@ public class AuthenticationFilter implements Filter {
             "/registerForm.do",
             "/register.do",
             "/checkUserId.do",
+            "/checkEmail.do",
             "/lookup",
             "/checkinDetail.do", 
             "/checkinApply.do",
