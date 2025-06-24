@@ -452,6 +452,7 @@ public class UserDAO {
     // ResultSet을 User 객체로 매핑하는 헬퍼 메소드
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
+        user.setUserNo(rs.getInt("user_no"));
         user.setUserId(rs.getString("user_id"));
         user.setPassword(rs.getString("password"));
         user.setKoreanName(rs.getString("korean_name"));

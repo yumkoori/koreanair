@@ -9,7 +9,7 @@ import lombok.Data;
 @Builder
 public class PassengerDTO {
 	private String passengerId;
-	private String userNo;
+	private Integer userNo;
 	private String bookingId;
 	private String firstName;
 	private String lastName;

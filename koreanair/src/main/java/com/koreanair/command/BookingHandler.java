@@ -5,8 +5,10 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.koreanair.model.dto.BookingDTO;
+import com.koreanair.model.dto.User;
 import com.koreanair.model.service.BookingService;
 
 public class BookingHandler implements CommandHandler{
@@ -28,13 +30,20 @@ public class BookingHandler implements CommandHandler{
 		    totalPassengers += Integer.parseInt(matcher.group());
 		}
 		
+		HttpSession session = request.getSession();
 		
+		User user = (User) session.getAttribute("user");
+		Integer userNo = null;
+		
+		if(user != null) {
+			userNo = user.getUserNo();
+		}
 		
 		if(request.getParameter("tripType").equals("round")) {			
 			BookingDTO bookingDTO = BookingDTO.builder()
 					.outboundFlightId(request.getParameter("outboundFlightId"))
 					.returnFlightId(request.getParameter("returnFlightId"))
-					.userNo("1")
+					.userNo(userNo)
 					.promotionId("PROMO10")
 					.bookingPw(null)
 					.build();
@@ -57,7 +66,7 @@ public class BookingHandler implements CommandHandler{
 		} else {
 			BookingDTO dto = BookingDTO.builder()
 					.outboundFlightId(request.getParameter("outboundFlightId"))
-					.userNo("1")
+					.userNo(userNo)
 					.promotionId("PROMO10")
 					.bookingPw(null)
 					.build();

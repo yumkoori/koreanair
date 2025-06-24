@@ -2,8 +2,10 @@ package com.koreanair.command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.koreanair.model.dto.PassengerDTO;
+import com.koreanair.model.dto.User;
 import com.koreanair.model.service.PassengerService;
 
 public class PassengerHandler implements CommandHandler{
@@ -33,6 +35,15 @@ public class PassengerHandler implements CommandHandler{
 		String memberNumber = request.getParameter("memberNumber");
 		String discountType = request.getParameter("discountType");
 		String returnDiscountType = request.getParameter("returnDiscountType");
+		
+		HttpSession session = request.getSession();
+		
+		User user = (User) session.getAttribute("user");
+		Integer userNo = null;
+		
+		if(user != null) {
+			userNo = user.getUserNo();
+		}
 		
 		// 승객 인덱스 정보 추출
 		String passengerIndexStr = request.getParameter("passengerIndex");
@@ -88,7 +99,7 @@ public class PassengerHandler implements CommandHandler{
 		
 		PassengerDTO dto = PassengerDTO.builder()
 				.passengerId(null) // 자동 생성
-				.userNo("1") // 세션에서 가져오거나 추후 설정
+				.userNo(userNo) // 세션에서 가져오거나 추후 설정
 				.bookingId(primaryBookingId) // 기본 예약ID 또는 가는편 예약ID 설정
 				.lastName(lastName.trim())
 				.firstName(firstName.trim())
@@ -107,7 +118,7 @@ public class PassengerHandler implements CommandHandler{
 		if (returnBookingId != null && !returnBookingId.isEmpty() && !returnBookingId.equals("null")) {
 			PassengerDTO returnDto = PassengerDTO.builder()
 					.passengerId(null) // 자동 생성
-					.userNo("1") // 세션에서 가져오거나 추후 설정
+					.userNo(userNo) // 세션에서 가져오거나 추후 설정
 					.bookingId(returnBookingId) // 오는편 예약ID 설정
 					.lastName(lastName)
 					.firstName(firstName)

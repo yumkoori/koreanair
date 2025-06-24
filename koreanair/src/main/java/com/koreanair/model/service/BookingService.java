@@ -119,4 +119,8 @@ public class BookingService {
 			e.printStackTrace();
 		}
     }
+    
+    public void updateNonUserPw(String bookingId, String bookingPW) {
+    	bookingDAO.updateNonUserPW(bookingId, bookingPW);
+    }
 }

@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 public class User {
+	private int userNo;
     private String userId;
     private String password;
     private String koreanName;
@@ -22,8 +23,9 @@ public class User {
     public User() {}
     
     // 매개변수 생성자
-    public User(String userId, String password, String koreanName, String englishName, 
+    public User(int userNo, String userId, String password, String koreanName, String englishName, 
                 Date birthDate, String gender, String email, String phone, String address) {
+    	this.userNo = userNo;
         this.userId = userId;
         this.password = password;
         this.koreanName = koreanName;
@@ -33,6 +35,14 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.address = address;
+    }
+    
+    public int getUserNo() {
+        return userNo;
+    }
+    
+    public void setUserNo(int userNo) {
+        this.userNo = userNo;
     }
     
     // Getter와 Setter 메소드들

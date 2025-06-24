@@ -40,14 +40,21 @@ public class BookingDAO {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        
+                       
         try {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, dto.getOutboundFlightId());
             pstmt.setString(3, dto.getReturnFlightId());
-            pstmt.setString(4, dto.getUserNo());
+            
+            Integer userNo = dto.getUserNo();
+            if (userNo != null) {
+                pstmt.setInt(4, userNo);
+            } else {
+                pstmt.setNull(4, java.sql.Types.INTEGER);
+            }
+            
             pstmt.setString(5, dto.getPromotionId());
             pstmt.setString(6, dto.getBookingPw());
             pstmt.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now().plusMinutes(15)));
@@ -97,6 +104,30 @@ public class BookingDAO {
 	        pstmt.setString(1, flightId);
 	        pstmt.setString(2, seatClass);
 	        pstmt.setInt(3, totalPassengers);
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+	}
+	
+	public void updateNonUserPW(String bookingId, String bookingPW) {
+		String sql = "UPDATE booking SET booking_pw = ?"
+				+ " WHERE booking_id = ?;";
+		
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        
+	    try {
+	    	
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            
+	        pstmt.setString(1, bookingPW);
+	        pstmt.setString(2, bookingId);
 	        pstmt.executeUpdate();
 	    } catch (SQLException e) {
             e.printStackTrace();

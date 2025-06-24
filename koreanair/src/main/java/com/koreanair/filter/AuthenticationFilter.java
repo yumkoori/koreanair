@@ -115,7 +115,8 @@ public class AuthenticationFilter implements Filter {
             "/reservationDetail", // [수정] 비회원 예약 상세 조회를 위해 경로 추가
             "/kakao/login.do",
             "/kakao/callback.do",
-            "/kakao/signup.do"
+            "/kakao/signup.do",
+            "/updateNonUserPW.do"
 
         };
         

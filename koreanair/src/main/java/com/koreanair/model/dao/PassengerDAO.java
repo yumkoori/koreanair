@@ -42,7 +42,14 @@ public class PassengerDAO {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, uuid.toString());
-            pstmt.setString(2, dto.getUserNo());
+            
+            Integer userNo = dto.getUserNo();
+            if (userNo != null) {
+                pstmt.setInt(2, userNo);
+            } else {
+                pstmt.setNull(2, java.sql.Types.INTEGER);
+            }
+            
             pstmt.setString(3, dto.getBookingId());
             pstmt.setString(4, dto.getLastName());
             pstmt.setString(5, dto.getFirstName());

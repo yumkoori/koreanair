@@ -658,6 +658,58 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <%
+                                // 세션에서 사용자 정보 확인
+                                HttpSession userSession = request.getSession();
+                                com.koreanair.model.dto.User user = (com.koreanair.model.dto.User) userSession.getAttribute("user");
+                                
+                                if (user == null) {
+                                    // 비회원인 경우 비밀번호 등록 필드 표시
+                            %>
+                            <!-- 비회원 비밀번호 등록 -->
+                            <div class="guest-password-section">
+                                <h4 class="password-section-title">
+                                    <i class="fas fa-lock"></i>
+                                    비회원 예약 비밀번호
+                                </h4>
+                                <p class="password-section-desc">예약 조회 시 사용할 비밀번호를 설정해주세요</p>
+                                
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="guestPassword" class="required">비밀번호</label>
+                                        <input type="password" id="guestPassword" name="guestPassword" 
+                                               placeholder="영문, 숫자 조합 8자 이상" 
+                                               pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$" 
+                                               minlength="8" required>
+                                        <small class="form-help">영문과 숫자를 포함하여 8자 이상 입력해주세요</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="guestPasswordConfirm" class="required">비밀번호 확인</label>
+                                        <input type="password" id="guestPasswordConfirm" name="guestPasswordConfirm" 
+                                               placeholder="비밀번호를 다시 입력해주세요" required>
+                                        <small class="form-help password-match-message"></small>
+                                    </div>
+                                </div>
+                                
+                                <div class="password-actions">
+                                    <button type="button" id="confirmPasswordBtn" class="password-confirm-btn">
+                                        <i class="fas fa-check"></i>
+                                        비밀번호 확인
+                                    </button>
+                                </div>
+                                
+                                <div class="password-notice-inline">
+                                    <div class="notice-item">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>설정하신 비밀번호는 예약 조회 및 변경 시 사용됩니다</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <%
+                                }
+                            %>
                         </div>
                     </form>
                 </section>
@@ -702,6 +754,8 @@
                         </div>
                     </form>
                 </section>
+
+
             </div>
 
             <!-- 우측 요금 요약 -->

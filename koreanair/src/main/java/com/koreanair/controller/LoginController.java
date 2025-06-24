@@ -167,6 +167,7 @@ public class LoginController extends HttpServlet {
     // 회원가입 처리
     private void handleRegister(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+    	String userNo = request.getParameter("userNo");
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
@@ -211,7 +212,7 @@ public class LoginController extends HttpServlet {
             return;
         }
         
-        User user = new User(userId, password, koreanName, englishName, birthDate, gender, email, phone, address);
+        User user = new User(Integer.parseInt(userNo), userId, password, koreanName, englishName, birthDate, gender, email, phone, address);
         boolean success = userDAO.insertUser(user);
         
         if (success) {

@@ -477,13 +477,22 @@ function validateForm() {
         if (!firstErrorField) firstErrorField = emailField;
     }
     
-    // 전화번호 특별 검사
+        // 전화번호 특별 검사
     const phoneField = document.getElementById('phone');
     if (phoneField && !validatePhone(phoneField)) {
         isValid = false;
         if (!firstErrorField) firstErrorField = phoneField;
     }
     
+    // 비회원 비밀번호 검증
+    if (!validateGuestPassword()) {
+        isValid = false;
+        const guestPasswordField = document.getElementById('guestPassword');
+        if (guestPasswordField && !firstErrorField) {
+            firstErrorField = guestPasswordField;
+        }
+    }
+
     if (!isValid) {
         alert('입력 정보를 다시 확인해주세요.');
         // 첫 번째 오류 필드로 스크롤
@@ -492,7 +501,7 @@ function validateForm() {
             firstErrorField.focus();
         }
     }
-    
+
     return isValid;
 }
 
@@ -1142,4 +1151,327 @@ document.addEventListener('DOMContentLoaded', function() {
             formatBirthDate(this);
         });
     });
-}); 
+    
+    // 비회원 비밀번호 검증 기능 초기화
+    initializeGuestPasswordValidation();
+});
+
+// 비회원 비밀번호 검증 기능
+function initializeGuestPasswordValidation() {
+    const passwordInput = document.getElementById('guestPassword');
+    const confirmInput = document.getElementById('guestPasswordConfirm');
+    const matchMessage = document.querySelector('.password-match-message');
+    const confirmBtn = document.getElementById('confirmPasswordBtn');
+    
+    if (!passwordInput || !confirmInput || !matchMessage || !confirmBtn) {
+        return; // 비회원 비밀번호 섹션이 없으면 리턴
+    }
+    
+    console.log('🔒 비회원 비밀번호 검증 기능 초기화');
+    
+    // 초기 상태: 버튼 비활성화
+    confirmBtn.disabled = true;
+    
+    // 비밀번호 입력 시 실시간 검증
+    passwordInput.addEventListener('input', function() {
+        validatePassword(this);
+        checkPasswordMatch();
+        updateConfirmButtonState();
+    });
+    
+    // 비밀번호 확인 입력 시 매칭 검증
+    confirmInput.addEventListener('input', function() {
+        checkPasswordMatch();
+        updateConfirmButtonState();
+    });
+    
+    // 포커스 아웃 시에도 검증
+    passwordInput.addEventListener('blur', function() {
+        validatePassword(this);
+        updateConfirmButtonState();
+    });
+    
+    confirmInput.addEventListener('blur', function() {
+        checkPasswordMatch();
+        updateConfirmButtonState();
+    });
+    
+    // 확인 버튼 클릭 이벤트
+    confirmBtn.addEventListener('click', function() {
+        handlePasswordConfirmation();
+    });
+    
+    // 비밀번호 유효성 검사
+    function validatePassword(input) {
+        const password = input.value;
+        const helpText = input.parentElement.querySelector('.form-help');
+        
+        // 길이 체크
+        if (password.length < 8) {
+            input.style.borderColor = '#dc3545';
+            if (helpText) {
+                helpText.textContent = '비밀번호는 8자 이상이어야 합니다';
+                helpText.style.color = '#dc3545';
+            }
+            return false;
+        }
+        
+        // 패턴 체크 (영문 + 숫자 조합)
+        const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+        if (!pattern.test(password)) {
+            input.style.borderColor = '#dc3545';
+            if (helpText) {
+                helpText.textContent = '영문과 숫자를 포함하여 입력해주세요';
+                helpText.style.color = '#dc3545';
+            }
+            return false;
+        }
+        
+        // 유효한 비밀번호
+        input.style.borderColor = '#28a745';
+        if (helpText) {
+            helpText.textContent = '사용 가능한 비밀번호입니다';
+            helpText.style.color = '#28a745';
+        }
+        return true;
+    }
+    
+    // 비밀번호 일치 확인
+    function checkPasswordMatch() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmInput.value;
+        
+        if (confirmPassword.length === 0) {
+            matchMessage.textContent = '';
+            matchMessage.className = 'form-help password-match-message';
+            confirmInput.style.borderColor = '#ddd';
+            return false;
+        }
+        
+        if (password === confirmPassword) {
+            matchMessage.textContent = '비밀번호가 일치합니다';
+            matchMessage.className = 'form-help password-match-message success';
+            confirmInput.style.borderColor = '#28a745';
+            return true;
+        } else {
+            matchMessage.textContent = '비밀번호가 일치하지 않습니다';
+            matchMessage.className = 'form-help password-match-message error';
+            confirmInput.style.borderColor = '#dc3545';
+            return false;
+        }
+    }
+    
+    // 확인 버튼 상태 업데이트
+    function updateConfirmButtonState() {
+        const confirmBtn = document.getElementById('confirmPasswordBtn');
+        const password = passwordInput.value;
+        const confirmPassword = confirmInput.value;
+        
+        // 비밀번호 패턴 확인
+        const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+        const isPasswordValid = pattern.test(password);
+        const isPasswordMatch = password === confirmPassword && confirmPassword.length > 0;
+        
+        if (isPasswordValid && isPasswordMatch) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('success');
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.classList.remove('success');
+        }
+    }
+    
+    // 비밀번호 확인 처리
+    function handlePasswordConfirmation() {
+        const confirmBtn = document.getElementById('confirmPasswordBtn');
+        const password = passwordInput.value;
+        const confirmPassword = confirmInput.value;
+        
+        // 최종 검증
+        const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+        if (!pattern.test(password)) {
+            alert('비밀번호는 영문과 숫자를 포함하여 8자 이상이어야 합니다.');
+            passwordInput.focus();
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            alert('비밀번호가 일치하지 않습니다.');
+            confirmInput.focus();
+            return;
+        }
+        
+        // bookingId 확인
+        const bookingId = window.bookingId;
+        if (!bookingId || bookingId === '') {
+            alert('예약 ID를 찾을 수 없습니다. 페이지를 새로고침해주세요.');
+            console.error('❌ bookingId가 없음:', bookingId);
+            return;
+        }
+        
+        // 로딩 상태로 변경
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 저장 중...';
+        
+        // 서버에 비밀번호 업데이트 요청
+        updateNonUserPassword(bookingId, password, confirmBtn);
+    }
+    
+    // 비회원 비밀번호 업데이트 서버 호출
+    function updateNonUserPassword(bookingId, bookingPW, confirmBtn) {
+        console.log('🔐 비회원 비밀번호 업데이트 요청:', { bookingId, passwordLength: bookingPW.length });
+        
+        const requestData = {
+            bookingId: bookingId,
+            bookingPW: bookingPW
+        };
+        
+        const requestUrl = window.contextPath + '/updateNonUserPW.do';
+        console.log('📍 요청 URL:', requestUrl);
+        console.log('📦 요청 데이터:', JSON.stringify(requestData));
+        console.log('🌐 전체 contextPath:', window.contextPath);
+        console.log('🔗 최종 요청 URL:', requestUrl);
+        
+        fetch(requestUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            console.log('📡 서버 응답 상태:', response.status);
+            console.log('📡 서버 응답 헤더 Content-Type:', response.headers.get('content-type'));
+            console.log('📡 서버 응답 URL:', response.url);
+            console.log('📡 서버 응답 상태 텍스트:', response.statusText);
+            
+            // 응답을 텍스트로 먼저 읽어서 내용 확인
+            return response.text().then(text => {
+                console.log('📄 서버 응답 전체 내용:', text.substring(0, 500) + (text.length > 500 ? '...' : ''));
+                
+                // HTML 응답인지 확인
+                if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+                    console.error('❌ HTML 응답 감지! 예상 원인: 404 오류 또는 잘못된 URL');
+                    throw new Error('서버가 HTML 페이지를 반환했습니다. URL이 올바르지 않거나 핸들러가 매핑되지 않았을 수 있습니다.');
+                }
+                
+                // JSON 파싱 시도
+                try {
+                    const jsonData = JSON.parse(text);
+                    console.log('✅ JSON 파싱 성공:', jsonData);
+                    return jsonData;
+                } catch (parseError) {
+                    console.error('❌ JSON 파싱 실패:', parseError);
+                    console.error('원본 텍스트:', text);
+                    throw new Error('서버 응답을 JSON으로 파싱할 수 없습니다: ' + parseError.message);
+                }
+            });
+        })
+        .then(data => {
+            console.log('✅ 비밀번호 업데이트 성공:', data);
+            
+            // 성공 상태로 변경
+            confirmBtn.classList.add('success');
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> 확인 완료';
+            confirmBtn.disabled = true;
+            
+            // 입력 필드 비활성화
+            passwordInput.disabled = true;
+            confirmInput.disabled = true;
+            
+            // 성공 메시지 표시
+            matchMessage.textContent = '비밀번호가 안전하게 설정되었습니다';
+            matchMessage.className = 'form-help password-match-message success';
+            
+            // 성공 알림
+            showPasswordSuccessNotification();
+            
+            console.log('✅ 비회원 비밀번호 확인 완료');
+        })
+        .catch(error => {
+            console.error('❌ 비밀번호 업데이트 실패:', error);
+            
+            // 실패 상태로 변경
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> 비밀번호 확인';
+            confirmBtn.classList.remove('success');
+            
+            // 오류 메시지 표시
+            matchMessage.textContent = '비밀번호 저장에 실패했습니다. 다시 시도해주세요.';
+            matchMessage.className = 'form-help password-match-message error';
+            
+            // 오류 알림
+            alert('비밀번호 저장 중 오류가 발생했습니다.\n\n오류: ' + error.message);
+        });
+    }
+    
+    // 비밀번호 설정 성공 알림
+    function showPasswordSuccessNotification() {
+        const notification = document.createElement('div');
+        notification.innerHTML = `
+            <div style="
+                position: fixed; 
+                top: 20px; 
+                right: 20px; 
+                background: #28a745; 
+                color: white; 
+                padding: 15px 20px; 
+                border-radius: 8px; 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            ">
+                <i class="fas fa-check-circle"></i>
+                비밀번호가 안전하게 설정되었습니다!
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        // 3초 후 알림 제거
+        setTimeout(() => {
+            if (document.body.contains(notification)) {
+                document.body.removeChild(notification);
+            }
+        }, 3000);
+    }
+}
+
+// 비회원 비밀번호 유효성 검사 (결제 시 호출)
+function validateGuestPassword() {
+    const passwordInput = document.getElementById('guestPassword');
+    const confirmInput = document.getElementById('guestPasswordConfirm');
+    
+    if (!passwordInput || !confirmInput) {
+        return true; // 회원인 경우 true 반환
+    }
+    
+    const password = passwordInput.value;
+    const confirmPassword = confirmInput.value;
+    
+    // 비밀번호 입력 확인
+    if (!password) {
+        alert('비회원 예약 비밀번호를 입력해주세요.');
+        passwordInput.focus();
+        return false;
+    }
+    
+    // 비밀번호 패턴 확인
+    const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!pattern.test(password)) {
+        alert('비밀번호는 영문과 숫자를 포함하여 8자 이상이어야 합니다.');
+        passwordInput.focus();
+        return false;
+    }
+    
+    // 비밀번호 일치 확인
+    if (password !== confirmPassword) {
+        alert('비밀번호가 일치하지 않습니다. 다시 확인해주세요.');
+        confirmInput.focus();
+        return false;
+    }
+    
+    return true;
+}
