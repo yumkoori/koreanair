@@ -96,16 +96,16 @@ public class PaymentPrepareDAOImpl implements PaymentPrepareDAO {
 			throw new IllegalArgumentException("요청 시간이 누락되었습니다.");
 		}
 		
-		// 1. 기존 행 개수 조회하여 새로운 refund_request_id 생성
+		// 1. 기존 행 개수 조회하여 새로운 request_log_id 생성
 		String countSql = "SELECT COUNT(*) FROM payment_request_log";
-		int nextRefundRequestId = 1;
+		int nextRequestLogId = 1;
 		
 		try (PreparedStatement countStmt = conn.prepareStatement(countSql)) {
 			var rs = countStmt.executeQuery();
 			if (rs.next()) {
-				nextRefundRequestId = rs.getInt(1) + 1;
+				nextRequestLogId = rs.getInt(1) + 1;
 			}
-			System.out.println("[INFO] 새로운 refund_request_id 생성: " + nextRefundRequestId);
+			System.out.println("[INFO] 새로운 request_log_id 생성: " + nextRequestLogId);
 		} catch (SQLException e) {
 			System.err.println("[DB ERROR] 기존 행 개수 조회 실패: " + e.getMessage());
 			throw new Exception("기존 행 개수 조회 중 데이터베이스 오류가 발생했습니다: " + e.getMessage(), e);
@@ -119,7 +119,7 @@ public class PaymentPrepareDAOImpl implements PaymentPrepareDAO {
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			
-			pstmt.setInt(1, nextRefundRequestId);
+			pstmt.setInt(1, nextRequestLogId);
 			pstmt.setString(2, paymentId);
 			pstmt.setString(3, dto.getMerchantUid());
 			pstmt.setString(4, dto.getPayment_method());
@@ -129,7 +129,7 @@ public class PaymentPrepareDAOImpl implements PaymentPrepareDAO {
 			int result = pstmt.executeUpdate();
 			
 			if (result > 0) {
-				System.out.println("[SUCCESS] 결제 요청 로그 저장 성공 - RefundRequestId: " + nextRefundRequestId + 
+				System.out.println("[SUCCESS] 결제 요청 로그 저장 성공 - RequestLogId: " + nextRequestLogId + 
 				                 ", PaymentId: " + paymentId + ", MerchantUid: " + dto.getMerchantUid());
 				return true;
 			} else {
