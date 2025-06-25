@@ -22,6 +22,14 @@ public interface RefundProcessDAO {
     boolean updateRefundStatus(String merchantUid, String status) throws Exception;
     
     /**
+     * booking 상태를 업데이트
+     * @param dto 환불 처리 정보 (bookingId 포함)
+     * @return 업데이트 성공 여부
+     * @throws Exception 업데이트 중 발생하는 예외
+     */
+    boolean updateBookingStatus(RefundProcessDTO dto) throws Exception;
+    
+    /**
      * merchant_uid로 결제 금액 조회
      * @param merchantUid 주문 고유번호
      * @return 결제 금액 (조회 성공시), null (조회 실패시)
