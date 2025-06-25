@@ -20,4 +20,12 @@ public interface RefundProcessDAO {
      * @throws Exception 업데이트 중 발생하는 예외
      */
     boolean updateRefundStatus(String merchantUid, String status) throws Exception;
+    
+    /**
+     * merchant_uid로 결제 금액 조회
+     * @param merchantUid 주문 고유번호
+     * @return 결제 금액 (조회 성공시), null (조회 실패시)
+     * @throws Exception 조회 중 발생하는 예외
+     */
+    String getPaymentAmount(String merchantUid) throws Exception;
 } 

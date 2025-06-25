@@ -281,4 +281,36 @@ public class refundProcessService {
         
         System.out.println("[VALIDATION] 환불 파라미터 검증 완료 - BookingId: " + bookingId + ", UserNo: " + userNo);
     }
+
+    /**
+     * merchant_uid로 결제 금액 조회
+     * @param merchantUid 주문 고유번호
+     * @return 결제 금액
+     * @throws Exception 조회 중 발생하는 예외
+     */
+    public String getPaymentAmount(String merchantUid) throws Exception {
+        if (merchantUid == null || merchantUid.trim().isEmpty()) {
+            throw new IllegalArgumentException("merchant_uid가 누락되었습니다.");
+        }
+        
+        try {
+            String paymentAmount = refundProcessDAO.getPaymentAmount(merchantUid);
+            
+            if (paymentAmount == null) {
+                System.out.println("[WARNING] 결제 금액 조회 실패 - MerchantUid: " + merchantUid);
+                throw new IllegalArgumentException("해당 merchant_uid에 대한 결제 정보를 찾을 수 없습니다.");
+            }
+            
+            System.out.println("[SUCCESS] 결제 금액 조회 성공 - MerchantUid: " + merchantUid + ", Amount: " + paymentAmount);
+            return paymentAmount;
+            
+        } catch (SQLException e) {
+            System.err.println("[DB ERROR] 결제 금액 조회 중 데이터베이스 오류 발생 - MerchantUid: " + merchantUid + ", Error: " + e.getMessage());
+            throw new Exception("데이터베이스 연결 또는 쿼리 실행 중 오류가 발생했습니다.", e);
+            
+        } catch (Exception e) {
+            System.err.println("[SYSTEM ERROR] 결제 금액 조회 중 시스템 오류 발생 - MerchantUid: " + merchantUid + ", Error: " + e.getMessage());
+            throw new Exception("결제 금액 조회 중 예상치 못한 오류가 발생했습니다: " + e.getMessage(), e);
+        }
+    }
 } 

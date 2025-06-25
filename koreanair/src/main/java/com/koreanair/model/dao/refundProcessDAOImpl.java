@@ -74,4 +74,34 @@ public class refundProcessDAOImpl implements RefundProcessDAO {
         
         return result;
     }
+
+    @Override
+    public String getPaymentAmount(String merchantUid) throws Exception {
+        String paymentAmount = null;
+        
+        // 결제 금액 조회 SQL
+        String sql = "SELECT payment_amount FROM payment WHERE merchant_uid = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, merchantUid);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    paymentAmount = rs.getString("payment_amount");
+                    System.out.println("[SUCCESS] 결제 금액 조회 성공 - MerchantUid: " + merchantUid + 
+                                     ", Amount: " + paymentAmount);
+                } else {
+                    System.out.println("[WARNING] 결제 금액 조회 실패 - MerchantUid: " + merchantUid);
+                }
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("[DB ERROR] 결제 금액 조회 중 오류 발생: " + e.getMessage());
+            throw new Exception("결제 금액 조회 중 오류가 발생했습니다.", e);
+        }
+        
+        return paymentAmount;
+    }
 } 
