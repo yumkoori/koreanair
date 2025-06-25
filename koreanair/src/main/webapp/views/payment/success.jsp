@@ -7,36 +7,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>결제 완료 - 대한항공</title>
     <style>
+        /* 전체 스타일 초기화 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            margin: 0;
+            color: #333;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f8bbd9 100%);
+            min-height: 100vh;
             padding: 20px;
-            background-color: #f5f5f5;
         }
         
         .success-container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 50px auto;
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
         }
         
         .success-icon {
             width: 80px;
             height: 80px;
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
             border-radius: 50%;
             margin: 0 auto 30px;
             position: relative;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         }
         
         .success-icon::after {
             content: '✓';
             color: white;
             font-size: 40px;
+            font-weight: bold;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -45,7 +58,7 @@
         
         .success-title {
             font-size: 28px;
-            font-weight: bold;
+            font-weight: 600;
             color: #333;
             margin-bottom: 15px;
         }
@@ -54,23 +67,32 @@
             font-size: 16px;
             color: #666;
             margin-bottom: 30px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         
         .payment-details {
-            background-color: #f8f9fa;
-            border-radius: 8px;
+            background: white;
+            border: 1px solid #f0f0f0;
+            border-radius: 10px;
             padding: 25px;
             margin: 30px 0;
             text-align: left;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .payment-details:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
         
         .detail-row {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
         }
         
         .detail-row:last-child {
@@ -80,48 +102,124 @@
         }
         
         .detail-label {
-            font-weight: 600;
-            color: #495057;
+            font-weight: 500;
+            color: #666;
         }
         
         .detail-value {
             color: #333;
-            font-weight: 500;
+            font-weight: 600;
         }
         
         .button-group {
             margin-top: 40px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         
         .btn {
-            padding: 12px 30px;
+            padding: 15px 30px;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            margin: 0 10px;
             transition: all 0.3s ease;
+            min-width: 150px;
+            text-align: center;
         }
         
         .btn-primary {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #0064de 0%, #0078d4 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(0, 100, 222, 0.3);
         }
         
         .btn-primary:hover {
-            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 100, 222, 0.4);
         }
         
         .btn-secondary {
-            background-color: #6c757d;
-            color: white;
+            background: white;
+            color: #666;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .btn-secondary:hover {
-            background-color: #545b62;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border-color: #0064de;
+            color: #0064de;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .success-container {
+                margin: 20px auto;
+                padding: 30px 20px;
+            }
+            
+            .success-title {
+                font-size: 24px;
+            }
+            
+            .success-message {
+                font-size: 14px;
+            }
+            
+            .payment-details {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                padding: 12px 24px;
+                font-size: 14px;
+                min-width: 120px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .success-container {
+                margin: 10px auto;
+                padding: 25px 15px;
+            }
+            
+            .success-icon {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .success-icon::after {
+                font-size: 30px;
+            }
+            
+            .success-title {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -131,8 +229,9 @@
         
         <h1 class="success-title">결제가 완료되었습니다!</h1>
         <p class="success-message">
-            결제 검증이 성공적으로 완료되었습니다.<br>
-            예약 확인서는 이메일로 발송되었습니다.
+            결제가 정상적으로 완료되었습니다.<br>
+			주문 내역은 메인페이지 예약조회를 통해 확인하실 수 있습니다.<br>
+			감사합니다.
         </p>
         
         <%
@@ -170,8 +269,8 @@
         <% } %>
         
         <div class="button-group">
-            <a href="/views/reservationDetail.jsp" class="btn btn-primary">예약 내역 확인</a>
-            <a href="/index.jsp" class="btn btn-secondary">메인으로</a>
+            <a href="${pageContext.request.contextPath}/index.jsp" class="btn btn-primary">예약 내역 확인</a>
+            <a href="${pageContext.request.contextPath}/index.jsp" class="btn btn-secondary">메인으로</a>
         </div>
     </div>
 </body>
