@@ -104,6 +104,50 @@ public class AuthService {
     }
     
     /**
+     * 이메일 중복 체크 (카카오 연동 정보 포함)
+     * @param email 검사할 이메일
+     * @return EmailCheckResult 객체 (exists: 존재 여부, isKakaoLinkable: 카카오 연동 가능 여부)
+     */
+    public EmailCheckResult checkEmailForRegistration(String email) throws Exception {
+        if (email == null || email.trim().isEmpty()) {
+            return new EmailCheckResult(true, false);
+        }
+        
+        User existingUser = userDAO.getUserByEmail(email);
+        if (existingUser == null) {
+            return new EmailCheckResult(false, false); // 사용 가능
+        }
+        
+        // 카카오 계정이면 연동 가능
+        if ("kakao".equals(existingUser.getLoginType())) {
+            return new EmailCheckResult(true, true); // 카카오 연동 가능
+        }
+        
+        return new EmailCheckResult(true, false); // 일반 계정으로 이미 존재
+    }
+    
+    /**
+     * 이메일 체크 결과를 담는 내부 클래스
+     */
+    public static class EmailCheckResult {
+        private boolean exists;
+        private boolean isKakaoLinkable;
+        
+        public EmailCheckResult(boolean exists, boolean isKakaoLinkable) {
+            this.exists = exists;
+            this.isKakaoLinkable = isKakaoLinkable;
+        }
+        
+        public boolean isExists() {
+            return exists;
+        }
+        
+        public boolean isKakaoLinkable() {
+            return isKakaoLinkable;
+        }
+    }
+    
+    /**
      * 회원가입 처리
      */
     public boolean registerUser(String userId, String password, String confirmPassword, 

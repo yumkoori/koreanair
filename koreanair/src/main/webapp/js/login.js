@@ -52,8 +52,13 @@ function checkEmail() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             if (response.exists) {
-                checkResult.innerHTML = '<span class="error-icon">✗</span> 이미 사용 중인 이메일입니다.';
-                checkResult.setAttribute('data-status', 'duplicate');
+                if (response.isKakaoLinkable) {
+                    checkResult.innerHTML = '<span class="check-icon">✓</span> 카카오 계정과 연동 가능한 이메일입니다.';
+                    checkResult.setAttribute('data-status', 'kakao-linkable');
+                } else {
+                    checkResult.innerHTML = '<span class="error-icon">✗</span> 이미 사용 중인 이메일입니다.';
+                    checkResult.setAttribute('data-status', 'duplicate');
+                }
             } else {
                 checkResult.innerHTML = '<span class="check-icon">✓</span> 사용 가능한 이메일입니다.';
                 checkResult.setAttribute('data-status', 'available');
@@ -186,7 +191,7 @@ function validateEmailDuplication() {
         alert('이미 사용 중인 이메일입니다. 다른 이메일을 입력해주세요.');
         document.getElementById('email').focus();
         return false;
-    } else if (checkStatus !== 'available') {
+    } else if (checkStatus !== 'available' && checkStatus !== 'kakao-linkable') {
         alert('이메일 중복 확인을 해주세요.');
         document.getElementById('email').focus();
         return false;

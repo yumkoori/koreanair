@@ -61,8 +61,8 @@ public class LoginHandler implements CommandHandler {
         // 저장된 아이디 쿠키 확인
         String savedUserId = authService.getSavedUserId(request);
         if (savedUserId != null) {
-            request.setAttribute("savedUserId", savedUserId);
-            request.setAttribute("rememberChecked", true);
+                        request.setAttribute("savedUserId", savedUserId);
+                        request.setAttribute("rememberChecked", true);
         }
         
         return "/views/login/login.jsp";
@@ -77,9 +77,9 @@ public class LoginHandler implements CommandHandler {
         
         try {
             User user = authService.authenticateUser(userId, password);
-            
-            if (user != null) {
-                HttpSession session = request.getSession();
+        
+        if (user != null) {
+            HttpSession session = request.getSession();
                 
                 // 세션 설정 및 예약 목록 조회
                 authService.setupUserSession(session, user);
@@ -88,16 +88,16 @@ public class LoginHandler implements CommandHandler {
                 authService.handleRememberMe(response, userId, remember);
                 
                 // 목적지 URL 확인 및 리다이렉션
-                String targetUrl = (String) session.getAttribute("targetUrl");
+            String targetUrl = (String) session.getAttribute("targetUrl");
                 session.removeAttribute("targetUrl");
-                
-                if (targetUrl != null && !targetUrl.isEmpty()) {
-                    return "redirect:" + targetUrl;
-                } else {
-                    return "redirect:/";
-                }
+
+            if (targetUrl != null && !targetUrl.isEmpty()) {
+                return "redirect:" + targetUrl;
             } else {
-                request.setAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");
+                return "redirect:/";
+            }
+        } else {
+            request.setAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");
                 return "/views/login/login.jsp";
             }
         } catch (Exception e) {
@@ -125,11 +125,12 @@ public class LoginHandler implements CommandHandler {
             throws Exception {
         String email = request.getParameter("email");
         
-        boolean exists = authService.isEmailExists(email);
+        AuthService.EmailCheckResult result = authService.checkEmailForRegistration(email);
         
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"exists\": " + exists + "}");
+        response.getWriter().write("{\"exists\": " + result.isExists() + 
+                                  ", \"isKakaoLinkable\": " + result.isKakaoLinkable() + "}");
         
         return null; // AJAX 응답이므로 뷰 없음
     }
