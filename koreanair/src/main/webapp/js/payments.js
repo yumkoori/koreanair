@@ -8,11 +8,10 @@ function getUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     
     // paymentAmount 파라미터 받아오기
-    const amountParam = urlParams.get('paymentAmount');
+    const amountParam = urlParams.get('totalAmount');
     //if문안에 amountParam
     if (true) {
-		//paymentAmount = parseInt(amountParam);
-        paymentAmount = 100000;
+		paymentAmount = parseInt(amountParam);
         console.log('URL에서 받아온 결제금액:', paymentAmount);
     }
     
@@ -20,8 +19,7 @@ function getUrlParameters() {
     const bookingParam = urlParams.get('bookingId');
     //if문안에 bookingParam
     if (true) {
-		//bookingId = bookingParam;
-        bookingId = "BKDON002";
+		bookingId = bookingParam;
         console.log('URL에서 받아온 예약ID:', bookingId);
     }
 }

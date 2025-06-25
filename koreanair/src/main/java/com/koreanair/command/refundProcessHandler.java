@@ -96,7 +96,7 @@ public class refundProcessHandler implements CommandHandler {
 			String merchantUid = refundProcessService.validateRefundRequest(validationDto);
 
 			// 5. 환불 처리를 위한 DTO 생성 (amount는 실제로는 DB에서 조회해야 함)
-			String amount = getRefundAmount(merchantUid); // TODO: 실제 환불 금액 조회 로직 구현
+			String amount = getRefundAmount(merchantUid);
 			RefundProcessDTO refundDto = new RefundProcessDTO(bookingId, merchantUid, userNo, amount,
 					refundReason != null ? refundReason : "사용자 요청");
 
@@ -138,9 +138,21 @@ public class refundProcessHandler implements CommandHandler {
 	 * merchant_uid로 환불 금액 조회 TODO: 실제 DB에서 결제 금액을 조회하는 로직 구현 필요
 	 */
 	private String getRefundAmount(String merchantUid) {
-		// 실제로는 payment 테이블에서 amount를 조회해야 함
-		// 현재는 임시로 고정값 반환
-		return "100000"; // 임시 금액
+		try {
+			// refundProcessService를 통해 실제 결제 금액 조회
+			String paymentAmount = refundProcessService.getPaymentAmount(merchantUid);
+			
+			if (paymentAmount != null && !paymentAmount.trim().isEmpty()) {
+				System.out.println("[SUCCESS] 환불 금액 조회 성공 - MerchantUid: " + merchantUid + ", Amount: " + paymentAmount);
+				return paymentAmount;
+			} else {
+				System.err.println("[WARNING] 환불 금액 조회 실패 - MerchantUid: " + merchantUid);
+				return "0"; // 조회 실패시 0 반환
+			}
+		} catch (Exception e) {
+			System.err.println("[ERROR] 환불 금액 조회 중 오류 발생 - MerchantUid: " + merchantUid + ", Error: " + e.getMessage());
+			return "0"; // 오류 발생시 0 반환
+		}
 	}
 }
 
