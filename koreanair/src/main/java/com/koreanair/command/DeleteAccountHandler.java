@@ -4,14 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.koreanair.model.dao.UserDAO;
 import com.koreanair.model.dto.User;
+import com.koreanair.model.service.UserService;
 
 public class DeleteAccountHandler implements CommandHandler {
-    private UserDAO userDAO;
+    private UserService userService;
     
     public DeleteAccountHandler() {
-        this.userDAO = new UserDAO();
+        this.userService = new UserService();
     }
     
     @Override
@@ -45,39 +45,23 @@ public class DeleteAccountHandler implements CommandHandler {
         }
         
         String loginType = request.getParameter("loginType");
+        String confirmPassword = request.getParameter("confirmPassword");
         
-        // 카카오 사용자가 아닌 경우에만 비밀번호 확인
-        if (!"kakao".equals(loginType) && !"kakao".equals(user.getLoginType())) {
-            String confirmPassword = request.getParameter("confirmPassword");
+        try {
+            boolean success = userService.deleteAccount(user, confirmPassword, loginType);
             
-            if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
-                request.setAttribute("error", "비밀번호를 입력해주세요.");
+            if (success) {
+                session.invalidate(); // 세션 무효화
+                request.setAttribute("message", "회원탈퇴가 완료되었습니다.");
+                return "/views/login/login.jsp";
+            } else {
+                request.setAttribute("error", "회원탈퇴 중 오류가 발생했습니다.");
                 return "/views/login/dashboard.jsp";
             }
-            
-            // 현재 사용자 정보를 다시 조회하여 비밀번호 확인
-            User currentUser = userDAO.loginUser(user.getUserId(), confirmPassword);
-            if (currentUser == null) {
-                request.setAttribute("error", "비밀번호가 일치하지 않습니다.");
-                return "/views/login/dashboard.jsp";
-            }
-        }
-        
-        // 회원탈퇴 처리
-        boolean success;
-        if ("kakao".equals(user.getLoginType()) || user.getUserId() == null) {
-            // 카카오 계정이거나 user_id가 없는 경우 이메일 기준으로 삭제
-            success = userDAO.deleteUserByEmail(user.getEmail());
-        } else {
-            // 일반 계정의 경우 user_id 기준으로 삭제
-            success = userDAO.deleteUser(user.getUserId());
-        }
-        
-        if (success) {
-            session.invalidate(); // 세션 무효화
-            request.setAttribute("message", "회원탈퇴가 완료되었습니다.");
-            return "/views/login/login.jsp";
-        } else {
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            return "/views/login/dashboard.jsp";
+        } catch (Exception e) {
             request.setAttribute("error", "회원탈퇴 중 오류가 발생했습니다.");
             return "/views/login/dashboard.jsp";
         }
