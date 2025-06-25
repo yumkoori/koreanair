@@ -42,12 +42,12 @@ String contextPath = request.getContextPath();
 								<li><a><i class="fa fa-home"></i> Home <span
 										class="fa fa-chevron-down"></span></a>
 									<ul class="nav child_menu">
-										<li><a href="index.jsp">Dashboard</a></li>
+										<li><a href="adminindex.jsp">Dashboard</a></li>
 										<li><a href="">Dashboard2</a></li>
 										<li><a href="">Dashboard3</a></li>
-										<li><a href="index4.jsp">좌석관리</a></li>
-										<li><a href="index5.jsp">비행스케줄표</a></li>
-										<li><a href="index6.jsp">사용자 검색 기능</a></li>
+										<li><a href="seatmanagement.jsp">좌석관리</a></li>
+										<li><a href="flightmanagement.jsp">비행스케줄표</a></li>
+										<li><a href="usersearch.jsp">사용자 검색 기능</a></li>
 										<li><a href="reservationManagement.jsp">예약 검색 기능</a></li>
 									</ul></li>
 								<li><a><i class="fa fa-edit"></i> Forms <span

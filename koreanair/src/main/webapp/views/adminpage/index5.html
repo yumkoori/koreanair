@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Gentelella Alela! | 비행 스케줄표</title>
+    <title>Gentelella Alela! | 비행 ?��?줄표</title>
 
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -18,36 +18,36 @@
     <link href="../build/css/custom.min.css" rel="stylesheet">
 
     <style>
-      /* 페이지 컨텐츠를 위한 추가 스타일 */
+      /* ?�이지 컨텐츠�? ?�한 추�? ?��???*/
       .flight-schedule-container {
         display: flex;
-        flex-wrap: wrap; /* 작은 화면에서 줄바꿈 허용 */
+        flex-wrap: wrap; /* ?��? ?�면?�서 줄바�??�용 */
       }
-      .calendar-input-container { /* 이름 변경 및 스타일 수정 */
-        flex: 0 0 220px; /* 달력 입력 컨테이너 너비 조정 (예: 220px) */
+      .calendar-input-container { /* ?�름 변�?�??��????�정 */
+        flex: 0 0 220px; /* ?�력 ?�력 컨테?�너 ?�비 조정 (?? 220px) */
         margin-right: 20px;
-        margin-bottom: 20px; /* 작은 화면에서 아래 여백 */
+        margin-bottom: 20px; /* ?��? ?�면?�서 ?�래 ?�백 */
       }
       .schedule-table-container {
         flex: 1;
-        min-width: 0; /* flex item이 내용보다 작아질 수 있도록 허용 */
+        min-width: 0; /* flex item???�용보다 ?�아�????�도�??�용 */
       }
-      /* 입력 필드 스타일 (선택 사항) */
+      /* ?�력 ?�드 ?��???(?�택 ?�항) */
       #dateSelectorInput {
-        cursor: pointer; /* 클릭 가능함을 표시 */
-        background-color: #fff !important; /* readonly 배경색 강제 흰색 */
+        cursor: pointer; /* ?�릭 가?�함???�시 */
+        background-color: #fff !important; /* readonly 배경??강제 ?�색 */
       }
       .table-responsive {
-          overflow-x: auto; /* 테이블이 너무 길 경우 가로 스크롤 */
+          overflow-x: auto; /* ?�이블이 ?�무 �?경우 가�??�크�?*/
       }
-      /* 활성 페이지네이션 버튼 스타일 */
+      /* ?�성 ?�이지?�이??버튼 ?��???*/
       .pagination>.active>a, 
       .pagination>.active>a:focus, 
       .pagination>.active>a:hover, 
       .pagination>.active>span, 
       .pagination>.active>span:focus, 
       .pagination>.active>span:hover {
-          background-color: #1ABB9C; /* Gentelella 테마 색상 */
+          background-color: #1ABB9C; /* Gentelella ?�마 ?�상 */
           border-color: #1ABB9C;
       }
       .loading-overlay {
@@ -60,7 +60,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1000; /* 다른 요소 위에 표시 */
+        z-index: 1000; /* ?�른 ?�소 ?�에 ?�시 */
       }
       .loading-overlay .fa {
         font-size: 2em;
@@ -75,7 +75,7 @@
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Gentelella Alela!</span></a>
+              <a href="adminindex.html" class="site_title"><i class="fa fa-paw"></i> <span>Gentelella Alela!</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -97,55 +97,55 @@
                 <ul class="nav side-menu">
                   <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="index.html">Dashboard</a></li>
-                      <li><a href="index2.html">Dashboard2</a></li>
-                      <li><a href="index3.html">Dashboard3</a></li>
-                      <li><a href="index4.html">좌석관리</a></li>
-                      <li><a href="index5.html">비행스케줄표</a></li>
+                      <li><a href="adminindex.html">Dashboard</a></li>
+                      <li><a href="adminindex2.html">Dashboard2</a></li>
+                      <li><a href="adminindex3.html">Dashboard3</a></li>
+                      <li><a href="adminindex4.html">좌석관�?/a></li>
+                      <li><a href="adminindex5.html">비행?��?줄표</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="form.html">General Form</a></li>
-                      <li><a href="form_advanced.html">Advanced Components</a></li>
-                      <li><a href="form_validation.html">Form Validation</a></li>
-                      <li><a href="form_wizards.html">Form Wizard</a></li>
-                      <li><a href="form_upload.html">Form Upload</a></li>
-                      <li><a href="form_buttons.html">Form Buttons</a></li>
+                      <li><a href="adminform.html">General Form</a></li>
+                      <li><a href="adminform_advanced.html">Advanced Components</a></li>
+                      <li><a href="adminform_validation.html">Form Validation</a></li>
+                      <li><a href="adminform_wizards.html">Form Wizard</a></li>
+                      <li><a href="adminform_upload.html">Form Upload</a></li>
+                      <li><a href="adminform_buttons.html">Form Buttons</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-desktop"></i> UI Elements <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="general_elements.html">General Elements</a></li>
-                      <li><a href="media_gallery.html">Media Gallery</a></li>
-                      <li><a href="typography.html">Typography</a></li>
-                      <li><a href="icons.html">Icons</a></li>
-                      <li><a href="glyphicons.html">Glyphicons</a></li>
-                      <li><a href="widgets.html">Widgets</a></li>
-                      <li><a href="invoice.html">Invoice</a></li>
-                      <li><a href="inbox.html">Inbox</a></li>
-                      <li><a href="calendar.html">Calendar</a></li>
+                      <li><a href="admingeneral_elements.html">General Elements</a></li>
+                      <li><a href="adminmedia_gallery.html">Media Gallery</a></li>
+                      <li><a href="admintypography.html">Typography</a></li>
+                      <li><a href="adminicons.html">Icons</a></li>
+                      <li><a href="adminglyphicons.html">Glyphicons</a></li>
+                      <li><a href="adminwidgets.html">Widgets</a></li>
+                      <li><a href="admininvoice.html">Invoice</a></li>
+                      <li><a href="admininbox.html">Inbox</a></li>
+                      <li><a href="admincalendar.html">Calendar</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-table"></i> Tables <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="tables.html">Tables</a></li>
-                      <li><a href="tables_dynamic.html">Table Dynamic</a></li>
+                      <li><a href="admintables.html">Tables</a></li>
+                      <li><a href="admintables_dynamic.html">Table Dynamic</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-bar-chart-o"></i> Data Presentation <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="chartjs.html">Chart JS</a></li>
-                      <li><a href="chartjs2.html">Chart JS2</a></li>
-                      <li><a href="morisjs.html">Moris JS</a></li>
-                      <li><a href="echarts.html">ECharts</a></li>
-                      <li><a href="other_charts.html">Other Charts</a></li>
+                      <li><a href="adminchartjs.html">Chart JS</a></li>
+                      <li><a href="adminchartjs2.html">Chart JS2</a></li>
+                      <li><a href="adminmorisjs.html">Moris JS</a></li>
+                      <li><a href="adminecharts.html">ECharts</a></li>
+                      <li><a href="adminother_charts.html">Other Charts</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
-                      <li><a href="fixed_footer.html">Fixed Footer</a></li>
+                      <li><a href="adminfixed_sidebar.html">Fixed Sidebar</a></li>
+                      <li><a href="adminfixed_footer.html">Fixed Footer</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -155,21 +155,21 @@
                 <ul class="nav side-menu">
                   <li><a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="e_commerce.html">E-commerce</a></li>
-                      <li><a href="projects.html">Projects</a></li>
-                      <li><a href="project_detail.html">Project Detail</a></li>
-                      <li><a href="contacts.html">Contacts</a></li>
-                      <li><a href="profile.html">Profile</a></li>
+                      <li><a href="admine_commerce.html">E-commerce</a></li>
+                      <li><a href="adminprojects.html">Projects</a></li>
+                      <li><a href="adminproject_detail.html">Project Detail</a></li>
+                      <li><a href="admincontacts.html">Contacts</a></li>
+                      <li><a href="adminprofile.html">Profile</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-windows"></i> Extras <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="page_403.html">403 Error</a></li>
-                      <li><a href="page_404.html">404 Error</a></li>
-                      <li><a href="page_500.html">500 Error</a></li>
-                      <li><a href="plain_page.html">Plain Page</a></li>
-                      <li><a href="login.html">Login Page</a></li>
-                      <li><a href="pricing_tables.html">Pricing Tables</a></li>
+                      <li><a href="adminpage_403.html">403 Error</a></li>
+                      <li><a href="adminpage_404.html">404 Error</a></li>
+                      <li><a href="adminpage_500.html">500 Error</a></li>
+                      <li><a href="adminplain_page.html">Plain Page</a></li>
+                      <li><a href="adminlogin.html">Login Page</a></li>
+                      <li><a href="adminpricing_tables.html">Pricing Tables</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
@@ -177,7 +177,7 @@
                         <li><a href="#level1_1">Level One</a>
                         <li><a>Level One<span class="fa fa-chevron-down"></span></a>
                           <ul class="nav child_menu">
-                            <li class="sub_menu"><a href="level2.html">Level Two</a>
+                            <li class="sub_menu"><a href="adminlevel2.html">Level Two</a>
                             </li>
                             <li><a href="#level2_1">Level Two</a>
                             </li>
@@ -204,7 +204,7 @@
               <a data-toggle="tooltip" data-placement="top" title="Lock">
                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
               </a>
-              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+              <a data-toggle="tooltip" data-placement="top" title="Logout" href="adminlogin.html">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
@@ -229,7 +229,7 @@
                           <span>Settings</span>
                         </a>
                     <a class="dropdown-item"  href="javascript:;">Help</a>
-                      <a class="dropdown-item"  href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                      <a class="dropdown-item"  href="adminlogin.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                     </div>
                   </li>
   
@@ -305,7 +305,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>비행 스케줄 조회</h3>
+                <h3>비행 ?��?�?조회</h3>
               </div>
             </div>
 
@@ -315,7 +315,7 @@
               <div class="col-md-12 col-sm-12 ">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>조회 조건 및 결과</h2>
+                    <h2>조회 조건 �?결과</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
                       <li><a class="close-link"><i class="fa fa-close"></i></a></li>
@@ -324,32 +324,32 @@
                   </div>
                   <div class="x_content">
                     <div class="flight-schedule-container">
-                      <div class="calendar-input-container"> <label for="dateSelectorInput" style="display:block; margin-bottom:5px;">날짜 선택</label>
+                      <div class="calendar-input-container"> <label for="dateSelectorInput" style="display:block; margin-bottom:5px;">?�짜 ?�택</label>
                         <div class="input-group">
-                            <input type="text" id="dateSelectorInput" class="form-control" readonly placeholder="날짜를 선택하세요">
+                            <input type="text" id="dateSelectorInput" class="form-control" readonly placeholder="?�짜�??�택?�세??>
                             <span class="input-group-addon" style="cursor: pointer;">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
                       </div>
                       <div class="schedule-table-container">
-                        <h4 id="scheduleDateDisplay">오늘의 스케줄</h4>
+                        <h4 id="scheduleDateDisplay">?�늘???��?�?/h4>
                         <div class="table-responsive">
                           <table class="table table-striped table-bordered" id="flightScheduleTable">
                             <thead>
                               <tr>
-                                <th>편명</th>
-                                <th>항공사</th>
+                                <th>?�명</th>
+                                <th>??��??/th>
                                 <th>출발지</th>
-                                <th>도착지</th>
-                                <th>출발시간</th>
-                                <th>도착시간</th>
-                                <th>상태</th>
+                                <th>?�착지</th>
+                                <th>출발?�간</th>
+                                <th>?�착?�간</th>
+                                <th>?�태</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
-                                <td colspan="7" class="text-center">날짜를 선택해주세요.</td>
+                                <td colspan="7" class="text-center">?�짜�??�택?�주?�요.</td>
                               </tr>
                             </tbody>
                           </table>
@@ -405,10 +405,10 @@
 
     <script>
     $(document).ready(function() {
-        const KOREAN_CITIES = ["서울(ICN)", "부산(PUS)", "제주(CJU)", "광주(KWJ)", "대구(TAE)"];
-        const OVERSEAS_CITIES = ["도쿄(NRT)", "뉴욕(JFK)", "런던(LHR)", "파리(CDG)", "상하이(PVG)", "LA(LAX)", "시드니(SYD)", "방콕(BKK)"];
-        const AIRLINES = ["대한항공", "아시아나", "제주항공", "진에어", "티웨이항공", "에어부산", "에어서울"];
-        const STATUSES = ["정시", "지연", "결항", "탑승중", "출발", "도착"];
+        const KOREAN_CITIES = ["?�울(ICN)", "부??PUS)", "?�주(CJU)", "광주(KWJ)", "?��?TAE)"];
+        const OVERSEAS_CITIES = ["?�쿄(NRT)", "?�욕(JFK)", "?�던(LHR)", "?�리(CDG)", "?�하??PVG)", "LA(LAX)", "?�드??SYD)", "방콕(BKK)"];
+        const AIRLINES = ["?�?�항�?, "?�시?�나", "?�주??��", "진에??, "?�웨?�항�?, "?�어부??, "?�어?�울"];
+        const STATUSES = ["?�시", "지??, "결항", "?�승�?, "출발", "?�착"];
 
         function generateRandomFlightData(dateStr) {
             const schedules = [];
@@ -450,7 +450,7 @@
 
         function showLoading() {
             $loadingIndicator.show();
-            $('#flightScheduleTable tbody').empty().append('<tr><td colspan="7" class="text-center">로딩 중...</td></tr>');
+            $('#flightScheduleTable tbody').empty().append('<tr><td colspan="7" class="text-center">로딩 �?..</td></tr>');
             $('#paginationControls').empty();
         }
 
@@ -458,34 +458,34 @@
             $loadingIndicator.hide();
         }
 
-        // --- 달력 초기화 ---
+        // --- ?�력 초기??---
         $dateSelectorInput.daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,
-            autoUpdateInput: false, // 중요: 선택 시 자동으로 input 값 업데이트 안함 (수동으로 처리)
+            autoUpdateInput: false, // 중요: ?�택 ???�동?�로 input �??�데?�트 ?�함 (?�동?�로 처리)
             locale: {
                 format: 'YYYY-MM-DD',
-                applyLabel: "선택",
+                applyLabel: "?�택",
                 cancelLabel: "취소",
-                daysOfWeek: ["일", "월", "화", "수", "목", "금", "토"],
-                monthNames: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"]
+                daysOfWeek: ["??, "??, "??, "??, "�?, "�?, "??],
+                monthNames: ["1??, "2??, "3??, "4??, "5??, "6??, "7??, "8??, "9??, "10??, "11??, "12??]
             }
         });
 
-        // 날짜 선택 시 input 값 업데이트 및 스케줄 로드
+        // ?�짜 ?�택 ??input �??�데?�트 �??��?�?로드
         $dateSelectorInput.on('apply.daterangepicker', function(ev, picker) {
             selectedDate = picker.startDate.format('YYYY-MM-DD');
-            $(this).val(selectedDate); // 선택된 날짜를 input에 표시
-            $('#scheduleDateDisplay').text(`${selectedDate} 스케줄`);
+            $(this).val(selectedDate); // ?�택???�짜�?input???�시
+            $('#scheduleDateDisplay').text(`${selectedDate} ?��?�?);
             loadAndDisplaySchedules(selectedDate);
         });
 
-        // 초기 input 값 설정 (오늘 날짜)
+        // 초기 input �??�정 (?�늘 ?�짜)
         $dateSelectorInput.val(selectedDate);
 
-        // 달력 아이콘 클릭 시 daterangepicker 열기
+        // ?�력 ?�이�??�릭 ??daterangepicker ?�기
         $('.input-group-addon').on('click', function() {
-            $dateSelectorInput.trigger('click'); // 또는 $dateSelectorInput.data('daterangepicker').show();
+            $dateSelectorInput.trigger('click'); // ?�는 $dateSelectorInput.data('daterangepicker').show();
         });
 
 
@@ -508,7 +508,7 @@
             $tbody.empty();
 
             if (currentSchedules.length === 0) {
-                $tbody.append('<tr><td colspan="7" class="text-center">선택하신 날짜에 스케줄이 없습니다.</td></tr>');
+                $tbody.append('<tr><td colspan="7" class="text-center">?�택?�신 ?�짜???��?줄이 ?�습?�다.</td></tr>');
                 return;
             }
 
@@ -593,11 +593,11 @@
             }
         });
 
-        $('#scheduleDateDisplay').text(`${selectedDate} 스케줄`);
+        $('#scheduleDateDisplay').text(`${selectedDate} ?��?�?);
         loadAndDisplaySchedules(selectedDate); 
 
-        $('ul.nav.side-menu a[href="index5.html"]').closest('li').addClass('current-page active');
-        $('ul.nav.side-menu a[href="index5.html"]').closest('li.current-page').parents('li').addClass('active');
+        $('ul.nav.side-menu a[href="adminindex5.html"]').closest('li').addClass('current-page active');
+        $('ul.nav.side-menu a[href="adminindex5.html"]').closest('li.current-page').parents('li').addClass('active');
     });
     </script>
 
