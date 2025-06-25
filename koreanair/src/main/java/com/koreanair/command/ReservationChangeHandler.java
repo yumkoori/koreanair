@@ -46,8 +46,30 @@ public class ReservationChangeHandler implements CommandHandler {
         // 3. 요청에서 bookingId 가져오기
         String bookingId = request.getParameter("bookingId");
         
-        // 4. Service 호출 시 실제 userId를 사용하여 권한 검증
-        ReservationDTO reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+        // 4. 비회원 조회에서 넘어온 경우 예약 소유자 확인
+        String guestBookingId = (String) session.getAttribute("guestBookingId");
+        ReservationDTO reservation = null;
+        
+        if (guestBookingId != null && guestBookingId.equals(bookingId)) {
+            // 비회원 조회에서 로그인으로 넘어온 경우, 예약 소유자 확인
+            reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+            if (reservation == null) {
+                // 예약 정보가 로그인한 사용자와 일치하지 않음
+                session.setAttribute("error", "변경하려는 예약이 회원님의 예약과 일치하지 않습니다. 본인의 예약만 변경할 수 있습니다.");
+                // 비회원 조회 정보 제거
+                session.removeAttribute("guestBookingId");
+                session.removeAttribute("guestBookingInfo");
+                session.removeAttribute("isGuestLookup");
+                return "redirect:/dashboard.do";
+            }
+            // 일치하는 경우 비회원 조회 정보 제거
+            session.removeAttribute("guestBookingId");
+            session.removeAttribute("guestBookingInfo");
+            session.removeAttribute("isGuestLookup");
+        } else {
+            // 일반적인 로그인 사용자 예약 변경
+            reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+        }
 
         // 5. 성공/실패 분기 처리
         if (reservation != null) {
@@ -55,8 +77,8 @@ public class ReservationChangeHandler implements CommandHandler {
             return "/WEB-INF/views/reservationSelect.jsp";
         } else {
             // 본인 예약이 아닐 경우
-            request.setAttribute("error", "예약 정보를 찾을 수 없습니다.");
-            return "/dashboard.do";
+            session.setAttribute("error", "변경하려는 예약이 회원님의 예약과 일치하지 않습니다. 본인의 예약만 변경할 수 있습니다.");
+            return "redirect:/dashboard.do";
         }
     }
 
@@ -76,8 +98,30 @@ public class ReservationChangeHandler implements CommandHandler {
         // 3. 요청에서 bookingId 가져오기
         String bookingId = request.getParameter("bookingId");
         
-        // 4. Service 호출 시 실제 userId를 사용하여 권한 검증
-        ReservationDTO reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+        // 4. 비회원 조회에서 넘어온 경우 예약 소유자 확인
+        String guestBookingId = (String) session.getAttribute("guestBookingId");
+        ReservationDTO reservation = null;
+        
+        if (guestBookingId != null && guestBookingId.equals(bookingId)) {
+            // 비회원 조회에서 로그인으로 넘어온 경우, 예약 소유자 확인
+            reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+            if (reservation == null) {
+                // 예약 정보가 로그인한 사용자와 일치하지 않음
+                session.setAttribute("error", "변경하려는 예약이 회원님의 예약과 일치하지 않습니다. 본인의 예약만 변경할 수 있습니다.");
+                // 비회원 조회 정보 제거
+                session.removeAttribute("guestBookingId");
+                session.removeAttribute("guestBookingInfo");
+                session.removeAttribute("isGuestLookup");
+                return "redirect:/dashboard.do";
+            }
+            // 일치하는 경우 비회원 조회 정보 제거
+            session.removeAttribute("guestBookingId");
+            session.removeAttribute("guestBookingInfo");
+            session.removeAttribute("isGuestLookup");
+        } else {
+            // 일반적인 로그인 사용자 예약 변경
+            reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+        }
 
         // 5. 성공/실패 분기 처리
         if (reservation != null) {
@@ -85,8 +129,8 @@ public class ReservationChangeHandler implements CommandHandler {
             return "/WEB-INF/views/reservationChange.jsp";
         } else {
             // 본인 예약이 아닐 경우
-            request.setAttribute("error", "변경할 예약 정보를 찾을 수 없습니다.");
-            return "/dashboard.do";
+            session.setAttribute("error", "변경할 예약 정보를 찾을 수 없습니다.");
+            return "redirect:/dashboard.do";
         }
     }
 }

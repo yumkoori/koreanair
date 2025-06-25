@@ -672,3 +672,44 @@ main.container {
         flex-wrap: wrap;
     }
 }
+
+/* ==================== 로그인 필요 배지 스타일 ==================== */
+.login-required-badge {
+    background-color: #ff4757 !important;
+    color: #fff !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    padding: 3px 8px !important;
+    border-radius: 12px !important;
+    margin-left: 8px !important;
+    display: inline-block !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    box-shadow: 0 2px 4px rgba(255, 71, 87, 0.3) !important;
+}
+
+/* 비회원 조회 시 로그인 필요 버튼들의 스타일 */
+.guest-login-required {
+    position: relative;
+    opacity: 0.8;
+}
+
+.guest-login-required:hover {
+    opacity: 1;
+}
+
+.guest-login-required .login-required-badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+    }
+}

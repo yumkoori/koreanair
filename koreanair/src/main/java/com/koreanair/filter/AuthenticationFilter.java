@@ -117,8 +117,8 @@ public class AuthenticationFilter implements Filter {
             "/updateNonUserPW.do",
             "/savemerchantUid.do",
             "/views/payment/Payment_Page.jsp",
-            "/checkinDetail.do", 
-            "/checkinApply.do",
+            "/checkinDetail.do",
+            "/checkinApply.do", 
             "/verifyPayment.do",
             "/RefundProcess.do"
 

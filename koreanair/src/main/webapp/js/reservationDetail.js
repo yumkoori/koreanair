@@ -87,8 +87,29 @@ function showLoginRequiredAlert(functionName) {
         const fullPath = window.location.pathname;
         const contextPath = fullPath.substring(0, fullPath.indexOf('/', 1)) || '';
         
-        // 로그인 페이지로 리다이렉트 (간단한 방법)
-        console.log('Redirecting to login with contextPath:', contextPath);
-        window.location.href = contextPath + '/loginForm.do';
+        // 기능별 targetUrl 설정
+        let targetUrl;
+        switch(functionName) {
+            case '체크인':
+            case '온라인 체크인':
+                targetUrl = '/checkinDetail.do?bookingId=' + bookingId;
+                break;
+            case '좌석 변경':
+            case '좌석 신청':
+                targetUrl = '/checkinSeat.do?bookingId=' + bookingId;
+                break;
+            case '예약변경':
+                targetUrl = '/changeReservationSelect.do?bookingId=' + bookingId;
+                break;
+            case '예약 취소':
+                targetUrl = '/cancelReservationForm.do?bookingId=' + bookingId;
+                break;
+            default:
+                targetUrl = '/reservationDetail?bookingId=' + bookingId;
+        }
+        
+        // 로그인 페이지로 리다이렉트 (targetUrl 포함)
+        console.log('Redirecting to login with targetUrl:', targetUrl);
+        window.location.href = contextPath + '/loginForm.do?targetUrl=' + encodeURIComponent(targetUrl);
     }
 }

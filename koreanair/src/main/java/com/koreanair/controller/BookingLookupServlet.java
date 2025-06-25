@@ -46,6 +46,9 @@ public class BookingLookupServlet extends HttpServlet {
             session.setAttribute("lookupResult", bookingInfo);
             // 비회원 조회 표시를 위한 플래그 설정
             session.setAttribute("isGuestLookup", true);
+            // 비회원 조회한 예약 정보를 저장 (로그인 후에도 사용)
+            session.setAttribute("guestBookingId", bookingInfo.getBookingId());
+            session.setAttribute("guestBookingInfo", bookingInfo);
             
             jsonResponse.put("success", true);
             jsonResponse.put("redirectUrl", "reservationDetail?bookingId=" + bookingInfo.getBookingId());
