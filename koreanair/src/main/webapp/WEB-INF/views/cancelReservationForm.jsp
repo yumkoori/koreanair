@@ -124,7 +124,9 @@
 
 					<button type="button" id="cancelBtn" class="btn btn-secondary">신청
 						취소</button>
-					<button type="submit" class="btn btn-primary">환불 신청</button>
+					<button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/views/payment/refundProcess.jsp?bookingId=${reservation.bookingId}'">
+    환불 신청
+</button>
 				</div>
 			</form>
 		</div>

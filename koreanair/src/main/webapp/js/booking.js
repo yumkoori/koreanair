@@ -579,7 +579,7 @@ function showPaymentSuccess(data = null) {
         window.location.href = data.redirectUrl;
     } else {
         // 기본적으로 홈페이지로 이동
-        window.location.href = window.contextPath + '/';
+        window.location.href = window.contextPath + '/index.jsp';
     }
 }
 

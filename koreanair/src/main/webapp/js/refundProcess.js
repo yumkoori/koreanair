@@ -2,8 +2,7 @@
 
 function handleRefund() {
     // 예약번호 확인
-    //const bookingId = document.getElementById('bookingId').value;
-    const bookingId = 'BKDON002';
+    const bookingId = document.getElementById('bookingId').value; 
     if (!bookingId) {
         alert('예약번호가 없습니다. 다시 시도해주세요.');
         return;
@@ -109,8 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('환불 확인 페이지가 로드되었습니다.');
     
     // 예약번호 확인
-    //const bookingId = document.getElementById('bookingId').value;
-    const bookingId = 'BKDON002';
+    const bookingId = document.getElementById('bookingId').value;
     if (!bookingId) {
         console.warn('예약번호가 없습니다.');
         alert('예약번호가 없습니다. 올바른 경로로 접근해주세요.');
