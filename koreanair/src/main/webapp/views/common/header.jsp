@@ -48,31 +48,33 @@
     <div class="airline-header-main">
         <div class="airline-container">
             <div class="airline-logo">
-                <svg width="180" height="45" viewBox="0 0 180 45">
-                    <!-- 대한항공 로고 -->
-                    <g>
-                        <!-- 외부 원 테두리 -->
-                        <circle cx="22.5" cy="22.5" r="18" fill="none" stroke="#003876" stroke-width="2.5"/>
-                        
-                        <!-- 태극 심볼 - 심플 버전 -->
-                        <g transform="translate(22.5, 22.5) rotate(90) scale(-1, 1)">
-                            <!-- 배경 원 (빨간색) -->
-                            <circle cx="0" cy="0" r="15" fill="#CD212A"/>
+                <a href="index.jsp" style="text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <svg width="180" height="45" viewBox="0 0 180 45">
+                        <!-- 대한항공 로고 -->
+                        <g>
+                            <!-- 외부 원 테두리 -->
+                            <circle cx="22.5" cy="22.5" r="18" fill="none" stroke="#003876" stroke-width="2.5"/>
                             
-                            <!-- S자 모양의 파란색 영역 -->
-                            <path d="M 0,-15 A 7.5,7.5 0 0,1 0,0 A 7.5,7.5 0 0,0 0,15 A 15,15 0 0,1 0,-15" fill="#003876"/>
-                            
-                            <!-- 작은 빨간색 원 (하단) -->
-                            <circle cx="0" cy="7.5" r="7.5" fill="#CD212A"/>
-                            
-                            <!-- 작은 파란색 원 (상단) -->
-                            <circle cx="0" cy="-7.5" r="7.5" fill="#003876"/>
+                            <!-- 태극 심볼 - 심플 버전 -->
+                            <g transform="translate(22.5, 22.5) rotate(90) scale(-1, 1)">
+                                <!-- 배경 원 (빨간색) -->
+                                <circle cx="0" cy="0" r="15" fill="#CD212A"/>
+                                
+                                <!-- S자 모양의 파란색 영역 -->
+                                <path d="M 0,-15 A 7.5,7.5 0 0,1 0,0 A 7.5,7.5 0 0,0 0,15 A 15,15 0 0,1 0,-15" fill="#003876"/>
+                                
+                                <!-- 작은 빨간색 원 (하단) -->
+                                <circle cx="0" cy="7.5" r="7.5" fill="#CD212A"/>
+                                
+                                <!-- 작은 파란색 원 (상단) -->
+                                <circle cx="0" cy="-7.5" r="7.5" fill="#003876"/>
+                            </g>
                         </g>
-                    </g>
-                    
-                    <!-- KOREAN AIR 텍스트 -->
-                    <text x="55" y="28" font-family="'Nanum Gothic', Arial, sans-serif" font-size="18" font-weight="bold" fill="#003876" letter-spacing="1px">KOREAN AIR</text>
-                </svg>
+                        
+                        <!-- KOREAN AIR 텍스트 -->
+                        <text x="55" y="28" font-family="'Nanum Gothic', Arial, sans-serif" font-size="18" font-weight="bold" fill="#003876" letter-spacing="1px">KOREAN AIR</text>
+                    </svg>
+                </a>
             </div>
             <nav class="airline-main-nav">
                 <ul class="airline-list">
