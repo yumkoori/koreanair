@@ -76,6 +76,36 @@ public class refundProcessDAOImpl implements RefundProcessDAO {
     }
 
     @Override
+    public boolean updateBookingStatus(RefundProcessDTO dto) throws Exception {
+        boolean result = false;
+        
+        // booking 상태 업데이트 SQL
+        String sql = "UPDATE booking SET STATUS = 'PENDING' WHERE booking_id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, dto.getBookingId());
+            
+            int rowsAffected = pstmt.executeUpdate();
+            result = rowsAffected > 0;
+            
+            if (result) {
+                System.out.println("[SUCCESS] booking 상태 업데이트 성공 - BookingId: " + dto.getBookingId() + 
+                                 ", Status: PENDING");
+            } else {
+                System.out.println("[WARNING] booking 상태 업데이트 실패 - BookingId: " + dto.getBookingId());
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("[DB ERROR] booking 상태 업데이트 중 오류 발생: " + e.getMessage());
+            throw new Exception("booking 상태 업데이트 중 오류가 발생했습니다.", e);
+        }
+        
+        return result;
+    }
+
+    @Override
     public String getPaymentAmount(String merchantUid) throws Exception {
         String paymentAmount = null;
         
