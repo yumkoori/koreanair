@@ -25,13 +25,19 @@ public class ReservationDetailServlet extends HttpServlet {
         // 세션에서 필요한 정보들을 미리 가져옴
         ReservationDTO lookupResult = (session != null) ? (ReservationDTO) session.getAttribute("lookupResult") : null;
         User loggedInUser = (session != null) ? (User) session.getAttribute("user") : null;
+        Boolean isGuestLookup = (session != null) ? (Boolean) session.getAttribute("isGuestLookup") : null;
 
         // [흐름 1] 비회원이 '다른 예약 조회'를 통해 접근했는지 확인
         // 이 로직은 로그인 여부와 관계없이 가장 먼저 실행되어야 함
         if (lookupResult != null && lookupResult.getBookingId().equals(bookingIdFromUrl)) {
             // 성공: 임시 이용권(lookupResult)이 유효하므로 상세 정보 표시
             request.setAttribute("reservation", lookupResult);
+            // 비회원 조회인지 플래그 전달
+            if (isGuestLookup != null && isGuestLookup) {
+                request.setAttribute("isGuestLookup", true);
+            }
             session.removeAttribute("lookupResult"); // 사용한 임시 이용권은 즉시 제거
+            session.removeAttribute("isGuestLookup"); // 플래그도 제거
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/reservationDetail.jsp");
             dispatcher.forward(request, response);

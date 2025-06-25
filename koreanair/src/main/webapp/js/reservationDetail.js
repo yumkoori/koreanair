@@ -73,3 +73,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// 비회원 조회 시 로그인이 필요한 기능에 대한 알람을 표시하는 함수
+function showLoginRequiredAlert(functionName) {
+    const message = functionName + ' 기능을 이용하시려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?';
+    
+    if (confirm(message)) {
+        // 현재 예약 정보를 유지하기 위해 bookingId를 URL 파라미터로 전달
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get('bookingId');
+        
+        // 현재 페이지의 contextPath 가져오기
+        const fullPath = window.location.pathname;
+        const contextPath = fullPath.substring(0, fullPath.indexOf('/', 1)) || '';
+        
+        // 로그인 페이지로 리다이렉트 (간단한 방법)
+        console.log('Redirecting to login with contextPath:', contextPath);
+        window.location.href = contextPath + '/loginForm.do';
+    }
+}

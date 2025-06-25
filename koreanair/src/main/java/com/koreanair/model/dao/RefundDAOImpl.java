@@ -11,7 +11,6 @@ public class RefundDAOImpl implements RefundDAO {
 
     @Override
     public RefundDetailDTO findRefundDetailsByBookingId(String bookingId, String userId) {
-        // [최종 수정] 존재하지 않는 fare 테이블 대신, seat_class 테이블을 사용하도록 SQL을 수정했습니다.
         String sql = "SELECT "
                        + "    b.booking_id, f.flight_id, f.departure_time, f.arrival_time, "
                        + "    p.last_name, p.first_name, u.phone, u.email, u.user_id AS member_id, "
@@ -22,7 +21,7 @@ public class RefundDAOImpl implements RefundDAO {
                        + "    0 AS tax, "
                        + "    sc.cancellation_penalty AS penalty_fee "
                        + "FROM booking b "
-                       + "JOIN flight f ON b.flight_id = f.flight_id "
+                       + "JOIN flight f ON b.outbound_flight_id = f.flight_id "
                        + "JOIN passenger p ON b.booking_id = p.booking_id "
                        + "JOIN users u ON p.user_no = u.user_no "
                        + "JOIN airport da ON f.departure_airport_id = da.airport_id "

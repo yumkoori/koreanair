@@ -88,7 +88,7 @@ public class ReservationDAOImpl implements ReservationDAO {
                 + "    aa.airport_id AS arrival_airport_id, aa.airport_name AS arrival_airport_name, "
                 + "    bs.flight_seat_id " // <-- 조회할 컬럼 추가
                 + "FROM booking b "
-                + "JOIN flight f ON b.outbound_flight_id = f.flight_id " // 수정된 부분: outbound_flight_id 사용
+                + "JOIN flight f ON b.outbound_flight_id = f.flight_id " 
                 + "JOIN passenger p ON b.booking_id = p.booking_id "
                 + "JOIN users u ON p.user_no = u.user_no "
                 + "JOIN airport da ON f.departure_airport_id = da.airport_id "

@@ -185,7 +185,7 @@ public class UserDAO {
                      "da.airport_id AS departure_airport_id, da.airport_name AS departure_airport_name, " +
                      "aa.airport_id AS arrival_airport_id, aa.airport_name AS arrival_airport_name " +
                      "FROM booking b " +
-                     "JOIN flight f ON b.flight_id = f.flight_id " +
+                     "JOIN flight f ON b.outbound_flight_id = f.flight_id " +
                      "JOIN passenger p ON b.booking_id = p.booking_id " +
                      "JOIN users u ON p.user_no = u.user_no " +
                      "JOIN airport da ON f.departure_airport_id = da.airport_id " +

@@ -40,8 +40,14 @@ public class LoginHandler implements CommandHandler {
     private String showLoginForm(HttpServletRequest request, HttpServletResponse response) 
             throws Exception {
         
+        // URL 파라미터로 전달된 targetUrl 처리
+        String targetUrlParam = request.getParameter("targetUrl");
+        HttpSession session = request.getSession();
+        if (targetUrlParam != null && !targetUrlParam.isEmpty()) {
+            session.setAttribute("targetUrl", targetUrlParam);
+        }
+        
         // 세션에서 메시지들 확인
-        HttpSession session = request.getSession(false);
         if (session != null) {
             // 회원가입 성공 메시지 확인
             String signupSuccessMessage = (String) session.getAttribute("signupSuccessMessage");
