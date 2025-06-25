@@ -47,6 +47,7 @@ public class DispatcherServlet extends HttpServlet {
 				commandHandlerMap.put(command, handlerInstance);
 				
 			} catch (ClassNotFoundException|InstantiationException|IllegalAccessException e) {
+				 System.out.println("★ 클래스 로딩 실패: " + handlerClassName);
 				throw new ServletException();
 			}
 		}

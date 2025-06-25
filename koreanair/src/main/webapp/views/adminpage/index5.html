@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Gentelella Alela! | ÎπÑÌñâ ?§Ï?Ï§ÑÌëú</title>
+
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <link href="../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    
+    <link href="../build/css/custom.min.css" rel="stylesheet">
+
+    <style>
+      /* ?òÏù¥ÏßÄ Ïª®ÌÖêÏ∏†Î? ?ÑÌïú Ï∂îÍ? ?§Ì???*/
+      .flight-schedule-container {
+        display: flex;
+        flex-wrap: wrap; /* ?ëÏ? ?îÎ©¥?êÏÑú Ï§ÑÎ∞îÍø??àÏö© */
+      }
+      .calendar-input-container { /* ?¥Î¶Ñ Î≥ÄÍ≤?Î∞??§Ì????òÏ†ï */
+        flex: 0 0 220px; /* ?¨Î†• ?ÖÎ†• Ïª®ÌÖå?¥ÎÑà ?àÎπÑ Ï°∞Ï†ï (?? 220px) */
+        margin-right: 20px;
+        margin-bottom: 20px; /* ?ëÏ? ?îÎ©¥?êÏÑú ?ÑÎûò ?¨Î∞± */
+      }
+      .schedule-table-container {
+        flex: 1;
+        min-width: 0; /* flex item???¥Ïö©Î≥¥Îã§ ?ëÏïÑÏß????àÎèÑÎ°??àÏö© */
+      }
+      /* ?ÖÎ†• ?ÑÎìú ?§Ì???(?†ÌÉù ?¨Ìï≠) */
+      #dateSelectorInput {
+        cursor: pointer; /* ?¥Î¶≠ Í∞Ä?•Ìï®???úÏãú */
+        background-color: #fff !important; /* readonly Î∞∞Í≤Ω??Í∞ïÏ†ú ?∞ÏÉâ */
+      }
+      .table-responsive {
+          overflow-x: auto; /* ?åÏù¥Î∏îÏù¥ ?àÎ¨¥ Í∏?Í≤ΩÏö∞ Í∞ÄÎ°??§ÌÅ¨Î°?*/
+      }
+      /* ?úÏÑ± ?òÏù¥ÏßÄ?§Ïù¥??Î≤ÑÌäº ?§Ì???*/
+      .pagination>.active>a, 
+      .pagination>.active>a:focus, 
+      .pagination>.active>a:hover, 
+      .pagination>.active>span, 
+      .pagination>.active>span:focus, 
+      .pagination>.active>span:hover {
+          background-color: #1ABB9C; /* Gentelella ?åÎßà ?âÏÉÅ */
+          border-color: #1ABB9C;
+      }
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* ?§Î•∏ ?îÏÜå ?ÑÏóê ?úÏãú */
+      }
+      .loading-overlay .fa {
+        font-size: 2em;
+        color: #1ABB9C;
+      }
+    </style>
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="adminindex.html" class="site_title"><i class="fa fa-paw"></i> <span>Gentelella Alela!</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="profile clearfix">
+              <div class="profile_pic">
+                <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Welcome,</span>
+                <h2>John Doe</h2>
+              </div>
+            </div>
+            <br />
+
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>General</h3>
+                <ul class="nav side-menu">
+                  <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="adminindex.html">Dashboard</a></li>
+                      <li><a href="adminindex2.html">Dashboard2</a></li>
+                      <li><a href="adminindex3.html">Dashboard3</a></li>
+                      <li><a href="adminindex4.html">Ï¢åÏÑùÍ¥ÄÎ¶?/a></li>
+                      <li><a href="adminindex5.html">ÎπÑÌñâ?§Ï?Ï§ÑÌëú</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="adminform.html">General Form</a></li>
+                      <li><a href="adminform_advanced.html">Advanced Components</a></li>
+                      <li><a href="adminform_validation.html">Form Validation</a></li>
+                      <li><a href="adminform_wizards.html">Form Wizard</a></li>
+                      <li><a href="adminform_upload.html">Form Upload</a></li>
+                      <li><a href="adminform_buttons.html">Form Buttons</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-desktop"></i> UI Elements <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="admingeneral_elements.html">General Elements</a></li>
+                      <li><a href="adminmedia_gallery.html">Media Gallery</a></li>
+                      <li><a href="admintypography.html">Typography</a></li>
+                      <li><a href="adminicons.html">Icons</a></li>
+                      <li><a href="adminglyphicons.html">Glyphicons</a></li>
+                      <li><a href="adminwidgets.html">Widgets</a></li>
+                      <li><a href="admininvoice.html">Invoice</a></li>
+                      <li><a href="admininbox.html">Inbox</a></li>
+                      <li><a href="admincalendar.html">Calendar</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-table"></i> Tables <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="admintables.html">Tables</a></li>
+                      <li><a href="admintables_dynamic.html">Table Dynamic</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-bar-chart-o"></i> Data Presentation <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="adminchartjs.html">Chart JS</a></li>
+                      <li><a href="adminchartjs2.html">Chart JS2</a></li>
+                      <li><a href="adminmorisjs.html">Moris JS</a></li>
+                      <li><a href="adminecharts.html">ECharts</a></li>
+                      <li><a href="adminother_charts.html">Other Charts</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="adminfixed_sidebar.html">Fixed Sidebar</a></li>
+                      <li><a href="adminfixed_footer.html">Fixed Footer</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+              <div class="menu_section">
+                <h3>Live On</h3>
+                <ul class="nav side-menu">
+                  <li><a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="admine_commerce.html">E-commerce</a></li>
+                      <li><a href="adminprojects.html">Projects</a></li>
+                      <li><a href="adminproject_detail.html">Project Detail</a></li>
+                      <li><a href="admincontacts.html">Contacts</a></li>
+                      <li><a href="adminprofile.html">Profile</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-windows"></i> Extras <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="adminpage_403.html">403 Error</a></li>
+                      <li><a href="adminpage_404.html">404 Error</a></li>
+                      <li><a href="adminpage_500.html">500 Error</a></li>
+                      <li><a href="adminplain_page.html">Plain Page</a></li>
+                      <li><a href="adminlogin.html">Login Page</a></li>
+                      <li><a href="adminpricing_tables.html">Pricing Tables</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="#level1_1">Level One</a>
+                        <li><a>Level One<span class="fa fa-chevron-down"></span></a>
+                          <ul class="nav child_menu">
+                            <li class="sub_menu"><a href="adminlevel2.html">Level Two</a>
+                            </li>
+                            <li><a href="#level2_1">Level Two</a>
+                            </li>
+                            <li><a href="#level2_2">Level Two</a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li><a href="#level1_2">Level One</a>
+                        </li>
+                    </ul>
+                  </li>                  
+                  <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li>
+                </ul>
+              </div>
+
+            </div>
+            <div class="sidebar-footer hidden-small">
+              <a data-toggle="tooltip" data-placement="top" title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Logout" href="adminlogin.html">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="top_nav">
+            <div class="nav_menu">
+                <div class="nav toggle">
+                  <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                </div>
+                <nav class="nav navbar-nav">
+                <ul class=" navbar-right">
+                  <li class="nav-item dropdown open" style="padding-left: 15px;">
+                    <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                      <img src="images/img.jpg" alt="">John Doe
+                    </a>
+                    <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item"  href="javascript:;"> Profile</a>
+                        <a class="dropdown-item"  href="javascript:;">
+                          <span class="badge bg-red pull-right">50%</span>
+                          <span>Settings</span>
+                        </a>
+                    <a class="dropdown-item"  href="javascript:;">Help</a>
+                      <a class="dropdown-item"  href="adminlogin.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                    </div>
+                  </li>
+  
+                  <li role="presentation" class="nav-item dropdown open">
+                    <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-envelope-o"></i>
+                      <span class="badge bg-green">6</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
+                      <li class="nav-item">
+                        <a class="dropdown-item">
+                          <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                          <span>
+                            <span>John Smith</span>
+                            <span class="time">3 mins ago</span>
+                          </span>
+                          <span class="message">
+                            Film festivals used to be do-or-die moments for movie makers. They were where...
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="dropdown-item">
+                          <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                          <span>
+                            <span>John Smith</span>
+                            <span class="time">3 mins ago</span>
+                          </span>
+                          <span class="message">
+                            Film festivals used to be do-or-die moments for movie makers. They were where...
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="dropdown-item">
+                          <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                          <span>
+                            <span>John Smith</span>
+                            <span class="time">3 mins ago</span>
+                          </span>
+                          <span class="message">
+                            Film festivals used to be do-or-die moments for movie makers. They were where...
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="dropdown-item">
+                          <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                          <span>
+                            <span>John Smith</span>
+                            <span class="time">3 mins ago</span>
+                          </span>
+                          <span class="message">
+                            Film festivals used to be do-or-die moments for movie makers. They were where...
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <div class="text-center">
+                          <a class="dropdown-item">
+                            <strong>See All Alerts</strong>
+                            <i class="fa fa-angle-right"></i>
+                          </a>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>ÎπÑÌñâ ?§Ï?Ï§?Ï°∞Ìöå</h3>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 ">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Ï°∞Ìöå Ï°∞Í±¥ Î∞?Í≤∞Í≥º</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div class="flight-schedule-container">
+                      <div class="calendar-input-container"> <label for="dateSelectorInput" style="display:block; margin-bottom:5px;">?†Ïßú ?†ÌÉù</label>
+                        <div class="input-group">
+                            <input type="text" id="dateSelectorInput" class="form-control" readonly placeholder="?†ÏßúÎ•??†ÌÉù?òÏÑ∏??>
+                            <span class="input-group-addon" style="cursor: pointer;">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                      </div>
+                      <div class="schedule-table-container">
+                        <h4 id="scheduleDateDisplay">?§Îäò???§Ï?Ï§?/h4>
+                        <div class="table-responsive">
+                          <table class="table table-striped table-bordered" id="flightScheduleTable">
+                            <thead>
+                              <tr>
+                                <th>?∏Î™Ö</th>
+                                <th>??≥µ??/th>
+                                <th>Ï∂úÎ∞úÏßÄ</th>
+                                <th>?ÑÏ∞©ÏßÄ</th>
+                                <th>Ï∂úÎ∞ú?úÍ∞Ñ</th>
+                                <th>?ÑÏ∞©?úÍ∞Ñ</th>
+                                <th>?ÅÌÉú</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td colspan="7" class="text-center">?†ÏßúÎ•??†ÌÉù?¥Ï£º?∏Ïöî.</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <nav aria-label="Page navigation">
+                          <ul class="pagination justify-content-center" id="paginationControls">
+                          </ul>
+                        </nav>
+                        <div id="loadingIndicator" class="loading-overlay" style="display: none; position: relative; min-height: 100px;">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer>
+          <div class="pull-right">
+            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+      </div>
+    </div>
+
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <script src="../vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../vendors/fastclick/lib/fastclick.js"></script>
+    <script src="../vendors/nprogress/nprogress.js"></script>
+    <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
+    <script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <script src="../vendors/raphael/raphael.min.js"></script>
+    <script src="../vendors/morris.js/morris.min.js"></script>
+    <script src="../vendors/gauge.js/dist/gauge.min.js"></script>
+    <script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+    <script src="../vendors/skycons/skycons.js"></script>
+    <script src="../vendors/Flot/jquery.flot.js"></script>
+    <script src="../vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="../vendors/Flot/jquery.flot.time.js"></script>
+    <script src="../vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="../vendors/Flot/jquery.flot.resize.js"></script>
+    <script src="../vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="../vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="../vendors/flot.curvedlines/curvedLines.js"></script>
+    <script src="../vendors/DateJS/build/date.js"></script>
+    <script src="../vendors/moment/min/moment.min.js"></script>
+    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+    <script src="../build/js/custom.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        const KOREAN_CITIES = ["?úÏö∏(ICN)", "Î∂Ä??PUS)", "?úÏ£º(CJU)", "Í¥ëÏ£º(KWJ)", "?ÄÍµ?TAE)"];
+        const OVERSEAS_CITIES = ["?ÑÏøÑ(NRT)", "?¥Ïöï(JFK)", "?∞Îçò(LHR)", "?åÎ¶¨(CDG)", "?ÅÌïò??PVG)", "LA(LAX)", "?úÎìú??SYD)", "Î∞©ÏΩï(BKK)"];
+        const AIRLINES = ["?Ä?úÌï≠Í≥?, "?ÑÏãú?ÑÎÇò", "?úÏ£º??≥µ", "ÏßÑÏóê??, "?∞Ïõ®?¥Ìï≠Í≥?, "?êÏñ¥Î∂Ä??, "?êÏñ¥?úÏö∏"];
+        const STATUSES = ["?ïÏãú", "ÏßÄ??, "Í≤∞Ìï≠", "?ëÏäπÏ§?, "Ï∂úÎ∞ú", "?ÑÏ∞©"];
+
+        function generateRandomFlightData(dateStr) {
+            const schedules = [];
+            const numSchedules = Math.floor(Math.random() * 70) + 80; 
+            for (let i = 0; i < numSchedules; i++) {
+                const departureCity = KOREAN_CITIES[Math.floor(Math.random() * KOREAN_CITIES.length)];
+                let arrivalCity;
+                do {
+                    arrivalCity = OVERSEAS_CITIES[Math.floor(Math.random() * OVERSEAS_CITIES.length)];
+                } while (arrivalCity === departureCity); 
+
+                const depHour = String(Math.floor(Math.random() * 24)).padStart(2, '0');
+                const depMin = String(Math.floor(Math.random() * 6) * 10).padStart(2, '0'); 
+                const arrHour = String((parseInt(depHour) + Math.floor(Math.random() * 8) + 1) % 24).padStart(2, '0'); 
+                const arrMin = String(Math.floor(Math.random() * 6) * 10).padStart(2, '0');
+
+                schedules.push({
+                    id: `${dateStr}-FL${String(100 + i).padStart(3, '0')}`,
+                    flightNo: `K${String.fromCharCode(65 + Math.floor(Math.random()*26))}${String(Math.floor(Math.random()*900)+100)}`,
+                    airline: AIRLINES[Math.floor(Math.random() * AIRLINES.length)],
+                    origin: departureCity,
+                    destination: arrivalCity,
+                    departureTime: `${depHour}:${depMin}`,
+                    arrivalTime: `${arrHour}:${arrMin}`,
+                    status: STATUSES[Math.floor(Math.random() * STATUSES.length)]
+                });
+            }
+            return schedules;
+        }
+
+        let allFlightDataByDate = {}; 
+        const ITEMS_PER_PAGE = 50;
+        let currentPage = 1;
+        let currentSchedules = [];
+        let selectedDate = moment().format('YYYY-MM-DD'); 
+
+        const $loadingIndicator = $('#loadingIndicator');
+        const $dateSelectorInput = $('#dateSelectorInput');
+
+        function showLoading() {
+            $loadingIndicator.show();
+            $('#flightScheduleTable tbody').empty().append('<tr><td colspan="7" class="text-center">Î°úÎî© Ï§?..</td></tr>');
+            $('#paginationControls').empty();
+        }
+
+        function hideLoading() {
+            $loadingIndicator.hide();
+        }
+
+        // --- ?¨Î†• Ï¥àÍ∏∞??---
+        $dateSelectorInput.daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            autoUpdateInput: false, // Ï§ëÏöî: ?†ÌÉù ???êÎèô?ºÎ°ú input Í∞??ÖÎç∞?¥Ìä∏ ?àÌï® (?òÎèô?ºÎ°ú Ï≤òÎ¶¨)
+            locale: {
+                format: 'YYYY-MM-DD',
+                applyLabel: "?†ÌÉù",
+                cancelLabel: "Ï∑®ÏÜå",
+                daysOfWeek: ["??, "??, "??, "??, "Î™?, "Í∏?, "??],
+                monthNames: ["1??, "2??, "3??, "4??, "5??, "6??, "7??, "8??, "9??, "10??, "11??, "12??]
+            }
+        });
+
+        // ?†Ïßú ?†ÌÉù ??input Í∞??ÖÎç∞?¥Ìä∏ Î∞??§Ï?Ï§?Î°úÎìú
+        $dateSelectorInput.on('apply.daterangepicker', function(ev, picker) {
+            selectedDate = picker.startDate.format('YYYY-MM-DD');
+            $(this).val(selectedDate); // ?†ÌÉù???†ÏßúÎ•?input???úÏãú
+            $('#scheduleDateDisplay').text(`${selectedDate} ?§Ï?Ï§?);
+            loadAndDisplaySchedules(selectedDate);
+        });
+
+        // Ï¥àÍ∏∞ input Í∞??§Ï†ï (?§Îäò ?†Ïßú)
+        $dateSelectorInput.val(selectedDate);
+
+        // ?¨Î†• ?ÑÏù¥ÏΩ??¥Î¶≠ ??daterangepicker ?¥Í∏∞
+        $('.input-group-addon').on('click', function() {
+            $dateSelectorInput.trigger('click'); // ?êÎäî $dateSelectorInput.data('daterangepicker').show();
+        });
+
+
+        function loadAndDisplaySchedules(dateStr) {
+            showLoading();
+            setTimeout(() => {
+                if (!allFlightDataByDate[dateStr]) {
+                    allFlightDataByDate[dateStr] = generateRandomFlightData(dateStr);
+                }
+                currentSchedules = allFlightDataByDate[dateStr] || [];
+                currentPage = 1; 
+                renderTable();
+                renderPagination();
+                hideLoading();
+            }, 500); 
+        }
+
+        function renderTable() {
+            const $tbody = $('#flightScheduleTable tbody');
+            $tbody.empty();
+
+            if (currentSchedules.length === 0) {
+                $tbody.append('<tr><td colspan="7" class="text-center">?†ÌÉù?òÏã† ?†Ïßú???§Ï?Ï§ÑÏù¥ ?ÜÏäµ?àÎã§.</td></tr>');
+                return;
+            }
+
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const pageSchedules = currentSchedules.slice(startIndex, endIndex);
+
+            pageSchedules.forEach(flight => {
+                const row = `<tr>
+                                <td>${flight.flightNo}</td>
+                                <td>${flight.airline}</td>
+                                <td>${flight.origin}</td>
+                                <td>${flight.destination}</td>
+                                <td>${flight.departureTime}</td>
+                                <td>${flight.arrivalTime}</td>
+                                <td>${flight.status}</td>
+                             </tr>`;
+                $tbody.append(row);
+            });
+        }
+
+        function renderPagination() {
+            const $paginationControls = $('#paginationControls');
+            $paginationControls.empty();
+            const totalPages = Math.ceil(currentSchedules.length / ITEMS_PER_PAGE);
+
+            if (totalPages <= 1) return; 
+
+             if (currentPage > 1) {
+                $paginationControls.append(`<li class="page-item"><a class="page-link" href="#" data-page="${currentPage - 1}">&laquo;</a></li>`);
+            } else {
+                $paginationControls.append(`<li class="page-item disabled"><span class="page-link">&laquo;</span></li>`);
+            }
+
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            if (endPage - startPage + 1 < 5) {
+                if (startPage === 1) {
+                    endPage = Math.min(totalPages, startPage + 4);
+                } else if (endPage === totalPages) {
+                    startPage = Math.max(1, endPage - 4);
+                }
+            }
+            
+            if (startPage > 1) {
+                 $paginationControls.append(`<li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>`);
+                if (startPage > 2) {
+                     $paginationControls.append(`<li class="page-item disabled"><span class="page-link">...</span></li>`);
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const activeClass = (i === currentPage) ? 'active' : '';
+                $paginationControls.append(`<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`);
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    $paginationControls.append(`<li class="page-item disabled"><span class="page-link">...</span></li>`);
+                }
+                $paginationControls.append(`<li class="page-item"><a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a></li>`);
+            }
+
+            if (currentPage < totalPages) {
+                $paginationControls.append(`<li class="page-item"><a class="page-link" href="#" data-page="${currentPage + 1}">&raquo;</a></li>`);
+            } else {
+                $paginationControls.append(`<li class="page-item disabled"><span class="page-link">&raquo;</span></li>`);
+            }
+        }
+
+        $('#paginationControls').on('click', 'a.page-link', function(e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            if (page && page !== currentPage) {
+                currentPage = page;
+                renderTable();
+                renderPagination(); 
+                $('html, body').animate({
+                    scrollTop: $(".schedule-table-container").offset().top - 70 
+                }, 500);
+            }
+        });
+
+        $('#scheduleDateDisplay').text(`${selectedDate} ?§Ï?Ï§?);
+        loadAndDisplaySchedules(selectedDate); 
+
+        $('ul.nav.side-menu a[href="adminindex5.html"]').closest('li').addClass('current-page active');
+        $('ul.nav.side-menu a[href="adminindex5.html"]').closest('li.current-page').parents('li').addClass('active');
+    });
+    </script>
+
+  </body>
+</html>
