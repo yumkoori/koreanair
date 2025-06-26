@@ -99,8 +99,6 @@ public class AuthenticationFilter implements Filter {
             "/checkUserId.do",
             "/checkEmail.do",
             "/lookup",
-            "/checkinDetail.do", 
-            "/checkinApply.do",
             "/airportSearch.do",
             "/search/search.jsp",
             "/views/search/search.jsp",
@@ -111,14 +109,16 @@ public class AuthenticationFilter implements Filter {
             "/passenger.do",
             "/testPayment.do",
             "/payment.jsp",
-            "/lookup", // [기존] 비회원 예약 조회를 위해 /lookup 경로 추가
-            "/reservationDetail", // [수정] 비회원 예약 상세 조회를 위해 경로 추가
+            "/lookup",
+            "/reservationDetail", 
             "/kakao/login.do",
             "/kakao/callback.do",
             "/kakao/signup.do",
             "/updateNonUserPW.do",
             "/savemerchantUid.do",
             "/views/payment/Payment_Page.jsp",
+            "/checkinDetail.do",
+            "/checkinApply.do", 
             "/verifyPayment.do",
             "/RefundProcess.do"
 

@@ -1496,12 +1496,65 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 뒤로 가기 등으로 페이지 로드 시 폼 초기화 (예약 조회 관련)
+    // '체크인' 탭의 비회원 체크인 폼 처리
+    var checkinForm = document.querySelector('#checkinLookupForm');
+    if (checkinForm) {
+        checkinForm.addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            var agreeCheckbox = checkinForm.querySelector('input[name="agreeInfo"]');
+            if (agreeCheckbox && !agreeCheckbox.checked) {
+                alert('[필수] 항목에 동의해주셔야 조회가 가능합니다.');
+                return; 
+            }
+            
+            var errorBox = document.querySelector('#checkinErrorBox');
+            var errorMessageElement = document.querySelector('#checkinErrorMessage');
+            if (errorBox) errorBox.classList.add('hidden');
+
+            var formData = new FormData(this);
+            formData.append('ajax', 'true');
+
+            fetch('checkinDetail.do', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('서버 응답에 문제가 발생했습니다.');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.success) {
+                    var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2)) || "";
+                    window.location.href = contextPath + '/' + data.redirectUrl;
+                } else {
+                    if (errorBox && errorMessageElement) {
+                        errorMessageElement.textContent = data.error || '알 수 없는 오류가 발생했습니다.';
+                        errorBox.classList.remove('hidden');
+                    }
+                }
+            })
+            .catch(function(error) {
+                console.error('체크인 조회 중 오류 발생:', error);
+                if (errorBox && errorMessageElement) {
+                    errorMessageElement.textContent = '체크인 조회 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+                    errorBox.classList.remove('hidden');
+                }
+            });
+        });
+    }
+
+    // 뒤로 가기 등으로 페이지 로드 시 폼 초기화 (예약 조회 및 체크인 관련)
     window.addEventListener('pageshow', function(event) {
         if (event.persisted) {
             if (lookupForm) lookupForm.reset();
-            var errorBox = document.querySelector('#bookingErrorBox');
-            if (errorBox) errorBox.classList.add('hidden');
+            if (checkinForm) checkinForm.reset();
+            var bookingErrorBox = document.querySelector('#bookingErrorBox');
+            var checkinErrorBox = document.querySelector('#checkinErrorBox');
+            if (bookingErrorBox) bookingErrorBox.classList.add('hidden');
+            if (checkinErrorBox) checkinErrorBox.classList.add('hidden');
         }
     });
 

@@ -4,9 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.koreanair.model.dto.ReservationDTO;
 import com.koreanair.model.dto.User;
+import com.koreanair.model.service.BookingService;
 
 public class HomeHandler implements CommandHandler {
+    
+    private BookingService bookingService = new BookingService();
     
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -27,7 +31,7 @@ public class HomeHandler implements CommandHandler {
                 return "/WEB-INF/views/lookupForm.jsp";
                 
             case "/checkupForm.do":
-                return "/WEB-INF/views/checkupForm.jsp";
+                return handleCheckupForm(request, response);
                 
             default:
                 return showMainIndex(request, response);
@@ -49,5 +53,36 @@ public class HomeHandler implements CommandHandler {
             return "redirect:/loginForm.do";
         }
         return "/views/login/dashboard.jsp";
+    }
+    
+    // 체크인 폼 처리 (GET: 폼 표시, POST: 비회원 체크인 조회)
+    private String handleCheckupForm(HttpServletRequest request, HttpServletResponse response) 
+            throws Exception {
+        
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            // GET 요청: 체크인 폼 표시
+            return "/WEB-INF/views/checkupForm.jsp";
+        } else if ("POST".equalsIgnoreCase(request.getMethod())) {
+            // POST 요청: 비회원 체크인 조회 처리
+            String bookingId = request.getParameter("bookingId");
+            String departureDate = request.getParameter("departureDate");
+            String lastName = request.getParameter("lastName");
+            String firstName = request.getParameter("firstName");
+            
+            // 비회원 체크인 조회
+            ReservationDTO reservation = bookingService.searchBooking(bookingId, departureDate, lastName, firstName);
+            
+            if (reservation != null) {
+                // 조회 성공: checkinDetail.jsp로 포워딩
+                request.setAttribute("reservation", reservation);
+                return "/WEB-INF/views/checkinDetail.jsp";
+            } else {
+                // 조회 실패: 에러 메시지와 함께 체크인 폼으로 다시
+                request.setAttribute("error", "입력하신 정보와 일치하는 예약이 없습니다.");
+                return "/WEB-INF/views/checkupForm.jsp";
+            }
+        }
+        
+        return "/WEB-INF/views/checkupForm.jsp";
     }
 }

@@ -58,5 +58,7 @@ public interface FlightDAO {
     Map<String,Integer> getWeekLowPrices(SearchFlightDTO dto);
     
     void releaseExpiredPendingSeats();
+    
+    public String findActualSeatId(String flightId, int seatRow, String seat);
 }
 

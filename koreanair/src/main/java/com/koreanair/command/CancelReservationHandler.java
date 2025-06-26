@@ -54,8 +54,8 @@ public class CancelReservationHandler implements CommandHandler {
             return "/WEB-INF/views/cancelReservationForm.jsp";
         } else {
             // 본인 예약이 아니거나 존재하지 않는 예약
-            request.setAttribute("error", "취소할 예약 정보를 찾을 수 없습니다.");
-            return "/dashboard.do";
+            session.setAttribute("error", "취소하려는 예약이 회원님의 예약과 일치하지 않습니다. 본인의 예약만 취소할 수 있습니다.");
+            return "redirect:/dashboard.do";
         }
     }
 
