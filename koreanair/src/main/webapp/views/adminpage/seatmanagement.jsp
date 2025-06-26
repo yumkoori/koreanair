@@ -15,6 +15,7 @@ String contextPath = request.getContextPath();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>좌석 관리</title>
     <link href="<%=contextPath%>/views/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <link href="<%=contextPath%>/views/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="<%=contextPath%>/views/vendors/nprogress/nprogress.css" rel="stylesheet">
     <link href="<%=contextPath%>/views/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
@@ -716,7 +717,7 @@ String contextPath = request.getContextPath();
                         			// check 값에 따라 다른 처리
                         			if (userData.check === 1) {
                         				// 검색 성공 - 검색어로 변경되었다고 알림
-                        				alert(`"${searchValue}" 검색 완료! 현재는 보잉 787-9만 지원됩니다.`);
+                        				alert(`"\${searchValue}" 검색 완료! 현재는 보잉 787-9만 지원됩니다.`);
                         				
                         				// 검색 결과로 기본 비행기 표시
                         				searchInput.value = searchValue; // 검색어 그대로 유지

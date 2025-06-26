@@ -624,6 +624,7 @@ String contextPath = request.getContextPath();
     <script src="<%=contextPath%>/views/vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    
     <!-- FastClick -->
     <script src="<%=contextPath%>/views/vendors/fastclick/lib/fastclick.js"></script>
     <!-- NProgress -->
