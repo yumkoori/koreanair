@@ -7,16 +7,15 @@
 }
 
 body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: linear-gradient(135deg, #e3f2fd 0%, #f8bbd9 100%);
+    background: #f4f7fb;
+    font-family: 'Noto Sans KR', 'Nanum Gothic', sans-serif;
+    color: #333;
+    line-height: 1.6;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #333;
-    line-height: 1.6;
-    overflow: hidden;
-    position: relative;
+    padding: 40px 20px;
 }
 
 body.loaded {
@@ -25,116 +24,38 @@ body.loaded {
 
 /* 배경 데코레이션 */
 .background-decoration {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
+    display: none;
 }
 
-.floating-circle {
-    position: absolute;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(0, 100, 222, 0.1) 0%, rgba(248, 187, 217, 0.1) 100%);
-    animation: float 8s ease-in-out infinite;
-}
-
-.circle-1 {
-    width: 300px;
-    height: 300px;
-    top: 10%;
-    left: -5%;
-    animation-delay: 0s;
-}
-
-.circle-2 {
-    width: 200px;
-    height: 200px;
-    top: 70%;
-    right: -3%;
-    animation-delay: 3s;
-}
-
-.circle-3 {
-    width: 150px;
-    height: 150px;
-    top: 40%;
-    left: 80%;
-    animation-delay: 6s;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-        opacity: 0.7;
-    }
-    50% {
-        transform: translateY(-20px) rotate(180deg);
-        opacity: 1;
-    }
-}
+/* 배경 애니메이션 요소들 완전 제거 */
 
 .confirmation-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-    padding: 50px 40px;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 37, 108, 0.05);
+    border: 1px solid #e9eff5;
     text-align: center;
-    max-width: 500px;
-    width: 90%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    position: relative;
-    overflow: hidden;
-    animation: fadeInUp 0.8s ease-out;
 }
 
-.confirmation-container::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        rgba(0, 100, 222, 0.1) 0%, 
-        rgba(248, 187, 217, 0.1) 50%, 
-        rgba(227, 242, 253, 0.1) 100%);
-    animation: rotate 20s linear infinite;
-    z-index: -1;
-}
-
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+/* 컨테이너 배경 애니메이션 제거 */
 
 .icon {
     font-size: 48px;
     margin-bottom: 25px;
     color: #0064de;
-    text-shadow: 0 2px 10px rgba(0, 100, 222, 0.3);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
 }
 
 .confirmation-message {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 30px;
-    line-height: 1.4;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    background: linear-gradient(135deg, #333 0%, #0064de 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 26px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 2px solid #333;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -143,169 +64,139 @@ body.loaded {
 
 /* 예약 정보 스타일 */
 .booking-info {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 1px solid rgba(0, 100, 222, 0.2);
-    border-radius: 15px;
-    padding: 20px;
+    border: 1px solid #e9eff5;
+    border-radius: 8px;
+    padding: 24px;
     margin-bottom: 30px;
     text-align: left;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.booking-info:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
 }
 
 .booking-info-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid rgba(0, 100, 222, 0.2);
-    font-weight: 600;
-    color: #0064de;
-    font-size: 16px;
 }
 
 .booking-info-header i {
-    font-size: 18px;
+    font-size: 20px;
+    color: #0064de;
 }
 
 .info-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(0, 100, 222, 0.1);
+    font-size: 15px;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .info-row:last-child {
-    margin-bottom: 0;
     border-bottom: none;
 }
 
 .info-label {
-    font-weight: 600;
-    color: #0064de;
-    min-width: 100px;
-    font-size: 15px;
+    color: #555;
+    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 8px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .info-label i {
     font-size: 14px;
+    color: #0064de;
 }
 
 .info-value {
-    font-weight: 600;
-    color: #333;
-    font-size: 16px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-weight: 700;
+    color: #111;
 }
 
 /* 환불 안내 섹션 */
 .refund-notice {
-    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-    border: 1px solid rgba(255, 193, 7, 0.3);
-    border-radius: 15px;
-    padding: 20px;
+    border: 1px solid #e9eff5;
+    border-radius: 8px;
+    padding: 24px;
     margin-bottom: 30px;
     text-align: left;
-    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.1);
+    background-color: #fff;
 }
 
 .notice-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid rgba(255, 193, 7, 0.3);
-    font-weight: 600;
-    color: #856404;
-    font-size: 16px;
 }
 
 .notice-header i {
-    font-size: 18px;
-    color: #ffc107;
+    font-size: 20px;
+    color: #0064de;
 }
 
 .notice-list {
-    list-style: none;
-    padding: 0;
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 14px;
+    color: #666;
     margin: 0;
 }
 
 .notice-list li {
+    padding-left: 1.2em;
+    text-indent: -1.2em;
+    margin-bottom: 8px;
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    margin-bottom: 10px;
-    color: #856404;
-    font-size: 14px;
-    line-height: 1.5;
 }
 
-.notice-list li:last-child {
-    margin-bottom: 0;
+.notice-list li::before {
+    content: "•";
+    color: #999;
+    margin-right: 0.5em;
 }
 
 .notice-list li i {
-    color: #28a745;
+    color: #0064de;
     margin-top: 2px;
     font-size: 12px;
+    display: none;
 }
 
 /* 버튼 컨테이너 */
 .button-container {
     display: flex;
-    gap: 20px;
     justify-content: center;
-    margin-top: 10px;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #e9ecef;
 }
 
 /* 버튼 기본 스타일 */
 .btn {
-    padding: 15px 35px;
+    padding: 12px 28px;
+    border-radius: 8px;
     font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 25px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 1px solid;
+    transition: all 0.3s;
     min-width: 120px;
-    font-family: inherit;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.6s ease;
-}
-
-.btn:hover::before {
-    left: 100%;
 }
 
 .btn i {
@@ -314,58 +205,40 @@ body.loaded {
 
 /* 예 버튼 */
 .btn-yes {
-    background: linear-gradient(135deg, #0064de 0%, #0078d4 100%);
-    color: white;
-    box-shadow: 0 8px 25px rgba(0, 100, 222, 0.4);
+    background-color: #0064de;
+    color: #fff;
+    border-color: #0064de;
 }
 
 .btn-yes:hover {
-    background: linear-gradient(135deg, #0056b3 0%, #006bb3 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0, 100, 222, 0.5);
-}
-
-.btn-yes:active {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0, 100, 222, 0.4);
+    background-color: #0056c0;
+    border-color: #0056c0;
 }
 
 /* 아니오 버튼 */
 .btn-no {
-    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-    color: white;
-    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+    background-color: #fff;
+    color: #555;
+    border-color: #ccc;
 }
 
 .btn-no:hover {
-    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(108, 117, 125, 0.4);
-}
-
-.btn-no:active {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+    background-color: #f5f5f5;
+    border-color: #999;
 }
 
 /* 확인 버튼 */
 .btn-ok {
-    background: linear-gradient(135deg, #0064de 0%, #0078d4 100%);
-    color: white;
-    box-shadow: 0 8px 25px rgba(0, 100, 222, 0.4);
+    background-color: #0064de;
+    color: #fff;
+    border-color: #0064de;
     min-width: 150px;
-    padding: 15px 40px;
+    padding: 12px 40px;
 }
 
 .btn-ok:hover {
-    background: linear-gradient(135deg, #0056b3 0%, #006bb3 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0, 100, 222, 0.5);
-}
-
-.btn-ok:active {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0, 100, 222, 0.4);
+    background-color: #0056c0;
+    border-color: #0056c0;
 }
 
 /* 로딩 애니메이션 */
@@ -376,20 +249,19 @@ body.loaded {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px);
 }
 
 .loading-container {
     text-align: center;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    padding: 50px 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 37, 108, 0.15);
+    border: 1px solid #e9eff5;
 }
 
 .spinner-container {
@@ -406,16 +278,13 @@ body.loaded {
     border-top: 4px solid #0064de;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    position: absolute;
-    top: 0;
-    left: 0;
 }
 
 .spinner-inner {
     width: 40px;
     height: 40px;
     border: 3px solid transparent;
-    border-top: 3px solid #f8bbd9;
+    border-top: 3px solid #ccc;
     border-radius: 50%;
     animation: spin 1.5s linear infinite reverse;
     position: absolute;
@@ -431,7 +300,7 @@ body.loaded {
 .loading-text {
     color: #333;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -458,40 +327,24 @@ body.loaded {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px);
 }
 
 .result-content {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    padding: 50px 40px;
-    border-radius: 25px;
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 37, 108, 0.15);
     text-align: center;
     max-width: 450px;
     width: 90%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    position: relative;
-    overflow: hidden;
+    border: 1px solid #e9eff5;
 }
 
-.result-content::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        rgba(0, 100, 222, 0.05) 0%, 
-        rgba(248, 187, 217, 0.05) 50%, 
-        rgba(227, 242, 253, 0.05) 100%);
-    animation: rotate 15s linear infinite;
-    z-index: -1;
-}
+/* 결과 컨테이너 배경 애니메이션 제거 */
 
 .result-icon-container {
     margin-bottom: 25px;
@@ -499,13 +352,14 @@ body.loaded {
 
 .result-icon {
     font-size: 64px;
-    animation: bounce 1s ease-in-out;
 }
 
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
+.result-icon.success {
+    color: #28a745;
+}
+
+.result-icon.error {
+    color: #dc3545;
 }
 
 .result-text-container {
@@ -515,9 +369,8 @@ body.loaded {
 .result-title {
     font-size: 22px;
     font-weight: 700;
-    color: #333;
+    color: #111;
     margin-bottom: 10px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .result-text {
@@ -534,65 +387,20 @@ body.loaded {
     display: flex;
 }
 
-/* 성공/실패 색상 */
-.result-icon.success {
-    color: #28a745;
-}
-
-.result-icon.error {
-    color: #dc3545;
-}
-
-/* 환불 사유 입력 섹션 (미래 확장용) */
-.refund-reason-section {
-    margin-bottom: 25px;
-    text-align: left;
-}
-
-.reason-label {
-    display: block;
-    font-weight: 600;
-    color: #0064de;
-    margin-bottom: 10px;
-    font-size: 15px;
-}
-
-.reason-textarea {
-    width: 100%;
-    height: 100px;
-    padding: 15px;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 1.5;
-    resize: vertical;
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-}
-
-.reason-textarea:focus {
-    outline: none;
-    border-color: #0064de;
-    box-shadow: 0 0 0 3px rgba(0, 100, 222, 0.1);
-    background: white;
-}
-
-.reason-textarea::placeholder {
-    color: #adb5bd;
-}
-
 /* 반응형 디자인 */
 @media (max-width: 768px) {
+    body {
+        padding: 20px 15px;
+    }
+    
     .confirmation-container {
-        padding: 40px 30px;
+        padding: 30px 20px;
         max-width: 95%;
-        margin: 20px;
     }
     
     .confirmation-message {
         font-size: 20px;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         flex-direction: column;
         gap: 5px;
     }
@@ -606,11 +414,10 @@ body.loaded {
     .btn {
         width: 100%;
         max-width: 250px;
-        padding: 15px 20px;
     }
     
     .result-content {
-        padding: 40px 25px;
+        padding: 30px 20px;
         margin: 20px;
     }
     
@@ -633,7 +440,7 @@ body.loaded {
     
     .booking-info,
     .refund-notice {
-        padding: 15px;
+        padding: 20px 15px;
         margin-bottom: 25px;
     }
     
@@ -644,7 +451,6 @@ body.loaded {
     }
     
     .info-label {
-        min-width: auto;
         font-size: 14px;
     }
     
@@ -656,14 +462,12 @@ body.loaded {
         font-size: 13px;
     }
     
-    .floating-circle {
-        display: none;
-    }
+    /* 배경 애니메이션 제거로 불필요 */
 }
 
 @media (max-width: 480px) {
     .confirmation-container {
-        padding: 30px 20px;
+        padding: 25px 15px;
     }
     
     .confirmation-message {
@@ -672,12 +476,11 @@ body.loaded {
     
     .btn {
         font-size: 14px;
-        padding: 12px 20px;
-        min-width: 100px;
+        padding: 10px 20px;
     }
     
     .result-content {
-        padding: 30px 20px;
+        padding: 25px 15px;
     }
     
     .result-icon {
@@ -726,27 +529,4 @@ body.loaded {
 }
 
 /* 애니메이션 효과 개선 */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 그라데이션 텍스트 효과 */
-.confirmation-message {
-    background: linear-gradient(135deg, #333 0%, #0064de 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* 미세한 그림자 효과 */
-.info-label,
-.info-value {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+/* 모든 애니메이션 효과 제거 완료 */
