@@ -2,9 +2,11 @@ package com.koreanair.command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.koreanair.model.dto.PaymentVerifyDTO;
 import com.koreanair.model.service.PaymentVerifyService;
+import com.koreanair.util.TokenUtil;
 
 public class PaymentVerifyHandler implements CommandHandler {
 
@@ -17,15 +19,33 @@ public class PaymentVerifyHandler implements CommandHandler {
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            // impUid 파라미터 받기
+            // 1. CSRF 토큰 검증
+            HttpSession session = request.getSession(false);
+            String csrfToken = request.getParameter("csrfToken");
+            
+            if (session == null) {
+                System.err.println("[보안 오류] 유효하지 않은 세션에서 결제 검증 시도");
+                request.setAttribute("error", "세션이 유효하지 않습니다. 다시 로그인해 주세요.");
+                request.setAttribute("verificationStatus", "invalid_session");
+                return "/views/error.jsp";
+            }
+            
+            if (!TokenUtil.validateCSRFToken(session, csrfToken)) {
+                System.err.println("[보안 오류] CSRF 토큰 검증 실패 - 세션ID: " + session.getId());
+                request.setAttribute("error", "보안 토큰이 유효하지 않습니다. 결제 페이지에서 다시 시도해 주세요.");
+                request.setAttribute("verificationStatus", "csrf_token_invalid");
+                return "/views/error.jsp";
+            }
+            
+            // 2. impUid 파라미터 받기
             String impUid = request.getParameter("imp_uid");
 
-            // impUid 유효성 검사
+            // 3. impUid 유효성 검사
             if (impUid == null || impUid.trim().isEmpty()) {
                 throw new IllegalArgumentException("imp_uid가 누락되었습니다.");
             }
 
-            // PaymentVerifyService를 통한 결제 검증 (아임포트 API vs DB 데이터 비교)
+            // 4. PaymentVerifyService를 통한 결제 검증 (아임포트 API vs DB 데이터 비교)
             boolean isValid = paymentVerifyService.verifyPaymentByImpUid(impUid, null);
 
             if (isValid) {

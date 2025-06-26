@@ -82,6 +82,8 @@ document.querySelectorAll('.payment-method').forEach(method => {
 function processcreditcardPayment() {
     if (!merchantUid) {
         alert('결제 준비 정보가 없습니다.');
+        const payBtn = document.getElementById("payBtn");
+        if (payBtn) payBtn.disabled = false;
         return;
     }
     
@@ -111,6 +113,9 @@ function processcreditcardPayment() {
             // 결제 실패
             console.log('결제 실패:', rsp);
             alert(`결제에 실패하였습니다.\n에러 내용: ${rsp.error_msg}`);
+            // 결제 실패 시 버튼 다시 활성화
+            const payBtn = document.getElementById("payBtn");
+            if (payBtn) payBtn.disabled = false;
         }
     });
 }
@@ -123,6 +128,8 @@ function processKakaoPayment() {
 	
     if (!merchantUid) {
         alert('결제 준비 정보가 없습니다.');
+        const payBtn = document.getElementById("payBtn");
+        if (payBtn) payBtn.disabled = false;
         return;
     }
     
@@ -152,6 +159,9 @@ function processKakaoPayment() {
             // 결제 실패
             console.log('결제 실패:', rsp);
             alert(`결제에 실패하였습니다.\n에러 내용: ${rsp}`);
+            // 결제 실패 시 버튼 다시 활성화
+            const payBtn = document.getElementById("payBtn");
+            if (payBtn) payBtn.disabled = false;
         }
     });
 }
@@ -160,6 +170,8 @@ function processKakaoPayment() {
 function processtossPayment() {
     if (!merchantUid) {
         alert('결제 준비 정보가 없습니다.');
+        const payBtn = document.getElementById("payBtn");
+        if (payBtn) payBtn.disabled = false;
         return;
     }
     
@@ -189,6 +201,9 @@ function processtossPayment() {
             // 결제 실패
             console.log('결제 실패:', rsp);
             alert(`결제에 실패하였습니다.\n에러 내용: ${rsp.error_msg}`);
+            // 결제 실패 시 버튼 다시 활성화
+            const payBtn = document.getElementById("payBtn");
+            if (payBtn) payBtn.disabled = false;
         }
     });
 }
@@ -221,16 +236,22 @@ function Transmission(paymentMethod, amount, booking_Id, callback) {
     // 입력값 검증
     if (!paymentMethod) {
         alert('결제 수단이 선택되지 않았습니다.');
+        const payBtn = document.getElementById("payBtn");
+        if (payBtn) payBtn.disabled = false;
         return;
     }
     
     if (!amount || amount <= 0) {
         alert('유효하지 않은 결제 금액입니다.');
+        const payBtn = document.getElementById("payBtn");
+        if (payBtn) payBtn.disabled = false;
         return;
     }
     
     if (!booking_Id) {
         alert('예약 ID가 없습니다.');
+        const payBtn = document.getElementById("payBtn");
+        if (payBtn) payBtn.disabled = false;
         return;
     }
     
@@ -262,7 +283,8 @@ function Transmission(paymentMethod, amount, booking_Id, callback) {
               '&bookingId=' + encodeURIComponent(booking_Id) +
               '&payment_method=' + encodeURIComponent(paymentMethod) +
               '&amount=' + encodeURIComponent(amount) +
-              '&created_at=' + encodeURIComponent(createdAt)
+              '&created_at=' + encodeURIComponent(createdAt) +
+              '&paymentToken=' + encodeURIComponent(window.paymentToken || '')
     })
     .then(response => response.text())
     .then(result => {
@@ -273,30 +295,60 @@ function Transmission(paymentMethod, amount, booking_Id, callback) {
             }
         } else if (result.startsWith('invalid_input:')) {
             alert("입력값 오류: " + result.substring(14));
+            const payBtn = document.getElementById("payBtn");
+            if (payBtn) payBtn.disabled = false;
         } else if (result.startsWith('system_error:')) {
             alert("시스템 오류: " + result.substring(13));
+            const payBtn = document.getElementById("payBtn");
+            if (payBtn) payBtn.disabled = false;
+        } else if (result.startsWith('invalid_session:')) {
+            alert("세션 오류: " + result.substring(16));
+            window.location.reload();
+        } else if (result.startsWith('invalid_token:')) {
+            alert("보안 토큰 오류: " + result.substring(14));
+            window.location.reload();
         } else {
             alert("서버 오류 또는 저장 실패: " + result);
+            const payBtn = document.getElementById("payBtn");
+            if (payBtn) payBtn.disabled = false;
         }
     })
     .catch(error => {
         console.error("서버 통신 오류: ", error);
         alert("네트워크 오류가 발생했습니다.");
+        const payBtn = document.getElementById("payBtn");
+        if (payBtn) payBtn.disabled = false;
     });
 }
 
 // 결제 처리 메인 함수
 function processPayment() {
+    // 이중 클릭 방지
+    const payBtn = document.getElementById("payBtn");
+    if (payBtn.disabled) {
+        return;
+    }
+    payBtn.disabled = true;
+    
     const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
     
     if (!selectedPayment) {
         alert('결제 수단을 선택해주세요.');
+        payBtn.disabled = false;
         return;
     }
     
     // URL에서 받아온 bookingId가 없으면 에러
     if (!bookingId) {
         alert('예약 정보가 없습니다. 다시 시도해주세요.');
+        payBtn.disabled = false;
+        return;
+    }
+    
+    // 이중결제 방지 토큰 확인
+    if (!window.paymentToken) {
+        alert('보안 토큰이 없습니다. 페이지를 새로고침해주세요.');
+        payBtn.disabled = false;
         return;
     }
     
@@ -324,6 +376,7 @@ function processPayment() {
             
         default:
             alert('지원되지 않는 결제 수단입니다.');
+            payBtn.disabled = false;
             break;
     }
 }
