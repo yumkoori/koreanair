@@ -60,11 +60,19 @@ public class refundProcessService {
                 // 2. 환불 성공 시 상태 업데이트
                 boolean statusUpdateSuccess = refundProcessDAO.updateRefundStatus(dto.getMerchantUid(), "CANCELLED");
                 
-                if (statusUpdateSuccess) {
+                // 3. 환불 성공 시 booking 상태 업데이트
+                boolean bookingUpdateSuccess = refundProcessDAO.updateBookingStatus(dto);
+                
+                if (statusUpdateSuccess && bookingUpdateSuccess) {
                     System.out.println("[SUCCESS] 환불 처리 완료 - MerchantUid: " + dto.getMerchantUid());
                     return true;
                 } else {
-                    System.err.println("[WARNING] 환불은 성공했으나 상태 업데이트 실패 - MerchantUid: " + dto.getMerchantUid());
+                    if (!statusUpdateSuccess) {
+                        System.err.println("[WARNING] 환불은 성공했으나 payment 상태 업데이트 실패 - MerchantUid: " + dto.getMerchantUid());
+                    }
+                    if (!bookingUpdateSuccess) {
+                        System.err.println("[WARNING] 환불은 성공했으나 booking 상태 업데이트 실패 - BookingId: " + dto.getBookingId());
+                    }
                     return false;
                 }
             } else {

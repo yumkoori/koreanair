@@ -94,6 +94,11 @@ public class LoginHandler implements CommandHandler {
                 // 아이디 저장 쿠키 처리
                 authService.handleRememberMe(response, userId, remember);
                 
+                // admin 사용자인 경우 관리자 페이지로 이동
+                if ("admin".equals(userId)) {
+                    return "/views/adminpage/adminindex.jsp";
+                }
+                
                 // 목적지 URL 확인 및 리다이렉션
             String targetUrl = (String) session.getAttribute("targetUrl");
                 session.removeAttribute("targetUrl");
