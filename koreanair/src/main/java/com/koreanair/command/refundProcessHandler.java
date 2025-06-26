@@ -74,9 +74,9 @@ public class refundProcessHandler implements CommandHandler {
 			  response.getWriter().
 			  write("{\"success\": false, \"message\": \"사용자 정보가 없습니다. 다시 로그인해주세요.\"}");
 			  return null; }
-			 
-			  int userNo = extractUserNo(user);
-			
+			  
+			  //int userNo = 12;
+			  int userNo = user.getUserNo();
 
 			// 2. 요청 파라미터 추출
 			String bookingId = request.getParameter("bookingId");
@@ -122,16 +122,6 @@ public class refundProcessHandler implements CommandHandler {
 		}
 
 		return null; // AJAX 응답이므로 JSP 페이지로 이동하지 않음
-	}
-
-	/**
-	 * User 객체에서 사용자 번호 추출 TODO: User DTO의 실제 구조에 맞게 수정 필요
-	 */
-	private int extractUserNo(User user) {
-		// User DTO에 userNo 필드가 있다면 직접 사용
-		// 없다면 userId를 이용해서 DB에서 조회하거나 다른 방법 사용
-		// 현재는 임시로 userId를 해시코드로 변환 (실제 구현에서는 수정 필요)
-		return Math.abs(user.getUserId().hashCode()) % 1000 + 1;
 	}
 
 	/**
