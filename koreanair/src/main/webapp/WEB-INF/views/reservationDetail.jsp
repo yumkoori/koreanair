@@ -55,6 +55,17 @@
                 </p>
             </div>
         </c:if>
+        
+        <%-- 좌석 선택/변경 성공 메시지 --%>
+        <c:if test="${not empty sessionScope.seatSuccessMessage}">
+            <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #10b981; margin: 20px; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(16,185,129,0.1);">
+                <div style="display: flex; align-items: center; color: #10b981;">
+                    <i class="fa-solid fa-check-circle" style="margin-right: 10px; font-size: 18px;"></i>
+                    <strong>${sessionScope.seatSuccessMessage}</strong>
+                </div>
+            </div>
+            <c:remove var="seatSuccessMessage" scope="session" />
+        </c:if>
         <c:set var="durationInMillis" value="${reservation.arrivalTime.time - reservation.departureTime.time}" />
         <c:set var="durationInMinutes" value="${durationInMillis / (1000 * 60)}" />
         <c:set var="durationHours" value="${durationInMinutes / 60}" />
@@ -162,13 +173,13 @@
                                             <c:when test="${isGuestLookup}">
                                                 <a href="#" onclick="showLoginRequiredAlert('좌석 변경'); return false;" class="service-item guest-login-required">
                                                     <i class="fa-solid fa-chair"></i>
-                                                    <span>${reservation.assignedSeat} (좌석 변경)</span>
+                                                    <span>현재 좌석: ${reservation.assignedSeat} (변경하기)</span>
                                                 </a>
                                             </c:when>
                                             <c:otherwise>
                                                 <a href="${pageContext.request.contextPath}/checkinSeat.do?bookingId=${reservation.bookingId}" class="service-item">
                                                     <i class="fa-solid fa-chair"></i>
-                                                    <span>${reservation.assignedSeat} (좌석 변경)</span>
+                                                    <span>현재 좌석: ${reservation.assignedSeat} (변경하기)</span>
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
@@ -178,13 +189,13 @@
                                             <c:when test="${isGuestLookup}">
                                                 <a href="#" onclick="showLoginRequiredAlert('좌석 신청'); return false;" class="service-item guest-login-required">
                                                     <i class="fa-solid fa-chair"></i>
-                                                    <span>좌석 신청</span>
+                                                    <span>좌석 선택하기</span>
                                                 </a>
                                             </c:when>
                                             <c:otherwise>
                                                 <a href="${pageContext.request.contextPath}/checkinSeat.do?bookingId=${reservation.bookingId}" class="service-item">
                                                     <i class="fa-solid fa-chair"></i>
-                                                    <span>좌석 신청</span>
+                                                    <span>좌석 선택하기</span>
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>

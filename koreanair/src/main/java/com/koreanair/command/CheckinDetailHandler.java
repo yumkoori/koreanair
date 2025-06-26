@@ -78,7 +78,7 @@ public class CheckinDetailHandler implements CommandHandler {
         if (checkinResult != null) {
             // AJAX 체크인 조회에서 넘어온 경우
             reservation = checkinResult;
-            session.removeAttribute("checkinResult"); // 사용 후 제거
+            // checkinResult는 예매내역 조회에서도 사용하므로 제거하지 않음
         } else {
             // [분기 처리] 로그인 상태인지 확인
             if (user != null) {
@@ -114,6 +114,13 @@ public class CheckinDetailHandler implements CommandHandler {
         if (reservation != null) {
             // 조회 성공 시, request에 정보를 담아 jsp로 포워딩
             request.setAttribute("reservation", reservation);
+            
+            // 비회원 체크인에서 온 경우 세션에 표시
+            if (user == null) {
+                session.setAttribute("fromGuestCheckin", true);
+                session.setAttribute("guestCheckinBookingId", reservation.getBookingId());
+            }
+            
             return "/WEB-INF/views/checkinDetail.jsp";
         } else {
             // 조회 실패 시, 에러 메시지와 함께 적절한 페이지로 리다이렉트

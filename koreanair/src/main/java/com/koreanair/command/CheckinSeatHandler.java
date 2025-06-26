@@ -104,12 +104,11 @@ public class CheckinSeatHandler implements CommandHandler {
 
         switch (result) {
             case 1: // 최초 좌석 지정 성공
-                session.setAttribute("message", "좌석 예약 완료!");
-                return "redirect:/index.do"; // 메인 페이지로 이동
+                session.setAttribute("seatSuccessMessage", "좌석 선택이 완료되었습니다.");
+                return "redirect:/reservationDetail?bookingId=" + bookingId;
 
             case 2: // 좌석 변경 성공
-                session.setAttribute("message", "좌석 변경이 완료되었습니다.");
-                // 예약 상세 페이지로 다시 돌아가기 위해 bookingId 파라미터 추가
+                session.setAttribute("seatSuccessMessage", "좌석 변경이 완료되었습니다.");
                 return "redirect:/reservationDetail?bookingId=" + bookingId; 
 
             default: // 실패 (case 0)

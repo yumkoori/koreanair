@@ -86,7 +86,7 @@ public class ReservationDAOImpl implements ReservationDAO {
                 + "    sc.class_name AS cabin_class, "
                 + "    da.airport_id AS departure_airport_id, da.airport_name AS departure_airport_name, "
                 + "    aa.airport_id AS arrival_airport_id, aa.airport_name AS arrival_airport_name, "
-                + "    bs.flight_seat_id " // <-- 조회할 컬럼 추가
+                + "    fs.row AS seat_row, fs.seat AS seat_number " // <-- 좌석 번호 조회를 위해 수정
                 + "FROM booking b "
                 + "JOIN flight f ON b.outbound_flight_id = f.flight_id " 
                 + "JOIN passenger p ON b.booking_id = p.booking_id "
@@ -123,14 +123,11 @@ public class ReservationDAOImpl implements ReservationDAO {
         // reservation.setAircraftType(null);
         // reservation.setTicketNumber(null);
         // 배정된 좌석 정보 처리
-        String flightSeatId = rs.getString("flight_seat_id");
-        if (flightSeatId != null && !flightSeatId.isEmpty()) {
-            // "FS-KE123-50B" 같은 형식에서 마지막 부분("50B")만 추출
-            String[] parts = flightSeatId.split("-");
-            if (parts.length >= 3) {
-                // DTO의 새로운 필드에 값을 설정
-                reservation.setAssignedSeat(parts[parts.length - 1]);
-            }
+        String seatRow = rs.getString("seat_row");
+        String seatNumber = rs.getString("seat_number");
+        if (seatRow != null && seatNumber != null && !seatRow.isEmpty() && !seatNumber.isEmpty()) {
+            // row와 seat를 조합해서 좌석 번호 생성 (예: "12" + "A" = "12A")
+            reservation.setAssignedSeat(seatRow + seatNumber);
         }
         
         return reservation;
