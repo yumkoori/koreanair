@@ -80,7 +80,7 @@ public class refundProcessDAOImpl implements RefundProcessDAO {
         boolean result = false;
         
         // booking 상태 업데이트 SQL
-        String sql = "UPDATE booking SET STATUS = 'PENDING' WHERE booking_id = ?";
+        String sql = "UPDATE booking SET booking_status = 'CANCELLED' WHERE booking_id = ?";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -92,7 +92,7 @@ public class refundProcessDAOImpl implements RefundProcessDAO {
             
             if (result) {
                 System.out.println("[SUCCESS] booking 상태 업데이트 성공 - BookingId: " + dto.getBookingId() + 
-                                 ", Status: PENDING");
+                                 ", Status: CANCELLED");
             } else {
                 System.out.println("[WARNING] booking 상태 업데이트 실패 - BookingId: " + dto.getBookingId());
             }
