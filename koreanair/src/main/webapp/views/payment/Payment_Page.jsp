@@ -1,4 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.koreanair.util.TokenUtil" %>
+<%
+    // 이중결제 방지 토큰 생성 및 세션에 저장
+    String paymentToken = TokenUtil.generatePaymentToken();
+    TokenUtil.storePaymentToken(session, paymentToken);
+    
+    // CSRF 토큰 생성 및 세션에 저장
+    String csrfToken = TokenUtil.generateCSRFToken();
+    TokenUtil.storeCSRFToken(session, csrfToken);
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,6 +17,11 @@
     <title>결제화면 - 대한항공</title>
     <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
     <link rel="stylesheet" href="../../css/payment.css">
+    <!-- 토큰을 JavaScript에서 사용할 수 있도록 설정 -->
+    <script>
+        window.paymentToken = '<%= paymentToken %>';
+        window.csrfToken = '<%= csrfToken %>';
+    </script>
 </head><body>
     <header class="header">
         <div class="header-content">
@@ -94,7 +109,8 @@
                 결제하기
             </button>
             <form id="reserv_form">
-               
+                <!-- CSRF 토큰을 hidden 필드로 추가 -->
+                <input type="hidden" name="csrfToken" value="<%= csrfToken %>" />
             </form>
             <form id="failure_log_form">
                 
