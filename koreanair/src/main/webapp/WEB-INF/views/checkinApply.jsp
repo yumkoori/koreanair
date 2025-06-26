@@ -72,7 +72,16 @@
 			<div class="form-actions">
 				<button type="button" class="btn btn-secondary"
 					onclick="history.back()">이전</button>
-				<button type="submit" class="btn btn-primary">다음</button>
+				<c:choose>
+					<c:when test="${empty sessionScope.user}">
+						<%-- 비회원인 경우 로그인 필요 알림 --%>
+						<button type="button" class="btn btn-primary" onclick="showLoginRequiredForSeat()">다음</button>
+					</c:when>
+					<c:otherwise>
+						<%-- 로그인 사용자인 경우 정상 진행 --%>
+						<button type="submit" class="btn btn-primary">다음</button>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</form>
 	</main>

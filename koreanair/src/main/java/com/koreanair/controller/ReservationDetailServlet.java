@@ -25,13 +25,21 @@ public class ReservationDetailServlet extends HttpServlet {
         // 세션에서 필요한 정보들을 미리 가져옴
         ReservationDTO lookupResult = (session != null) ? (ReservationDTO) session.getAttribute("lookupResult") : null;
         User loggedInUser = (session != null) ? (User) session.getAttribute("user") : null;
+        Boolean isGuestLookup = (session != null) ? (Boolean) session.getAttribute("isGuestLookup") : null;
+        Boolean fromGuestCheckin = (session != null) ? (Boolean) session.getAttribute("fromGuestCheckin") : null;
+        String guestCheckinBookingId = (session != null) ? (String) session.getAttribute("guestCheckinBookingId") : null;
 
         // [흐름 1] 비회원이 '다른 예약 조회'를 통해 접근했는지 확인
         // 이 로직은 로그인 여부와 관계없이 가장 먼저 실행되어야 함
         if (lookupResult != null && lookupResult.getBookingId().equals(bookingIdFromUrl)) {
             // 성공: 임시 이용권(lookupResult)이 유효하므로 상세 정보 표시
             request.setAttribute("reservation", lookupResult);
+            // 비회원 조회인지 플래그 전달
+            if (isGuestLookup != null && isGuestLookup) {
+                request.setAttribute("isGuestLookup", true);
+            }
             session.removeAttribute("lookupResult"); // 사용한 임시 이용권은 즉시 제거
+            session.removeAttribute("isGuestLookup"); // 플래그도 제거
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/reservationDetail.jsp");
             dispatcher.forward(request, response);
@@ -56,8 +64,31 @@ public class ReservationDetailServlet extends HttpServlet {
                 dispatcher.forward(request, response);
             }
         } else {
-            // [흐름 3] 비회원 조회도 아니고, 로그인도 안 된 모든 비정상 접근
-            response.sendRedirect(request.getContextPath() + "/loginForm.do");
+            // [흐름 3] 비회원 체크인에서 온 경우 확인
+            if (fromGuestCheckin != null && fromGuestCheckin && guestCheckinBookingId != null && guestCheckinBookingId.equals(bookingIdFromUrl)) {
+                // 비회원 체크인에서 온 경우: 체크인 결과 세션에서 예약 정보 가져오기
+                ReservationDTO checkinResult = (ReservationDTO) session.getAttribute("checkinResult");
+                
+                if (checkinResult != null && checkinResult.getBookingId().equals(bookingIdFromUrl)) {
+                    // 성공: 체크인에서 조회한 예약 정보 사용
+                    request.setAttribute("reservation", checkinResult);
+                    request.setAttribute("isGuestLookup", true); // 비회원 조회로 표시
+                    
+                    // 체크인 세션 정보 제거
+                    session.removeAttribute("fromGuestCheckin");
+                    session.removeAttribute("guestCheckinBookingId");
+                    session.removeAttribute("checkinResult");
+                    
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/reservationDetail.jsp");
+                    dispatcher.forward(request, response);
+                } else {
+                    // 실패: 체크인 정보가 없거나 일치하지 않음
+                    response.sendRedirect(request.getContextPath() + "/index.do");
+                }
+            } else {
+                // [흐름 4] 비회원 조회도 아니고, 로그인도 안 된 모든 비정상 접근
+                response.sendRedirect(request.getContextPath() + "/loginForm.do");
+            }
         }
     }
 }

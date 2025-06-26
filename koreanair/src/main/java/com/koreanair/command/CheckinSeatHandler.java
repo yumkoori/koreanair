@@ -39,13 +39,34 @@ public class CheckinSeatHandler implements CommandHandler {
             return "redirect:/loginForm.do";
         }
 
-        // 서비스 계층을 통해 '현재 로그인한 사용자 ID'와 '예약 ID'가 일치하는지 검증
-        ReservationDTO reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+        // 비회원 조회에서 넘어온 경우 예약 소유자 확인
+        String guestBookingId = (String) session.getAttribute("guestBookingId");
+        ReservationDTO reservation = null;
         
-        // 검증 실패: 예약이 없거나, 다른 사람의 예약을 변경하려는 경우
-        if (reservation == null) {
-            session.setAttribute("error", "해당 예약에 대한 좌석 변경 권한이 없습니다.");
-            return "redirect:/dashboard.do"; // 또는 에러 페이지
+        if (guestBookingId != null && guestBookingId.equals(bookingId)) {
+            // 비회원 조회에서 로그인으로 넘어온 경우, 예약 소유자 확인
+            reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+            if (reservation == null) {
+                // 예약 정보가 로그인한 사용자와 일치하지 않음
+                session.setAttribute("error", "좌석을 변경하려는 예약이 회원님의 예약과 일치하지 않습니다. 본인의 예약만 좌석 변경할 수 있습니다.");
+                // 비회원 조회 정보 제거
+                session.removeAttribute("guestBookingId");
+                session.removeAttribute("guestBookingInfo");
+                session.removeAttribute("isGuestLookup");
+                return "redirect:/dashboard.do";
+            }
+            // 일치하는 경우 비회원 조회 정보 제거
+            session.removeAttribute("guestBookingId");
+            session.removeAttribute("guestBookingInfo");
+            session.removeAttribute("isGuestLookup");
+        } else {
+            // 일반적인 로그인 사용자 좌석 변경
+            reservation = bookingService.getBookingDetailsById(bookingId, user.getUserId());
+            // 검증 실패: 예약이 없거나, 다른 사람의 예약을 변경하려는 경우
+            if (reservation == null) {
+                session.setAttribute("error", "좌석을 변경하려는 예약이 회원님의 예약과 일치하지 않습니다. 본인의 예약만 좌석 변경할 수 있습니다.");
+                return "redirect:/dashboard.do";
+            }
         }
         // ▲▲▲ [수정/추가] 여기까지 ▲▲▲
 
@@ -83,12 +104,11 @@ public class CheckinSeatHandler implements CommandHandler {
 
         switch (result) {
             case 1: // 최초 좌석 지정 성공
-                session.setAttribute("message", "좌석 예약 완료!");
-                return "redirect:/index.do"; // 메인 페이지로 이동
+                session.setAttribute("seatSuccessMessage", "좌석 선택이 완료되었습니다.");
+                return "redirect:/reservationDetail?bookingId=" + bookingId;
 
             case 2: // 좌석 변경 성공
-                session.setAttribute("message", "좌석 변경이 완료되었습니다.");
-                // 예약 상세 페이지로 다시 돌아가기 위해 bookingId 파라미터 추가
+                session.setAttribute("seatSuccessMessage", "좌석 변경이 완료되었습니다.");
                 return "redirect:/reservationDetail?bookingId=" + bookingId; 
 
             default: // 실패 (case 0)

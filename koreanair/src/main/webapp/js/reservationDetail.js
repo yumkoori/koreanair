@@ -73,3 +73,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// 비회원 조회 시 로그인이 필요한 기능에 대한 알람을 표시하는 함수
+function showLoginRequiredAlert(functionName) {
+    const message = functionName + ' 기능을 이용하시려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?';
+    
+    if (confirm(message)) {
+        // 현재 예약 정보를 유지하기 위해 bookingId를 URL 파라미터로 전달
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get('bookingId');
+        
+        // 현재 페이지의 contextPath 가져오기
+        const fullPath = window.location.pathname;
+        const contextPath = fullPath.substring(0, fullPath.indexOf('/', 1)) || '';
+        
+        // 기능별 targetUrl 설정
+        let targetUrl;
+        switch(functionName) {
+            case '체크인':
+            case '온라인 체크인':
+                targetUrl = '/checkinDetail.do?bookingId=' + bookingId;
+                break;
+            case '좌석 변경':
+            case '좌석 신청':
+                targetUrl = '/checkinSeat.do?bookingId=' + bookingId;
+                break;
+            case '예약변경':
+                targetUrl = '/changeReservationSelect.do?bookingId=' + bookingId;
+                break;
+            case '예약 취소':
+                targetUrl = '/cancelReservationForm.do?bookingId=' + bookingId;
+                break;
+            default:
+                targetUrl = '/reservationDetail?bookingId=' + bookingId;
+        }
+        
+        // 로그인 페이지로 리다이렉트 (targetUrl 포함)
+        console.log('Redirecting to login with targetUrl:', targetUrl);
+        window.location.href = contextPath + '/loginForm.do?targetUrl=' + encodeURIComponent(targetUrl);
+    }
+}

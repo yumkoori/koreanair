@@ -91,11 +91,33 @@ public class FlightDAOImpl implements FlightDAO{
         }
         return reservedSeats;
     }
-
-    // ================================================================
-    // ▼▼▼▼▼▼▼▼▼▼▼▼ 체크인/좌석 변경을 위한 신규 메소드들 ▼▼▼▼▼▼▼▼▼▼▼▼
-    // ================================================================
     
+    public String findActualSeatId(String flightId, int seatRow, String seat) {
+    	String sql = "SELECT seat_id FROM flight_seat WHERE flight_id = ? AND row = ? AND seat = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, flightId);
+            pstmt.setInt(2, seatRow);
+            pstmt.setString(3, seat);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // 쿼리 결과가 있으면
+                if (rs.next()) {
+                    // seat_id 컬럼의 값(UUID)을 반환합니다.
+                    return rs.getString("seat_id");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("findActualSeatId 실행 중 SQL 오류 발생");
+            e.printStackTrace();
+        }
+        
+        // 쿼리 결과가 없거나 오류가 발생하면 null을 반환합니다.
+        return null;
+    }
+
     /**
      * [신규] 예약 ID로 이미 배정된 좌석이 있는지 확인합니다.
      */
