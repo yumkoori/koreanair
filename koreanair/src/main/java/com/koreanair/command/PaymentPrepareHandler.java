@@ -25,15 +25,23 @@ public class PaymentPrepareHandler implements CommandHandler {
             HttpSession session = request.getSession(false);
             String paymentToken = request.getParameter("paymentToken");
             
+            System.out.println("[PaymentPrepare] 이중결제 방지 토큰 검증 시작");
+            System.out.println("[PaymentPrepare] 요청받은 토큰: " + paymentToken);
+            System.out.println("[PaymentPrepare] 세션ID: " + (session != null ? session.getId() : "null"));
+            
             if (session == null) {
+                System.err.println("[PaymentPrepare] 세션 검증 실패 - 세션이 null");
                 response.getWriter().write("invalid_session: 세션이 유효하지 않습니다.");
                 return null;
             }
             
             if (!TokenUtil.validateAndConsumePaymentToken(session, paymentToken)) {
+                System.err.println("[PaymentPrepare] 이중결제 방지 토큰 검증 실패 - 토큰: " + paymentToken + ", 세션ID: " + session.getId());
                 response.getWriter().write("invalid_token: 유효하지 않은 결제 토큰입니다. 페이지를 새로고침 후 다시 시도해주세요.");
                 return null;
             }
+            
+            System.out.println("[PaymentPrepare] 이중결제 방지 토큰 검증 성공 - 세션ID: " + session.getId());
             
             // 2. 요청 파라미터 추출
             String merchantUid = request.getParameter("merchantUid");
@@ -42,6 +50,8 @@ public class PaymentPrepareHandler implements CommandHandler {
             String amount = request.getParameter("amount");
             String created_at = request.getParameter("created_at");
             
+            System.out.println("[PaymentPrepare] 결제 요청 정보 - merchantUid: " + merchantUid + ", bookingId: " + bookingId + ", amount: " + amount);
+            
             // 3. PaymentPrepareDTO 생성
             PaymentPrepareDTO dto = new PaymentPrepareDTO(bookingId, merchantUid, payment_method, amount, created_at);
             
@@ -49,17 +59,22 @@ public class PaymentPrepareHandler implements CommandHandler {
             boolean success = paymentPrepareService.processPaymentPrepare(dto);
 
             if (success) {
+                System.out.println("[PaymentPrepare] 결제 사전 검증 성공 - merchantUid: " + merchantUid);
                 response.getWriter().write("success");
             } else {
+                System.err.println("[PaymentPrepare] 결제 사전 검증 실패 - merchantUid: " + merchantUid);
                 response.getWriter().write("failed");
             }
 
         } catch (IllegalArgumentException e) {
             // 입력값 검증 오류 처리
+            System.err.println("[PaymentPrepare] 입력값 검증 오류: " + e.getMessage());
             response.getWriter().write("invalid_input: " + e.getMessage());
             
         } catch (Exception e) {
             // 시스템 오류 처리
+            System.err.println("[PaymentPrepare] 시스템 오류: " + e.getMessage());
+            e.printStackTrace();
             response.getWriter().write("system_error: 결제 처리 중 오류가 발생했습니다.");
         }
         

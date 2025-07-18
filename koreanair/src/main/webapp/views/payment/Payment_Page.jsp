@@ -4,10 +4,12 @@
     // 이중결제 방지 토큰 생성 및 세션에 저장
     String paymentToken = TokenUtil.generatePaymentToken();
     TokenUtil.storePaymentToken(session, paymentToken);
+    System.out.println("[토큰 생성] 이중결제 방지 토큰 생성 및 세션 저장 완료 - 토큰: " + paymentToken + ", 세션ID: " + session.getId());
     
     // CSRF 토큰 생성 및 세션에 저장
     String csrfToken = TokenUtil.generateCSRFToken();
     TokenUtil.storeCSRFToken(session, csrfToken);
+    System.out.println("[토큰 생성] CSRF 토큰 생성 및 세션 저장 완료 - 토큰: " + csrfToken + ", 세션ID: " + session.getId());
 %>
 <!DOCTYPE html>
 <html lang="ko">
